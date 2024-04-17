@@ -7,28 +7,20 @@
 
     <style name="em_login_et_input">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">52dp</item>
-        <item name="android:layout_marginLeft">@dimen/em_login_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/em_login_margin_right</item>
+        <item name="android:layout_height">@dimen/ease_size_48</item>
+        <item name="android:layout_marginLeft">@dimen/ease_size_30</item>
+        <item name="android:layout_marginRight">@dimen/ease_size_30</item>
         <item name="android:maxWidth">400dp</item>
         <item name="android:background">@drawable/demo_login_et_bg</item>
-        <item name="android:paddingLeft">@dimen/em_login_padding_left</item>
-        <item name="android:paddingRight">@dimen/em_login_padding_right</item>
+        <item name="android:paddingStart">@dimen/ease_size_16</item>
+        <item name="android:paddingEnd">@dimen/ease_size_16</item>
         <item name="android:textSize">@dimen/em_login_text_size</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_color_text_on_primary</item>
+        <item name="android:textColorHint">@color/ease_color_text_hint</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:inputType">text</item>
-    </style>
-
-    <style name="em_login_tv_other">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">50dp</item>
-        <item name="android:minWidth">70dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_marginBottom">44dp</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/demo_login_tv_click_selector</item>
     </style>
 
     <style name="em_login_bottom_layout">
@@ -41,18 +33,13 @@
     <style name="em_login_btn">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">40dp</item>
-        <item name="android:layout_marginLeft">@dimen/em_login_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/em_login_margin_right</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_24</item>
+        <item name="android:layout_marginLeft">@dimen/ease_size_30</item>
+        <item name="android:layout_marginRight">@dimen/ease_size_30</item>
         <item name="android:background">@drawable/demo_login_btn_bg</item>
-        <item name="android:textColor">@color/demo_login_btn_text_color</item>
+        <item name="android:textColor">@color/ease_color_text_primary</item>
         <item name="android:enabled">false</item>
-        <item name="android:textSize">16sp</item>
-        <!--        <item name="android:drawableRight">@drawable/demo_login_btn_right_unable</item>-->
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:paddingEnd">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingStart">5dp</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Headline.Small</item>
     </style>
 
     <style name="main_bottom_view_normal">
@@ -64,4 +51,105 @@
         <item name="android:textColor">@color/em_main_color_tab_selected</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="splash_iv_bg_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/splash_bg_light</item>
+    </style>
+
+    <style name="splash_brand_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_35</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/ease_color_primary</item>
+    </style>
+
+    <style name="splash_powered_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom|center</item>
+        <item name="android:layout_marginBottom">60dp</item>
+        <item name="android:textColor">@color/ease_color_text_secondary</item>
+    </style>
+
+    <style name="main_about_me_arrow_item">
+        <item name="background">@color/ease_color_background</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/ease_contact_arrow_item_title_color</item>
+        <item name="arrowItemShowAvatar">true</item>
+        <item name="arrowItemShowArrow">true</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
+    </style>
+
+    <style name="em_main_badge_tv">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_3</item>
+        <item name="android:layout_marginLeft">@dimen/ease_size_20</item>
+        <item name="android:layout_marginStart">@dimen/ease_size_20</item>
+        <item name="android:background">@drawable/demo_main_unread_count_bg</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:textColor">@color/ease_color_text_primary</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Small</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">@dimen/ease_size_4</item>
+        <item name="android:paddingEnd">@dimen/ease_size_4</item>
+    </style>
+
+    <style name="main_about_me_information_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:textColor">@color/ease_contact_arrow_item_title_color</item>
+    </style>
+
+    <style name="main_about_me_information_subtitle">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Large</item>
+        <item name="android:textColor">@color/ease_contact_arrow_item_content_color</item>
+    </style>
+
+    <style name="main_about_me_feature_text_describe">
+        <item name="android:background">@color/ease_color_spacing_view</item>
+        <item name="android:textColor">@color/ease_color_text_secondary_high</item>
+        <item name="android:paddingStart">@dimen/ease_size_16</item>
+        <item name="android:paddingEnd">@dimen/ease_size_16</item>
+        <item name="android:paddingTop">@dimen/ease_size_4</item>
+        <item name="android:paddingBottom">@dimen/ease_size_4</item>
+    </style>
+
+    <style name="main_about_me_about_subtitle">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:textColor">@color/ease_details_subtitle2_color</item>
+    </style>
+
+    <style name="about_logo">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+    </style>
+
+    <style name="about_version">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:textColor">@color/ease_color_text_secondary_high</item>
+    </style>
+
+    <style name="about_uikit_version">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:textColor">@color/ease_color_text_secondary_high</item>
+    </style>
+
+    <style name="contact_detail_arrow_item">
+        <item name="background">@color/ease_color_background</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/ease_contact_arrow_item_title_color</item>
+        <item name="arrowItemShowArrow">true</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
+    </style>
+
 </resources>

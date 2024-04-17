@@ -3,32 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/em_login_color_bg">
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <TextView
         android:id="@+id/tv_login_im"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/et_login_phone"
+        app:layout_constraintStart_toStartOf="@id/et_login_phone"
         app:layout_constraintBottom_toTopOf="@id/et_login_phone"
-        android:layout_marginBottom="27dp"
+        android:layout_marginBottom="@dimen/ease_size_20"
         android:textSize="24sp"
-        android:textColor="@color/white"
+        android:textColor="@color/ease_color_primary"
+        android:textAppearance="@style/Ease.TextAppearance.Headline.Large"
         android:text="@string/em_login_im"/>
 
     <TextView
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/tv_login_im"
+        app:layout_constraintEnd_toEndOf="@id/et_login_phone"
         app:layout_constraintTop_toTopOf="@id/tv_login_im"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="@dimen/ease_size_4"
         tools:text="V4.1.0"
-        android:textSize="10sp"
-        android:textColor="@color/white"
+        android:textColor="@color/ease_color_text_primary"
+        android:textAppearance="@style/Ease.TextAppearance.Label.ExtraSmall"
         android:background="@drawable/demo_login_version_bg"/>
 
     <EditText
@@ -42,39 +41,41 @@
         style="@style/em_login_et_input"
         android:inputType="phone"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_login_code"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/ease_size_48"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_login_phone"
         app:layout_constraintBottom_toTopOf="@id/btn_login"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/ease_size_24"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        style="@style/em_login_et_input">
+        android:gravity="center_vertical">
 
         <EditText
             android:id="@+id/et_login_code"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:hint="@string/em_login_input_verification_code"
             android:inputType="number"
             android:textSize="@dimen/em_login_text_size"
-            android:gravity="center_vertical"
-            android:background="@color/transparent"/>
+            style="@style/em_login_et_input"/>
 
         <TextView
             android:id="@+id/tv_get_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/ease_size_52"
             android:padding="10dp"
             android:paddingEnd="2dp"
-            android:textSize="14sp"
-            android:textColor="#009FFF"
+            android:textColor="@color/ease_color_primary"
+            android:textAppearance="@style/Ease.TextAppearance.Label.Medium"
             android:text="@string/em_login_get_verification_code" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btn_login"
@@ -82,8 +83,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ll_login_code"
         android:text="@string/em_login_btn"
-        style="@style/em_login_btn"
-        android:layout_marginTop="24dp"/>
+        style="@style/em_login_btn"/>
 
     <CheckBox
         android:id="@+id/cb_select"
@@ -110,56 +110,24 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="40dp"
         android:lineSpacingExtra="10dp"
-        android:textColor="@color/white"
+        android:textColorHighlight="@color/transparent"
+        android:textColor="@color/ease_color_on_background"
         android:text="@string/em_login_agreement"
-        android:textSize="12sp"/>
-
-    <TextView
-        android:id="@+id/tv_login_register"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        app:layout_constraintRight_toLeftOf="@id/tv_login_reset_password"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        android:layout_marginLeft="44dp"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        style="@style/em_login_tv_other" />
-
-    <TextView
-        android:id="@+id/tv_login_reset_password"
-        app:layout_constraintLeft_toRightOf="@id/tv_login_register"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        android:layout_marginRight="44dp"
-        app:layout_goneMarginEnd="33dp"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        style="@style/em_login_tv_other"/>
-
-    <TextView
-        android:id="@+id/tv_login_token"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="33dp"
-        android:layout_marginEnd="33dp"
-        android:visibility="gone"
-        style="@style/em_login_tv_other"/>
+        android:textAppearance="@style/Ease.TextAppearance.Body.Small"/>
 
     <TextView
         android:id="@+id/tv_login_developer"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_agreement"
         app:layout_constraintVertical_bias="1"
-        android:layout_marginLeft="44dp"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="8dp"
         android:visibility="gone"
+        android:textAppearance="@style/Ease.TextAppearance.Body.Medium"
+        android:textColor="@color/ease_color_text_secondary"
         android:text="@string/em_login_server_configure"
-        style="@style/em_login_tv_other"
-        android:layout_marginBottom="60dp"/>
+        android:layout_marginBottom="@dimen/ease_size_65"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,16 @@
-import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
+    // Add the Huawei services Gradle plugin
+    id("com.huawei.agconnect")
+    // Add honor services Gradle plugin
+    id("com.hihonor.mcs.asplugin")
+    // Add the ksp plugin when using Room
+    id("com.google.devtools.ksp")
 }
 
 val properties = Properties()
@@ -11,33 +18,91 @@ val inputStream = project.rootProject.file("local.properties").inputStream()
 properties.load( inputStream )
 
 android {
-    namespace = "com.hyphenate.chat.demo"
+    namespace = "com.hyphenate.chatdemo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.hyphenate.chat.demo"
+        applicationId = "com.hyphenate.chatdemo"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "4.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // Set app server info from local.properties
         buildConfigField ("String", "APP_SERVER_PROTOCOL", "\"https\"")
-        buildConfigField ("String", "APP_SERVER_DOMAIN", "\"a1.easemob.com\"")
-        buildConfigField ("String", "APP_BASE_USER", "\"/inside/app/user/\"")
-        buildConfigField ("String", "APP_SERVER_LOGIN", "\"login/V2\"")
-        buildConfigField ("String", "APP_SERVER_REGISTER", "\"register\"")
-        buildConfigField ("String", "APP_SERVE_CHECK_RESET", "\"reset/password\"")
-        buildConfigField ("String", "APP_SERVE_CHANGE_PWD", "\"/password\"")
-        buildConfigField ("String", "APP_SEND_SMS_FROM_SERVER", "\"/inside/app/sms/send\"")
-        buildConfigField ("String", "APP_VERIFICATION_CODE", "\"/inside/app/image/\"")
+        buildConfigField ("String", "APP_SERVER_DOMAIN", "\"${properties.getProperty("APP_SERVER_DOMAIN")}\"")
+        buildConfigField ("String", "APP_BASE_USER", "\"${properties.getProperty("APP_BASE_USER")}\"")
+        buildConfigField ("String", "APP_BASE_GROUP", "\"${properties.getProperty("APP_BASE_GROUP")}\"")
+        buildConfigField ("String", "APP_SERVER_LOGIN", "\"${properties.getProperty("APP_SERVER_LOGIN")}\"")
+        buildConfigField ("String", "APP_SEND_SMS_FROM_SERVER", "\"${properties.getProperty("APP_SEND_SMS_FROM_SERVER")}\"")
+        buildConfigField ("String", "APP_UPLOAD_AVATAR", "\"${properties.getProperty("APP_UPLOAD_AVATAR")}\"")
+        buildConfigField ("String", "APP_GROUP_AVATAR", "\"${properties.getProperty("APP_GROUP_AVATAR")}\"")
+        buildConfigField ("String", "APP_RTC_TOKEN_URL", "\"${properties.getProperty("APP_RTC_TOKEN_URL")}\"")
+        buildConfigField ("String", "APP_RTC_CHANNEL_MAPPER_URL", "\"${properties.getProperty("RTC_CHANNEL_MAPPER_URL")}\"")
 
+        // Set appkey from local.properties
         buildConfigField("String", "APPKEY", "\"${properties.getProperty("APPKEY")}\"")
+
+        // Set push info from local.properties
+        buildConfigField("String", "MEIZU_PUSH_APPKEY", "\"${properties.getProperty("MEIZU_PUSH_APPKEY")}\"")
+        buildConfigField("String", "MEIZU_PUSH_APPID", "\"${properties.getProperty("MEIZU_PUSH_APPID")}\"")
+        buildConfigField("String", "OPPO_PUSH_APPKEY", "\"${properties.getProperty("OPPO_PUSH_APPKEY")}\"")
+        buildConfigField("String", "OPPO_PUSH_APPSECRET", "\"${properties.getProperty("OPPO_PUSH_APPSECRET")}\"")
+        buildConfigField("String", "VIVO_PUSH_APPID", "\"${properties.getProperty("VIVO_PUSH_APPID")}\"")
+        buildConfigField("String", "VIVO_PUSH_APPKEY", "\"${properties.getProperty("VIVO_PUSH_APPKEY")}\"")
+        buildConfigField("String", "MI_PUSH_APPKEY", "\"${properties.getProperty("MI_PUSH_APPKEY")}\"")
+        buildConfigField("String", "MI_PUSH_APPID", "\"${properties.getProperty("MI_PUSH_APPID")}\"")
+        buildConfigField("String", "FCM_SENDERID", "\"${properties.getProperty("FCM_SENDERID")}\"")
+        buildConfigField("String", "HONOR_PUSH_APPID", "\"${properties.getProperty("HONOR_PUSH_APPID")}\"")
+        buildConfigField("String", "BUGLY_APPID", "\"${properties.getProperty("BUGLY_APPID")}\"")
+        buildConfigField("String", "BUGLY_ENABLE_DEBUG", "\"${properties.getProperty("BUGLY_ENABLE_DEBUG")}\"")
+
+        // Set RTC appId from local.properties
+        buildConfigField("String", "RTC_APPID", "\"${properties.getProperty("RTC_APPID")}\"")
+
+        addManifestPlaceholders(mapOf(
+            "VIVO_PUSH_APPKEY" to properties.getProperty("VIVO_PUSH_APPKEY", "******"),
+            "VIVO_PUSH_APPID" to properties.getProperty("VIVO_PUSH_APPID", "******"),
+            "HONOR_PUSH_APPID" to properties.getProperty("HONOR_PUSH_APPID", "******"),
+            "BUGLY_APPID" to properties.getProperty("BUGLY_APPID", "******"),
+            "BUGLY_ENABLE_DEBUG" to properties.getProperty("BUGLY_ENABLE_DEBUG", "******")
+        ))
+
+        //指定room.schemaLocation生成的文件路径  处理Room 警告 Schema export Error
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments(mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                ))
+            }
+        }
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file(properties.getProperty("DEBUG_STORE_FILE_PATH", "./keystore/sdkdemo.jks"))
+            storePassword = properties.getProperty("DEBUG_STORE_PASSWORD", "123456")
+            keyAlias = properties.getProperty("DEBUG_KEY_ALIAS", "easemob")
+            keyPassword = properties.getProperty("DEBUG_KEY_PASSWORD", "123456")
+        }
+        create("release") {
+            storeFile = file(properties.getProperty("RELEASE_STORE_FILE_PATH", "./keystore/sdkdemo.jks"))
+            storePassword = properties.getProperty("RELEASE_STORE_PASSWORD", "123456")
+            keyAlias = properties.getProperty("RELEASE_KEY_ALIAS", "easemob")
+            keyPassword = properties.getProperty("RELEASE_KEY_PASSWORD", "123456")
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -56,20 +121,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    applicationVariants.all {
-        outputs.all { it ->
-            val apkName = "easemob_demo_${buildType.name}_${versionName}.apk"
-            if (it is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
-                it.outputFileName = apkName
-            }
-            true
-        }
+    // Set toolchain version
+    kotlin {
+        jvmToolchain(8)
     }
 }
 
 dependencies {
-
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
@@ -82,7 +141,55 @@ dependencies {
     implementation("io.github.scwang90:refresh-header-material:2.1.0")
     implementation("io.github.scwang90:refresh-header-classics:2.1.0")
     implementation("pub.devrel:easypermissions:3.0.0")
+    // lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    // lifecycle viewmodel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    // coroutines core library
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    // coroutines android library
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    // hms push
+    implementation("com.huawei.hms:push:6.12.0.300")
+    // hihonor push
+    implementation("com.hihonor.mcs:push:7.0.61.303")
+    // meizu push
+    implementation("com.meizu.flyme.internet:push-internal:4.0.4@aar")//配置集成sdk
+    //oppo push
+    implementation(files("libs/oppo_push_3.0.0.aar"))
+    //oppo push需添加以下依赖
+    implementation("com.google.code.gson:gson:2.6.2")
+    implementation("commons-codec:commons-codec:1.6")
+    implementation("androidx.annotation:annotation:1.1.0")
+    // Google firebase cloud messaging
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+
+    // Declare the dependencies for the Firebase Cloud Messaging and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-analytics")
+
+    // image corp library
+    implementation("com.github.yalantis:ucrop:2.2.8")
+    // bugly
+    implementation("com.tencent.bugly:crashreport:4.1.9.3")
+
     // Coil: load image library
     implementation("io.coil-kt:coil:2.5.0")
-    implementation(project(mapOf("path" to ":ease-im-kit")))
+    // Room
+    implementation("androidx.room:room-runtime:2.5.1")
+    ksp("androidx.room:room-compiler:2.5.1")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
+    implementation("androidx.room:room-ktx:2.5.1")
+
+    implementation("io.hyphenate:ease-chat-kit:4.5.0")
+//    implementation(project(mapOf("path" to ":ease-im-kit")))
+
+    //EaseCallKit，need add chat SDK
+//    implementation(project(mapOf("path" to ":ease-call-kit")))
+    implementation("io.hyphenate:ease-call-kit:4.5.0")
+    // Chat SDK
+    //implementation("io.hyphenate:hyphenate-chat:4.4.1")
 }

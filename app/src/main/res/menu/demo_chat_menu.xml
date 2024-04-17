@@ -5,17 +5,11 @@
     tools:ignore="MissingDefaultResource">
 
     <item
-        android:id="@+id/chat_menu_voice_call"
-        android:icon="@drawable/phone_pick"
-        android:title="@string/menu_voice_call"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/chat_menu_video_call"
-        android:icon="@drawable/video_camera"
+        android:icon="@drawable/video_call"
         android:title="@string/menu_video_call"
         android:visible="true"
+        android:orderInCategory="2"
         app:showAsAction="ifRoom" />
 
 </menu>

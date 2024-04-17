@@ -7,8 +7,25 @@
     <!-- create group -->
     <item name="sheet_item_create_group" type="id"/>
 
+    <!-- chat -->
+    <item name="chat_video_call_voice" type="id"/>
+    <item name="chat_video_call_video" type="id"/>
+
     <!-- new request -->
     <item name="header_new_request" type="id"/>
     <!-- group -->
     <item name="header_group" type="id"/>
+    <item name="tv_privacy" type="id" />
+
+    <item name="about_information_camera" type="id"/>
+    <item name="about_information_picture" type="id"/>
+
+    <!-- detail menu id -->
+    <!-- audio -->
+    <item name="contact_item_audio_call" type="id"/>
+    <!-- video -->
+    <item name="contact_item_video_call" type="id"/>
+    <!-- conference -->
+    <item name="group_item_video_call" type="id"/>
+
 </resources>

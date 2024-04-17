@@ -5,6 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
         <item name="android:selectableItemBackground">@drawable/ease_chat_recyclerview_item_shadow</item>
+        <item name="android:navigationBarColor">@color/ease_color_background</item>
     </style>
 
     <style name="Theme.ChatUIKit" parent="Base.Theme.ChatUIKit" />

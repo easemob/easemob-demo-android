@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid android:color="@color/white"/>
-    <corners android:radius="@dimen/em_login_bg_radius"/>
-    <stroke android:color="@color/gray"/>
+    <corners android:radius="@dimen/ease_corner_extra_small"/>
+    <stroke android:color="@color/ease_color_background"/>
 
 </shape>

@@ -5,18 +5,30 @@
 
     <ImageView
         android:id="@+id/iv_splash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/em_splash_bg"/>
+        style="@style/splash_iv_bg_style" />
 
-    <ImageView
-        android:id="@+id/iv_product"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/em_splash_name"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="80dp"
-        />
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_logo"/>
+
+        <TextView
+            android:text="@string/splash_title"
+            style="@style/splash_brand_text_style" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_product"
+        android:text="@string/splash_powered"
+        style="@style/splash_powered_text_style" />
 
 </FrameLayout>
