@@ -14,7 +14,7 @@
 - Gradle 8.0 及以上
 - targetVersion 26 及以上
 - Android SDK API 21 及以上
-- JDK 11 及以上
+- JDK 17 及以上
 
 # 跑通Demo
 
