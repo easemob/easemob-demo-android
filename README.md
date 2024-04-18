@@ -10,7 +10,7 @@
 
 ## 开发环境要求
 
-- Android Studio 4.0 及以上
+- Android Studio Flamingo | 2022.2.1 及以上
 - Gradle 8.0 及以上
 - targetVersion 26 及以上
 - Android SDK API 21 及以上
