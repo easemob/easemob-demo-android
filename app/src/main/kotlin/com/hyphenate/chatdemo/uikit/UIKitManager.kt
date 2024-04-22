@@ -55,15 +55,16 @@ object UIKitManager {
                             return@launch
                         }
                         val users = ProfileInfoRepository().getUserInfoAttribute(userIds, mutableListOf(ChatUserInfoType.NICKNAME, ChatUserInfoType.AVATAR_URL))
-                        val callbackList = users.values?.map { it.toProfile() }?.map {
+                        val callbackList = users.values.map { it.toProfile() }.map {
                             DemoHelper.getInstance().getDataModel().getUser(it.id)?.remark?.let { remark->
                                 it.remark = remark
                             }
                             it
-                        } ?: mutableListOf()
+                        }
                         if (callbackList.isNotEmpty()) {
                             DemoHelper.getInstance().getDataModel().insertUsers(callbackList)
                             DemoHelper.getInstance().getDataModel().updateUsersTimes(callbackList)
+                            EaseIM.updateUsersInfo(callbackList)
                         }
                         onValueSuccess(callbackList)
                     }

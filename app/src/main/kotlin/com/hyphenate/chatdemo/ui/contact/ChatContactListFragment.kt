@@ -51,7 +51,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
                     }
                     val fetchList = visibleList?.filter { user ->
                         val u = DemoHelper.getInstance().getDataModel().getUser(user.userId)
-                        (u == null || u.updateTimes == 0) && (user.nickname == null || user.avatar == null)
+                        (u == null || u.updateTimes == 0) && (u?.name.isNullOrEmpty() || u?.avatar.isNullOrEmpty())
                     }
                     fetchList?.let {
                         contactViewModel?.fetchContactInfo(fetchList)
