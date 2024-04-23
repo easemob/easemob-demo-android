@@ -11,6 +11,7 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.impl.OnError
 import com.hyphenate.easeui.common.impl.OnSuccess
@@ -46,6 +47,7 @@ class EMClientRepository: BaseRepository() {
     suspend fun loadAllInfoFromHX(): Boolean =
         withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
+                ChatLog.e("login info","isLoggedInBefore ${ChatClient.getInstance().isLoggedInBefore} - autoLogin ${ChatClient.getInstance().options.autoLogin}")
                 if (ChatClient.getInstance().isLoggedInBefore && ChatClient.getInstance().options.autoLogin) {
                     loadAllConversationsAndGroups()
                     continuation.resume(true)
@@ -111,7 +113,16 @@ class EMClientRepository: BaseRepository() {
                     EaseIM.login(EaseProfile(userName), pwd, onSuccess = {
                         successForCallBack(continuation)
                     }, onError = { code, error ->
-                        continuation.resumeWithException(ChatException(code, error))
+                        if(code == ChatError.USER_ALREADY_LOGIN){
+                            if (EaseIM.getCurrentUser()?.id == userName){
+                                successForCallBack(continuation)
+                            }else{
+                                EaseIM.logout(true)
+                                continuation.resumeWithException(ChatException(code, error))
+                            }
+                        }else{
+                            continuation.resumeWithException(ChatException(code, error))
+                        }
                     })
                 } else {
                     EaseIM.login(userName, pwd, onSuccess = {

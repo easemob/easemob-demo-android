@@ -11,11 +11,13 @@ import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.feature.contact.EaseContactsListFragment
 import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.viewmodel.contacts.IContactListRequest
 
 class ChatContactListFragment : EaseContactsListFragment() {
 
     private var contactViewModel: IContactListRequest? = null
+    private var isFirstLoadData = false
     companion object{
         private val TAG = ChatContactListFragment::class.java.simpleName
     }
@@ -32,11 +34,18 @@ class ChatContactListFragment : EaseContactsListFragment() {
 
     override fun initData() {
         super.initData()
-        fetchFirstVisibleData()
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX).register(this) {
             if (it.isContactChange && it.message.isNullOrEmpty().not()) {
                 binding?.listContact?.loadContactData(false)
             }
+        }
+    }
+
+    override fun loadContactListSuccess(userList: MutableList<EaseUser>) {
+        super.loadContactListSuccess(userList)
+        if (!isFirstLoadData){
+            fetchFirstVisibleData()
+            isFirstLoadData = true
         }
     }
 
