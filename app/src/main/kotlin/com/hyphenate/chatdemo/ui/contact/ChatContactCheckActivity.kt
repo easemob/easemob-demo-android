@@ -1,5 +1,6 @@
 package com.hyphenate.chatdemo.ui.contact
 
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
@@ -9,6 +10,7 @@ import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
 import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatUserInfoType
@@ -47,7 +49,12 @@ class ChatContactCheckActivity:EaseContactCheckActivity() {
 
     private fun updateUserInfo() {
         DemoHelper.getInstance().getDataModel().getUser(user?.userId)?.let {
-            binding.ivAvatar.load(it.parse().avatar)
+            val ph = AppCompatResources.getDrawable(this, R.drawable.ease_default_avatar)
+            val ep = AppCompatResources.getDrawable(this, R.drawable.ease_default_avatar)
+            binding.ivAvatar.load(it.parse().avatar ?: ph) {
+                placeholder(ph)
+                error(ep)
+            }
             binding.tvName.text = it.name?.ifEmpty { it.userId } ?: it.userId
         }
     }
