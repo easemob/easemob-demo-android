@@ -23,8 +23,15 @@ dependencyResolutionManagement {
 
 rootProject.name = "chatuikit-android-demo"
 include(":app")
-//include(":ease-im-kit")
-//project(":ease-im-kit").projectDir = File("../chatuikit-android/ease-im-kit")
-//include(":ease-call-kit")
-//project(":ease-call-kit").projectDir = File("../easecallkitui-android/ease-call-kit")
- 
+
+include(":ease-im-kit")
+project(":ease-im-kit").projectDir = File("../chatuikit-android/ease-im-kit")
+
+include(":ease-call-kit")
+project(":ease-call-kit").projectDir = File("../easecallkitui-android/ease-call-kit")
+
+include(":hyphenatechatsdk")
+project(":hyphenatechatsdk").projectDir = File("../emclient-android/hyphenatechatsdk")
+
+include(":ease-linux")
+project(":ease-linux").projectDir = File("../emclient-linux")
