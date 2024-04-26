@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.Ndk
 import java.util.*
 
 plugins {
@@ -25,8 +26,8 @@ android {
         applicationId = "com.hyphenate.chatdemo"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "4.5.0"
+        versionCode = 126
+        versionName = "4.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -80,6 +81,17 @@ android {
                 ))
             }
         }
+
+        ndk {
+            abiFilters .addAll(mutableSetOf("arm64-v8a","armeabi-v7a"))
+        }
+//        //用于设置使用as打包so时指定输出目录
+        externalNativeBuild {
+            ndkBuild {
+                abiFilters("arm64-v8a","armeabi-v7a")
+                arguments("-j8")
+            }
+        }
     }
 
     signingConfigs {
@@ -125,6 +137,13 @@ android {
     kotlin {
         jvmToolchain(8)
     }
+
+    //打开注释后，可以直接在studio里查看和编辑emclient-linux里的代码
+//    externalNativeBuild {
+//        ndkBuild {
+//            path = File("jni/Android.mk")
+//        }
+//    }
 }
 
 dependencies {
@@ -184,12 +203,12 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-    implementation("io.hyphenate:ease-chat-kit:4.5.0")
+    implementation("io.hyphenate:ease-chat-kit:4.6.0")
 //    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    //EaseCallKit，need add chat SDK
+    implementation("io.hyphenate:ease-call-kit:4.6.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
-    implementation("io.hyphenate:ease-call-kit:4.5.0")
-    // Chat SDK
-    //implementation("io.hyphenate:hyphenate-chat:4.4.1")
+
+    implementation("io.hyphenate:hyphenate-chat:4.6.0")
+//    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }

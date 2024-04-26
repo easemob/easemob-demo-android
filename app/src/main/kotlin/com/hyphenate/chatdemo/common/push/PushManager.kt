@@ -48,6 +48,10 @@ object PushManager {
 
             // Set pushListener to control the push type.
             ChatPushHelper.getInstance().setPushListener(object : ChatPushListener() {
+                override fun onBindTokenSuccess(pushType: EMPushType?, pushToken: String?) {
+                    ChatLog.d("PushManager", "onBindTokenSuccess: pushType: $pushType, pushToken: $pushToken")
+                }
+
                 override fun onError(pushType: EMPushType?, errorCode: Long) {
                     // 返回的errorCode仅9xx为环信内部错误，可从EMError中查询，其他错误请根据pushType去相应第三方推送网站查询。
                     ChatLog.e("PushManager", "onError: pushType: $pushType, errorCode: $errorCode")
