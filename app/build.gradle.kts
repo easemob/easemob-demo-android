@@ -83,12 +83,12 @@ android {
         }
 
         ndk {
-            abiFilters .addAll(mutableSetOf("x86","armeabi-v7a"))
+            abiFilters .addAll(mutableSetOf("arm64-v8a","armeabi-v7a"))
         }
 //        //用于设置使用as打包so时指定输出目录
         externalNativeBuild {
             ndkBuild {
-                abiFilters("x86","armeabi-v7a")
+                abiFilters("arm64-v8a","armeabi-v7a")
                 arguments("-j8")
             }
         }
