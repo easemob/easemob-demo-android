@@ -8,6 +8,7 @@ import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.feature.contact.EaseContactsListFragment
 import com.hyphenate.easeui.model.EaseEvent
@@ -47,6 +48,11 @@ class ChatContactListFragment : EaseContactsListFragment() {
             fetchFirstVisibleData()
             isFirstLoadData = true
         }
+    }
+
+    override fun loadContactListFail(code: Int, error: String) {
+        super.loadContactListFail(code, error)
+        ChatLog.e(TAG,"loadContactListFail: $code $error")
     }
 
     private fun fetchFirstVisibleData(){

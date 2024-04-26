@@ -21,7 +21,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "chatuikit-android-demo"
+rootProject.name = "chat-android-kotlin"
 include(":app")
 
 //include(":ease-im-kit")
