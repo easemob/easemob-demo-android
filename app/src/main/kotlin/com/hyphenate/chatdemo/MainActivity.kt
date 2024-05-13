@@ -95,7 +95,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         EaseIM.addContactListener(contactListener)
         clipboard.addPrimaryClipChangedListener {
             val currentClipText = clipboard.primaryClip?.getItemAt(0)?.text?.toString()
-            if (currentClipText != lastClipText) {
+            if (!currentClipText.equals(lastClipText)) {
                 mContext.showToast(getString(R.string.system_copy_success))
                 lastClipText = currentClipText
             }
