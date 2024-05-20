@@ -26,8 +26,8 @@ android {
         applicationId = "com.hyphenate.chatdemo"
         minSdk = 21
         targetSdk = 34
-        versionCode = 126
-        versionName = "4.6.0"
+        versionCode = 127
+        versionName = "4.6.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -209,6 +209,6 @@ dependencies {
     implementation("io.hyphenate:ease-call-kit:4.6.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.6.0")
+    implementation("io.hyphenate:hyphenate-chat:4.6.1")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
