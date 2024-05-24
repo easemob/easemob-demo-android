@@ -32,7 +32,7 @@
 
 ```Kotlin
 
-    DemoHelper.getInstance().initSDK()
+DemoHelper.getInstance().initSDK()
 
 ```
 
@@ -73,27 +73,35 @@ EaseIM.login(EaseProfile(userName), token,
 EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
     // 同步获取用户信息
     override fun getUser(userId: String?): EaseProfile? {
-        return getLocalUserInfo(userId)
+        return DemoHelper.getInstance().getDataModel().getAllContacts()[userId]?.toProfile()
     }
 
     override fun fetchUsers(
         userIds: List<String>,
         onValueSuccess: OnValueSuccess<List<EaseProfile>>
     ) {
-        fetchUserInfoFromServer(idsMap, onValueSuccess)
+        // 用户可以根据userIds从自己服务器获取多个id的Profile信息 通过onValueSuccess()进行数据返回
+        // 同时可以将获取到的信息更新本地
+        // 更新db DemoHelper.getInstance().getDataModel().insertUsers()
+        // 更新缓存 EaseIM.updateUsersInfo() 获取Profile时 UIKit会先从缓存中查询
     }
 })
-.setGroupMemberProfileProvider(object : EaseGroupMemberProfileProvider {
+.setGroupProfileProvider(object : EaseGroupProfileProvider {
     // 同步获取群组信息
-    override fun getMemberProfile(groupId: String?, username: String?): EaseProfile? {
-        return getLocalGroupMemberInfo(groupId, username)
+    override fun getGroup(id: String?): EaseGroupProfile? {
+        ChatClient.getInstance().groupManager().getGroup(id)?.let {
+            return EaseGroupProfile(it.groupId, it.groupName, it.extension)
+        }
+        return null
     }
 
-    override fun fetchMembers(
-        members: Map<String, List<String>>,
-        onValueSuccess: OnValueSuccess<Map<String, EaseProfile>>
+    override fun fetchGroups(
+        groupIds: List<String>,
+        onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>
     ) {
-        fetchGroupMemberInfoFromServer(members, onValueSuccess)
+        // 用户可以根据groupIds从自己服务器获取多个id的EaseGroupProfile信息 通过onValueSuccess()进行数据返回
+        // 同时可以将获取到的信息更新本地
+        // 更新缓存 EaseIM.updateGroupInfo() 获取Profile时 UIKit会先从缓存中查询
     }
 })
 ```

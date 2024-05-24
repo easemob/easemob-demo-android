@@ -24,7 +24,7 @@ if(!project.hasProperty("isLite")){
     project.ext.set("isLite", false)
 }
 if(!project.hasProperty("sdkVersion")){
-    project.ext.set("sdkVersion", "4.7.0")
+    project.ext.set("sdkVersion", "4.6.1")
 }
 if(!project.hasProperty("isTravis")) {
     project.ext.set("isTravis", false)
