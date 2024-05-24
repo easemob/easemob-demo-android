@@ -1,6 +1,8 @@
 package com.hyphenate.chatdemo.common
 
 import android.content.Context
+import com.hyphenate.EMValueCallBack
+import com.hyphenate.chat.EMContact
 import com.hyphenate.chatdemo.common.room.AppDatabase
 import com.hyphenate.chatdemo.common.room.dao.DemoUserDao
 import com.hyphenate.chatdemo.common.room.entity.DemoUser
@@ -8,6 +10,7 @@ import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
@@ -57,11 +60,24 @@ class DemoDataModel(private val context: Context) {
 
     private fun loadContactFromDb() {
         contactList.clear()
-        getUserDao().getAll().forEach {
-            val profile = it.parse()
-            profile.remark = ChatClient.getInstance().contactManager().fetchContactFromLocal(it.userId)?.remark
-            contactList[it.userId] = profile.parseToDbBean()
-        }
+        ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
+            EMValueCallBack<MutableList<EMContact>>{
+            override fun onSuccess(value: MutableList<EMContact>?) {
+                getUserDao().getAll().forEach {
+                    val profile = it.parse()
+                    value?.forEach { contact->
+                        if (contact.username.equals(profile.id)){
+                            profile.remark = contact.remark
+                            contactList[it.userId] = profile.parseToDbBean()
+                        }
+                    }
+                }
+            }
+
+            override fun onError(error: Int, errorMsg: String?) {
+                ChatLog.e("DemoDataModel","asyncFetchAllContactsFromLocal onError $error $errorMsg")
+            }
+        })
     }
 
     /**
@@ -190,8 +206,8 @@ class DemoDataModel(private val context: Context) {
      * Get the custom appKey.
      * @return
      */
-    fun getCustomAppKey(): String? {
-        return PreferenceManager.getValue(KEY_CUSTOM_APPKEY, null)
+    fun getCustomAppKey(): String {
+        return PreferenceManager.getValue(KEY_CUSTOM_APPKEY, "")
     }
 
     /**

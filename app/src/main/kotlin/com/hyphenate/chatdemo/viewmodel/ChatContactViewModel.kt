@@ -1,10 +1,13 @@
 package com.hyphenate.chatdemo.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.hyphenate.EMValueCallBack
+import com.hyphenate.chat.EMContact
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.common.helper.ContactSortedHelper
@@ -50,28 +53,38 @@ class ChatContactViewModel: EaseContactListViewModel() {
                 }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
                 .collect {
-                    val data = it?.map { user->
-                        val contactInfo = ChatClient.getInstance().contactManager().fetchContactFromLocal(user.userId)
-                        val profile = DemoHelper.getInstance().getDataModel().getUser(user.userId)?.parse()?: EaseProfile(user.userId)
-                        contactInfo?.let { contact->
-                            if (contact.remark.isNotEmpty()){
-                                profile.remark = contact.remark
+                    ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
+                        EMValueCallBack<MutableList<EMContact>> {
+                        override fun onSuccess(value: MutableList<EMContact>?) {
+                            value?.forEach { contact->
+                               val data = it?.map { user->
+                                    val profile = DemoHelper.getInstance().getDataModel().getUser(user.userId)?.parse()?: EaseProfile(user.userId)
+                                    if (contact.username == user.userId && contact.remark.isNotEmpty()){
+                                        profile.remark = contact.remark
+                                        DemoHelper.getInstance().getDataModel().insertUser(profile,false)
+                                    }
+                                    profile
+                                } as MutableList<EaseProfile>?
+                                data?.let { it1 ->
+                                    EaseIM.updateUsersInfo(it1)
+                                }
+                                val result = data?.map { it.toUser() }
+                                result?.map {
+                                    it.setUserInitialLetter()
+                                }
+                                result?.let {
+                                    val sortedList = ContactSortedHelper.sortedList(it)
+                                    viewModelScope.launch {
+                                        view?.loadContactListSuccess(sortedList.toMutableList())
+                                    }
+                                }
                             }
                         }
-                        DemoHelper.getInstance().getDataModel().insertUser(profile,false)
-                        profile
-                    }
-                    data?.let { it1 ->
-                        EaseIM.updateUsersInfo(it1)
-                    }
-                    val result = data?.map { it.toUser() }
-                    result?.map {
-                        it.setUserInitialLetter()
-                    }
-                    result?.let {
-                        val sortedList = ContactSortedHelper.sortedList(it)
-                        view?.loadContactListSuccess(sortedList.toMutableList())
-                    }
+
+                        override fun onError(error: Int, errorMsg: String?) {
+                            ChatLog.e("ChatContactViewModel","asyncFetchAllContactsFromLocal onError $error $errorMsg")
+                        }
+                    })
                 }
         }
     }

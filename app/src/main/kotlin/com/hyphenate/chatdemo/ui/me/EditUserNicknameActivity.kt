@@ -29,6 +29,7 @@ open class EditUserNicknameActivity:EaseBaseActivity<DemoActivityMeInformationEd
         selfProfile = EaseIM.getCurrentUser()
         initTitle()
         initListener()
+        showKeyboard(binding.etName)
     }
 
     open fun initTitle(){

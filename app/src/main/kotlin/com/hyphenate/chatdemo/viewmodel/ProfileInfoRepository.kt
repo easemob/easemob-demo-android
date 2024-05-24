@@ -179,7 +179,8 @@ class ProfileInfoRepository: BaseRepository()  {
                                 val jsonObject = JSONObject(it)
                                 jsonObject.getString("avatarUrl")
                             } catch (e: Exception) {
-                                TODO("Not yet implemented")
+                                e.printStackTrace()
+                                ""
                             }
                                 callBack.onSuccess(url)
                             } ?: callBack.onError(ChatError.NETWORK_ERROR,"result url is null.")

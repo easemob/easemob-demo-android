@@ -101,6 +101,7 @@
     <string name="main_about_me_information_edit_picture">Do you need to edit the Image?</string>
     <string name="main_about_me_information_edit_nick_name">Nickname</string>
     <string name="main_about_me_information_change_name_count">%1$d/32</string>
+    <string name="main_information_checked_model">Uploading avatars is not supported in this mode</string>
 
     <string name="main_about_me_currency">General</string>
     <string name="main_about_me_currency_dark_model">Dark Mode</string>

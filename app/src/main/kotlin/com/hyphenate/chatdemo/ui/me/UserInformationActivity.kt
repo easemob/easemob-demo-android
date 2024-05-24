@@ -22,6 +22,7 @@ import coil.load
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.DeveloperModeHelper
 import com.hyphenate.chatdemo.databinding.DemoActivityMeInformationBinding
 import com.hyphenate.chatdemo.ui.me.controller.CameraAndCroppingController
 import com.hyphenate.chatdemo.utils.CameraAndCropFileUtils
@@ -387,7 +388,15 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
 
     override fun onClick(v: View?) {
        when(v?.id){
-           R.id.avatar_layout -> { showSelectDialog() }
+           R.id.avatar_layout -> {
+               if (DeveloperModeHelper.isRequestToAppServer()){
+                   showSelectDialog()
+               }else{
+                   mainScope().launch {
+                       mContext.showToast(mContext.getString(R.string.main_information_checked_model))
+                   }
+               }
+           }
            R.id.nick_name_layout -> {
                launcherToUpdateName.launch(Intent(
                    this@UserInformationActivity,

@@ -46,12 +46,12 @@
     <string name="em_login_token_hint">token</string>
 
     <string name="server_set_title">服务器设置</string>
-    <string name="server_set_appkey">Appkey</string>
+    <string name="server_set_appkey">输入 App key</string>
     <string name="server_set_apns_cert_name">apns证书名称</string>
     <string name="server_set_specify_server">使用私有服务器:</string>
-    <string name="server_set_server_address">IM服务器地址</string>
-    <string name="server_set_server_port">端口号</string>
-    <string name="server_set_rest_server_address">REST服务器地址</string>
+    <string name="server_set_server_address">输入 IM 服务器地址</string>
+    <string name="server_set_server_port">输入端口号</string>
+    <string name="server_set_rest_server_address">输入 REST 服务器地址</string>
     <string name="server_set_appkey_empty_hint">请设置Appkey</string>
     <string name="server_set_im_server_empty_hint">请设置IM服务器地址</string>
     <string name="server_set_im_port_empty_hint">请设置IM端口号</string>
@@ -101,6 +101,7 @@
     <string name="main_about_me_information_edit_picture">是否需要编辑图片?</string>
     <string name="main_about_me_information_edit_nick_name">昵称</string>
     <string name="main_about_me_information_change_name_count">%1$d/32</string>
+    <string name="main_information_checked_model">当前模式下不支持上传头像</string>
 
     <string name="main_about_me_currency">通用</string>
     <string name="main_about_me_currency_dark_model">暗黑模式</string>
