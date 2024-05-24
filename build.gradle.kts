@@ -16,3 +16,16 @@ plugins {
     // Add to replace of kapt plugin when using Room. 1.8.0 is the version of Kotlin, 1.0.9 is the version of KSP
     id("com.google.devtools.ksp") version "1.8.0-1.0.9" apply false
 }
+
+if(!project.hasProperty("isAarRelease")){
+    project.ext.set("isAarRelease", false)
+}
+if(!project.hasProperty("isLite")){
+    project.ext.set("isLite", false)
+}
+if(!project.hasProperty("sdkVersion")){
+    project.ext.set("sdkVersion", "4.7.0")
+}
+if(!project.hasProperty("isTravis")) {
+    project.ext.set("isTravis", false)
+}
