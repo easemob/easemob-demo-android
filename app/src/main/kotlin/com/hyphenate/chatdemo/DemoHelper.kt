@@ -3,9 +3,7 @@ package com.hyphenate.chatdemo
 import android.content.Context
 import android.util.Log
 import com.hyphenate.chatdemo.callkit.CallKitManager
-import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.DemoDataModel
-import com.hyphenate.chatdemo.common.LanguageUtil
 import com.hyphenate.chatdemo.common.ListenersWrapper
 import com.hyphenate.chatdemo.common.extensions.internal.checkAppKey
 import com.hyphenate.chatdemo.common.push.PushManager
@@ -14,7 +12,6 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatOptions
 import com.hyphenate.easeui.common.PushConfigBuilder
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
 
 class DemoHelper private constructor(){
 
@@ -116,10 +113,14 @@ class DemoHelper private constructor(){
                 .enableHonorPush()                                  // need to configure appid in AndroidManifest.xml
                 .build()
 
-            if (dataModel.isCustomSetEnable()) {
-                dataModel.getCustomAppKey()?.let {
-                    appKey = it
+            if (dataModel.isDeveloperMode()) {
+
+                if (dataModel.getCustomAppKey().isNotEmpty()){
+                    dataModel.getCustomAppKey().let {
+                        appKey = it
+                    }
                 }
+
                 if (dataModel.isCustomServerEnable()) {
                     // Turn off DNS configuration
                     enableDNSConfig(false)
