@@ -128,14 +128,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <TextView
+    <com.hyphenate.easeui.widget.EaseArrowItemView
         android:id="@+id/about_me_logout"
-        android:text="@string/main_about_me_logout"
-        android:padding="@dimen/ease_size_16"
-        android:textStyle="bold"
-        android:textColor="@color/ease_color_primary"
+        app:layout_constraintTop_toBottomOf="@+id/sw_item_black"
+        app:arrowItemTitle="@string/main_about_me_logout"
+        style="@style/main_about_logout_arrow_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="54dp"/>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

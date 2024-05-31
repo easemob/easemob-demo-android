@@ -2,6 +2,7 @@ package com.hyphenate.chatdemo.ui.login
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -30,6 +31,7 @@ class ServerSetFragment: EaseBaseFragment<DemoFragmentServerSetBinding>() {
             it.inflateMenu(R.menu.demo_server_set_menu)
             enableSaveMenu(false)
         }
+        binding?.etAppkey?.inputType = InputType.TYPE_CLASS_TEXT
     }
 
     override fun initListener() {
