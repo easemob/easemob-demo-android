@@ -20,7 +20,7 @@
         <item name="android:textColorHint">@color/ease_color_text_hint</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:inputType">number</item>
+        <item name="android:inputType">text</item>
     </style>
 
     <style name="em_login_bottom_layout">

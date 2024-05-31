@@ -124,7 +124,7 @@
 
     <string name="main_about_me_notify">消息通知</string>
     <string name="main_about_me_notify_title">消息离线推送</string>
-    <string name="main_about_me_notify_describe">关闭后，除群组内被@的消息，将不再接收任何消息推送</string>
+    <string name="main_about_me_notify_describe">打开后，除群组内被@的消息，将不再接收任何消息推送</string>
 
     <string name="main_about_me_privacy">隐私</string>
 
