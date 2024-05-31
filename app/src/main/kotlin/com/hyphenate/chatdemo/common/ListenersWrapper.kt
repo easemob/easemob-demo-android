@@ -1,5 +1,7 @@
 package com.hyphenate.chatdemo.common
 
+import android.content.Intent
+import com.hyphenate.chat.EMLoginExtensionInfo
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.ui.login.LoginActivity
@@ -48,9 +50,9 @@ object ListenersWrapper {
                 logout(false)
             }
 
-            override fun onLogout(errorCode: Int, info: String?) {
+            override fun onLogout(errorCode: Int, info: EMLoginExtensionInfo?) {
                 super.onLogout(errorCode, info)
-                ChatLog.e("app","onLogout: $errorCode")
+                ChatLog.e("app","onLogout: $errorCode ${info?.deviceInfo} - ${info?.deviceExt}")
                 logout()
             }
         }
@@ -63,7 +65,11 @@ object ListenersWrapper {
                 DemoApplication.getInstance().getLifecycleCallbacks().activityList.forEach {
                     it.finish()
                 }
-                LoginActivity.startAction(DemoApplication.getInstance())
+                DemoApplication.getInstance().apply {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
             },
             onError = {code, error ->
                 ChatLog.e("ListenersWrapper","logout error $code $error")
