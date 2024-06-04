@@ -103,9 +103,13 @@ class EMClientRepository: BaseRepository() {
                         DemoHelper.getInstance().getDataModel().getCustomAppKey()?.let {
                             if (it.isNotEmpty()) {
                                 ChatClient.getInstance().changeAppkey(it)
+                            }else{
+                                ChatClient.getInstance().options.enableDNSConfig(true)
+                                ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
                             }
                         }
                     } else {
+                        ChatClient.getInstance().options.enableDNSConfig(true)
                         ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
                     }
                 }
