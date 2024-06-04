@@ -51,7 +51,7 @@ class ChatContactViewModel: EaseContactListViewModel() {
                 .catchChatException { e ->
                     view?.loadContactListFail(e.errorCode, e.description)
                 }
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), mutableListOf())
                 .collect {
                     ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
                         EMValueCallBack<MutableList<EMContact>> {
