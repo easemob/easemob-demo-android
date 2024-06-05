@@ -1,5 +1,6 @@
 package com.hyphenate.chatdemo.common
 
+import android.content.Intent
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.ui.login.LoginActivity
@@ -7,6 +8,7 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatLoginExtensionInfo
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.ioScope
@@ -48,9 +50,9 @@ object ListenersWrapper {
                 logout(false)
             }
 
-            override fun onLogout(errorCode: Int, info: String?) {
+            override fun onLogout(errorCode: Int, info: ChatLoginExtensionInfo?) {
                 super.onLogout(errorCode, info)
-                ChatLog.e("app","onLogout: $errorCode")
+                ChatLog.e("app","onLogout: $errorCode ${info?.deviceInfo} - ${info?.deviceExt}")
                 logout()
             }
         }
@@ -63,7 +65,11 @@ object ListenersWrapper {
                 DemoApplication.getInstance().getLifecycleCallbacks().activityList.forEach {
                     it.finish()
                 }
-                LoginActivity.startAction(DemoApplication.getInstance())
+                DemoApplication.getInstance().apply {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
             },
             onError = {code, error ->
                 ChatLog.e("ListenersWrapper","logout error $code $error")

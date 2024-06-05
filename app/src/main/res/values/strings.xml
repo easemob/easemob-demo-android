@@ -101,6 +101,7 @@
     <string name="main_about_me_information_edit_picture">Do you need to edit the Image?</string>
     <string name="main_about_me_information_edit_nick_name">Nickname</string>
     <string name="main_about_me_information_change_name_count">%1$d/32</string>
+    <string name="main_information_checked_model">Uploading avatars is not supported in this mode</string>
 
     <string name="main_about_me_currency">General</string>
     <string name="main_about_me_currency_dark_model">Dark Mode</string>
@@ -123,7 +124,7 @@
 
     <string name="main_about_me_notify">Message Notifications</string>
     <string name="main_about_me_notify_title">Offline Message Push</string>
-    <string name="main_about_me_notify_describe">After turning off, you will no longer receive any message notifications except for messages where you are @mentioned in the group.</string>
+    <string name="main_about_me_notify_describe">After turning on, you will no longer receive any message notifications except for messages where you are @mentioned in the group.</string>
 
     <string name="main_about_me_privacy">Privacy</string>
 

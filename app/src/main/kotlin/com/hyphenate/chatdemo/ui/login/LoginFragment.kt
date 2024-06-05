@@ -397,6 +397,8 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
                 tvLoginDeveloper.visibility = View.GONE
                 etLoginCode.showRightDrawable(null)
                 etLoginCode.clearEditTextListener()
+                DemoHelper.getInstance().getDataModel().enableCustomSet(false)
+                DemoHelper.getInstance().getDataModel().setDeveloperMode(false)
             }
         }
     }

@@ -86,8 +86,6 @@ class NotifyActivity:EaseBaseActivity<DemoActivityNotifyBinding>() {
             if (checked) {
                 pushViewModel?.let {
                     it.setSilentModeForApp()
-                        .onStart { showLoading(true) }
-                        .onCompletion { dismissLoading() }
                         .catchChatException {
                             ChatLog.e("notify", "changeAppSilentModel: ${it.description}")
                         }
@@ -99,8 +97,6 @@ class NotifyActivity:EaseBaseActivity<DemoActivityNotifyBinding>() {
             } else {
                 pushViewModel?.let {
                     it.clearSilentModeForApp()
-                        .onStart { showLoading(true) }
-                        .onCompletion { dismissLoading() }
                         .catchChatException {
                             ChatLog.e("notify", "changeAppSilentModel: ${it.description}")
                         }
