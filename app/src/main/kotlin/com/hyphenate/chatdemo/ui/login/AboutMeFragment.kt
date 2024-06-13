@@ -16,7 +16,6 @@ import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.databinding.DemoFragmentAboutMeBinding
-import com.hyphenate.chatdemo.ui.me.AboutActivity
 import com.hyphenate.chatdemo.ui.me.CurrencyActivity
 import com.hyphenate.chatdemo.ui.me.NotifyActivity
 import com.hyphenate.chatdemo.ui.me.UserInformationActivity
@@ -205,7 +204,13 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
 
             }
             R.id.item_about -> {
-                startActivity(Intent(mContext, AboutActivity::class.java))
+                var clazz:Class<*>?
+                try {
+                    clazz  = Class.forName("com.hyphenate.chatdemo.EMActivity")
+                }catch (e:Exception){
+                    clazz = Class.forName("com.hyphenate.chatdemo.ui.me.AboutActivity")
+                }
+                startActivity(Intent(mContext, clazz))
             }
             R.id.about_me_logout -> {
                 showLogoutDialog()
