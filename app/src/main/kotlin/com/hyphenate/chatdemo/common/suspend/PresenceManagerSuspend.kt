@@ -1,7 +1,6 @@
 package com.hyphenate.chatdemo.common.suspend
 
 import com.hyphenate.chatdemo.common.PresenceCache
-import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatPresence
@@ -39,43 +38,40 @@ suspend fun ChatPresenceManager.publishExtPresence(customStatus:String):Int{
  */
 suspend fun ChatPresenceManager.fetchUserPresenceStatus(userIds:MutableList<String>):MutableList<ChatPresence>{
     return suspendCoroutine { continuation ->
-        val enablePresences = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
-        if (enablePresences){
-            val presence = mutableListOf<ChatPresence>()
-            val ids = mutableListOf<String>()
-            val presenceInfo = PresenceCache.getPresenceInfo
+        val presence = mutableListOf<ChatPresence>()
+        val ids = mutableListOf<String>()
+        val presenceInfo = PresenceCache.getPresenceInfo
 
-            if (userIds.size > 0){
-                for (userId in userIds) {
-                    if (presenceInfo.containsKey(userId)){
-                        val cachePresence = PresenceCache.getUserPresence(userId)
-                        if (cachePresence == null){
-                            ids.add(userId)
-                        }else{
-                            presence.add(cachePresence)
-                        }
-                    }else{
+        if (userIds.size > 0){
+            for (userId in userIds) {
+                if (presenceInfo.containsKey(userId)){
+                    val cachePresence = PresenceCache.getUserPresence(userId)
+                    if (cachePresence == null){
                         ids.add(userId)
+                    }else{
+                        presence.add(cachePresence)
                     }
+                }else{
+                    ids.add(userId)
                 }
             }
+        }
 
-            if (ids.isEmpty()){
-                continuation.resume(presence)
-            }else{
-                fetchPresenceStatus(ids, ValueCallbackImpl<MutableList<ChatPresence>>(
-                    onSuccess = {
-                        presence.addAll(it)
-                        it.forEach { presence ->
-                            PresenceCache.insertPresences(presence.publisher,presence)
-                        }
-                        continuation.resume(presence)
-                    },
-                    onError = {code, message ->
-                        continuation.resumeWithException(ChatException(code, message))
-                    })
-                )
-            }
+        if (ids.isEmpty()){
+            continuation.resume(presence)
+        }else{
+            fetchPresenceStatus(ids, ValueCallbackImpl<MutableList<ChatPresence>>(
+                onSuccess = {
+                    presence.addAll(it)
+                    it.forEach { presence ->
+                        PresenceCache.insertPresences(presence.publisher,presence)
+                    }
+                    continuation.resume(presence)
+                },
+                onError = {code, message ->
+                    continuation.resumeWithException(ChatException(code, message))
+                })
+            )
         }
     }
 }

@@ -106,14 +106,11 @@ object ListenersWrapper {
     }
 
     private fun defaultPresencesEvent(presences: MutableList<ChatPresence>?){
-        val enablePresences = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
-        if (enablePresences){
-            presences?.forEach { presence->
-                PresenceCache.insertPresences(presence.publisher,presence)
-                EaseIM.getContext()?.let {
-                    EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
-                        .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.PRESENCE,presence.publisher))
-                }
+        presences?.forEach { presence->
+            PresenceCache.insertPresences(presence.publisher,presence)
+            EaseIM.getContext()?.let {
+                EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
+                    .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.PRESENCE,presence.publisher))
             }
         }
     }

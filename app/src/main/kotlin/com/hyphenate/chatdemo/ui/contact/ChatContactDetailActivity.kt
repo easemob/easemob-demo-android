@@ -104,7 +104,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
 
     private fun updateUserInfo() {
         DemoHelper.getInstance().getDataModel().getUser(user?.userId)?.let {
-            binding.epPresence.setPresenceData(it.parse())
+            binding.epPresence.setUserAvatarData(it.parse())
             binding.tvName.text = it.parse().getRemarkOrName()
             binding.tvNumber.text = it.userId
             remarkItem.setContent(it.remark)
@@ -178,7 +178,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         val map = PresenceCache.getPresenceInfo
         user?.let { user->
             map.let {
-                binding.epPresence.setPresenceData(user.toProfile(),EasePresenceUtil.getPresenceIcon(mContext,it[user.userId]))
+                binding.epPresence.setUserAvatarData(user.toProfile(),EasePresenceUtil.getPresenceIcon(mContext,it[user.userId]))
             }
         }
     }

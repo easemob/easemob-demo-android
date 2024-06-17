@@ -53,12 +53,12 @@ class ConferenceMemberSelectViewHolder(
                 }
                 val header = user.initialLetter
                 letterHeader.visibility = View.GONE
-                emPresence.setPresenceData(user.toProfile())
+                emPresence.setUserAvatarData(user.toProfile())
                 tvName.text = user.nickname ?: user.userId
 
                 groupId?.let { id ->
                     EaseProfile.getGroupMember(id, user.userId)?.let { profile ->
-                        emPresence.setPresenceData(profile)
+                        emPresence.setUserAvatarData(profile)
                         tvName.text = profile.getRemarkOrName()
                     }
                 }

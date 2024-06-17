@@ -37,11 +37,11 @@ import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.widget.EasePresenceView
+import com.hyphenate.easeui.widget.EaseCustomAvatarView
 import kotlinx.coroutines.launch
 
 class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnClickListener,
-    EasePresenceView.OnPresenceClickListener, IPresenceResultView {
+    EaseCustomAvatarView.OnPresenceClickListener, IPresenceResultView {
 
     /**
      * The clipboard manager.
@@ -68,13 +68,6 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
         super.initView(savedInstanceState)
         initPresence()
         initStatus()
-        EaseIM.getConfig()?.presencesConfig?.enablePresences?.let {
-             if (it){
-                 binding?.itemPresence?.visibility = View.VISIBLE
-             }else{
-                 binding?.itemPresence?.visibility = View.GONE
-             }
-        }
     }
     override fun initViewModel() {
         super.initViewModel()
@@ -137,7 +130,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             epPresence.getUserAvatar().layoutParams = layoutParams
 
             EaseIM.getCurrentUser()?.let {
-                epPresence.setPresenceData(it)
+                epPresence.setUserAvatarData(it)
                 name = it.getRemarkOrName()
             }
             tvName.text = name
@@ -149,12 +142,12 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
         EaseIM.getCurrentUser()?.let { user->
             val presence = PresenceCache.getUserPresence(user.id)
             presence?.let {
-                binding?.epPresence?.setPresenceData(user,EasePresenceUtil.getPresenceIcon(mContext,it))
+                binding?.epPresence?.setUserAvatarData(user,EasePresenceUtil.getPresenceIcon(mContext,it))
                 val subtitle = EasePresenceUtil.getPresenceString(mContext,it)
                 binding?.itemPresence?.setContent(subtitle)
             }
             if (presence == null){
-                binding?.epPresence?.setPresenceData(user)
+                binding?.epPresence?.setUserAvatarData(user)
             }
             binding?.tvName?.text = user.getNotEmptyName()
         }
