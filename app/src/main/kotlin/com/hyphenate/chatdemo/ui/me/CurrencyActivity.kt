@@ -3,6 +3,8 @@ package com.hyphenate.chatdemo.ui.me
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.result.ActivityResult
@@ -13,25 +15,37 @@ import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.bean.LanguageType
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.LanguageUtil
+import com.hyphenate.chatdemo.common.PreferenceManager
+import com.hyphenate.chatdemo.common.extensions.internal.setSwitchDefaultStyle
 import com.hyphenate.chatdemo.databinding.DemoActivityCurrencyBinding
+import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.base.EaseBaseActivity
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
-import com.hyphenate.easeui.widget.EaseSwitchItemView
+import java.util.Locale
 
-class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),
-    EaseSwitchItemView.OnCheckedChangeListener, View.OnClickListener {
+class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),View.OnClickListener {
     private var targetLanguage:String? = ""
+    private var appLanguage:String? = ""
     override fun getViewBinding(inflater: LayoutInflater): DemoActivityCurrencyBinding {
         return DemoActivityCurrencyBinding.inflate(inflater)
     }
     companion object {
-        private const val RESULT_CHOICE_LANGUAGE = 100
-        private const val RESULT_TARGET_LANGUAGE = "target_language"
+        private const val LANGUAGE_TYPE_APPLICATION = 0
+        private const val LANGUAGE_TYPE_TARGET = 1
+        private const val RESULT_CHOICE_APP_LANGUAGE = 100
+        private const val RESULT_CHOICE_TARGET_LANGUAGE = 101
+        private const val RESULT_LANGUAGE_TAG = "language_tag"
+        private const val RESULT_LANGUAGE_CODE = "language_code"
+        private const val LANGUAGE_TYPE = "language_type"
     }
 
-    private val launcherToUpdateLanguage: ActivityResultLauncher<Intent> = registerForActivityResult(
+    private val launcherToAppLanguage: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { result -> onActivityResult(result, RESULT_CHOICE_LANGUAGE) }
+    ) { result -> onActivityResult(result, RESULT_CHOICE_APP_LANGUAGE) }
+
+    private val launcherToTargetLanguage: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result -> onActivityResult(result, RESULT_CHOICE_TARGET_LANGUAGE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +60,11 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),
 
     private fun initListener(){
         binding.let {
-            it.switchItemDark.setOnCheckedChangeListener(this)
+            it.switchItemDark.setOnClickListener(this)
+            it.switchItemTyping.setOnClickListener(this)
             it.arrowItemFeature.setOnClickListener(this)
             it.arrowItemLanguage.setOnClickListener(this)
+            it.arrowItemTargetLanguage.setOnClickListener(this)
             it.titleBar.setNavigationOnClickListener{
                 mContext.onBackPressed()
             }
@@ -57,60 +73,75 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),
 
     private fun initSwitch(){
         val isBlack = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_BLACK_THEME)
-        if (isBlack){
-            binding.switchItemDark.setChecked(true)
-        }else{
-            binding.switchItemDark.setChecked(false)
-        }
-        binding.switchItemDark.setSwitchTarckDrawable(com.hyphenate.easeui.R.drawable.ease_switch_track_selector)
-        binding.switchItemDark.setSwitchThumbDrawable(com.hyphenate.easeui.R.drawable.ease_switch_thumb_selector)
+        val isTyping = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_TYPING_ON)
+
+        val handler = Looper.myLooper()?.let { Handler(it) }
+
+        handler?.postDelayed({
+            binding.switchItemDark.setChecked(isBlack)
+            binding.switchItemDark.setSwitchDefaultStyle()
+            binding.switchItemTyping.setSwitchDefaultStyle()
+            binding.switchItemTyping.setChecked(isTyping)
+        }, 200)
+
     }
 
     private fun initLanguage(){
-        val tagLanguage = EasePreferenceManager.getInstance().getString(DemoConstant.TARGET_LANGUAGE)
-        if (tagLanguage == LanguageType.ZH.value){
+        val spTagLanguage = PreferenceManager.getValue(DemoConstant.TARGET_LANGUAGE, LanguageType.EN.value)
+        val spAppLanguage = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE, Locale.getDefault().language)
+
+        if (spTagLanguage == LanguageType.ZH.value){
             targetLanguage = getString(R.string.currency_language_zh_cn)
-        }else if (tagLanguage == LanguageType.EN.value){
+        }else if (spTagLanguage == LanguageType.EN.value){
             targetLanguage = getString(R.string.currency_language_en)
+        }
+
+        if (spAppLanguage == LanguageType.ZH.value){
+            appLanguage = getString(R.string.currency_language_zh_cn)
+        }else if (spAppLanguage == LanguageType.EN.value){
+            appLanguage = getString(R.string.currency_language_en)
         }
         updateLanguage()
     }
 
-    override fun onCheckedChanged(buttonView: EaseSwitchItemView?, isChecked: Boolean) {
-        when(buttonView?.id){
-            R.id.switch_item_dark ->{
-                changeTheme(isChecked)
-            }
-            else -> {}
-        }
-    }
-
     private fun onActivityResult(result: ActivityResult, requestCode: Int) {
         if (result.resultCode == Activity.RESULT_OK) {
-            val data = result.data
-            when (requestCode) {
-                RESULT_CHOICE_LANGUAGE ->{
-                    data?.let {
-                        if (it.hasExtra(RESULT_TARGET_LANGUAGE)){
-                            targetLanguage = it.getStringExtra(RESULT_TARGET_LANGUAGE)
-                            updateLanguage()
+            result.data?.let {
+                if (it.hasExtra(RESULT_LANGUAGE_TAG) && it.hasExtra(RESULT_LANGUAGE_CODE)){
+                    val tag = it.getStringExtra(RESULT_LANGUAGE_TAG)
+                    val code = it.getStringExtra(RESULT_LANGUAGE_CODE)
+                    when (requestCode) {
+                        RESULT_CHOICE_APP_LANGUAGE -> {
+                            appLanguage = tag
+                            code?.let { languageCode->
+                                PreferenceManager.putValue(DemoConstant.APP_LANGUAGE, languageCode)
+                                LanguageUtil.changeLanguage(languageCode)
+                            }
                         }
+                        RESULT_CHOICE_TARGET_LANGUAGE -> {
+                            targetLanguage = tag
+                            code?.let { languageCode->
+                                PreferenceManager.putValue(DemoConstant.TARGET_LANGUAGE, languageCode)
+                                EaseIM.getConfig()?.chatConfig?.targetTranslationLanguage = languageCode
+                            }
+                        }
+                        else -> {}
                     }
                 }
-                else -> {}
+                updateLanguage()
             }
         }
     }
 
     private fun changeTheme(isChecked: Boolean){
-        AppCompatDelegate.setDefaultNightMode(if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
         DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.IS_BLACK_THEME, isChecked)
+        AppCompatDelegate.setDefaultNightMode(if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     private fun updateLanguage(){
         binding.let {
-            if (targetLanguage.isNullOrEmpty()) return
-            it.arrowItemLanguage.setContent(targetLanguage)
+            it.arrowItemLanguage.setContent(appLanguage?:"")
+            it.arrowItemTargetLanguage.setContent(targetLanguage?:"")
         }
     }
 
@@ -120,9 +151,29 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),
                 startActivity(Intent(this@CurrencyActivity,FeaturesActivity::class.java))
             }
             R.id.arrow_item_language -> {
-                launcherToUpdateLanguage.launch(Intent(
-                    this@CurrencyActivity,
-                    LanguageSettingActivity::class.java))
+                val intent = Intent(this@CurrencyActivity, LanguageSettingActivity::class.java)
+                intent.putExtra(LANGUAGE_TYPE, LANGUAGE_TYPE_APPLICATION)
+                launcherToAppLanguage.launch(intent)
+            }
+            R.id.arrow_item_target_language -> {
+                val intent = Intent(this@CurrencyActivity, LanguageSettingActivity::class.java)
+                intent.putExtra(LANGUAGE_TYPE, LANGUAGE_TYPE_TARGET)
+                launcherToTargetLanguage.launch(intent)
+            }
+            R.id.switch_item_typing -> {
+                binding.switchItemTyping.switch?.let { switch ->
+                    val isChecked = switch.isChecked.not()
+                    binding.switchItemTyping.setChecked(isChecked)
+                    EaseIM.getConfig()?.chatConfig?.enableChatTyping = isChecked
+                    DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.IS_TYPING_ON,isChecked)
+                }
+            }
+            R.id.switch_item_dark -> {
+                binding.switchItemDark.switch?.let { switch ->
+                    val isChecked = switch.isChecked.not()
+                    binding.switchItemDark.setChecked(isChecked)
+                    changeTheme(isChecked)
+                }
             }
             else -> {}
         }

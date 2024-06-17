@@ -5,6 +5,7 @@ import com.hyphenate.EMValueCallBack
 import com.hyphenate.chat.EMContact
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.common.room.entity.parse
+import com.hyphenate.chatdemo.repository.ChatContactRepository
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog

@@ -6,6 +6,7 @@ import android.view.View
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.extensions.internal.setSwitchDefaultStyle
 import com.hyphenate.chatdemo.databinding.DemoActivityFeaturesBinding
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.base.EaseBaseActivity
@@ -25,29 +26,12 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
         val enableTranslation = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_TRANSLATION,true)
         val enableThread = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_THREAD,true)
         val enableReaction = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_REACTION,true)
-        if (enableTranslation){
-            binding.switchItemTranslation.setChecked(true)
-        }else{
-            binding.switchItemTranslation.setChecked(false)
-        }
-        binding.switchItemTranslation.setSwitchTarckDrawable(com.hyphenate.easeui.R.drawable.ease_switch_track_selector)
-        binding.switchItemTranslation.setSwitchThumbDrawable(com.hyphenate.easeui.R.drawable.ease_switch_thumb_selector)
-
-        if (enableThread){
-            binding.switchItemTopic.setChecked(true)
-        }else{
-            binding.switchItemTopic.setChecked(false)
-        }
-        binding.switchItemTopic.setSwitchTarckDrawable(com.hyphenate.easeui.R.drawable.ease_switch_track_selector)
-        binding.switchItemTopic.setSwitchThumbDrawable(com.hyphenate.easeui.R.drawable.ease_switch_thumb_selector)
-
-        if (enableReaction){
-            binding.switchItemReaction.setChecked(true)
-        }else{
-            binding.switchItemReaction.setChecked(false)
-        }
-        binding.switchItemReaction.setSwitchTarckDrawable(com.hyphenate.easeui.R.drawable.ease_switch_track_selector)
-        binding.switchItemReaction.setSwitchThumbDrawable(com.hyphenate.easeui.R.drawable.ease_switch_thumb_selector)
+        binding.switchItemTranslation.setChecked(enableTranslation)
+        binding.switchItemTranslation.setSwitchDefaultStyle()
+        binding.switchItemTopic.setChecked(enableThread)
+        binding.switchItemTopic.setSwitchDefaultStyle()
+        binding.switchItemReaction.setChecked(enableReaction)
+        binding.switchItemReaction.setSwitchDefaultStyle()
     }
 
     fun initListener(){

@@ -94,7 +94,18 @@
         <item name="arrowItemTitleColor">@color/ease_color_primary</item>
         <item name="arrowItemShowAvatar">false</item>
         <item name="arrowItemShowArrow">false</item>
-        <item name="arrowItemShowDivider">false</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
+    </style>
+
+    <style name="main_about_account_cancellation_arrow_item">
+        <item name="background">@color/ease_color_background</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/ease_color_text_secondary_high</item>
+        <item name="arrowItemShowAvatar">false</item>
+        <item name="arrowItemShowArrow">false</item>
+        <item name="arrowItemShowDivider">true</item>
         <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
     </style>
 
@@ -170,5 +181,55 @@
         <item name="android:shadowDy">0</item>
         <item name="android:shadowRadius">0</item>
     </style>
+
+    <!-- Currency style -->
+    <style name="currency_switch_item_typing">
+        <item name="background">@color/ease_color_background</item>
+        <item name="switchItemTitleSize">16sp</item>
+        <item name="switchItemTitleStyle">bold</item>
+        <item name="switchItemTitleColor">@color/demo_title</item>
+        <item name="switchItemShowAvatar">false</item>
+        <item name="switchItemShowDivider">true</item>
+    </style>
+
+    <style name="currency_typing_desc">
+        <item name="background">@color/demo_desc_bg</item>
+        <item name="android:gravity">end</item>
+        <item name="android:text">@string/main_about_me_currency_typing_desc</item>
+        <item name="android:paddingStart">@dimen/ease_size_16</item>
+        <item name="android:paddingEnd">@dimen/ease_size_16</item>
+        <item name="android:paddingTop">@dimen/ease_size_4</item>
+        <item name="android:paddingBottom">@dimen/ease_size_4</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Large</item>
+        <item name="android:textColor">@color/demo_subtitle</item>
+    </style>
+
+    <style name="currency_switch_item_dark_mode">
+        <item name="background">@color/ease_color_background</item>
+        <item name="switchItemTitleSize">16sp</item>
+        <item name="switchItemTitleStyle">bold</item>
+        <item name="switchItemTitleColor">@color/demo_title</item>
+        <item name="switchItemShowAvatar">false</item>
+        <item name="switchItemShowDivider">true</item>
+    </style>
+
+    <style name="currency_arrow_item_feature">
+        <item name="background">@color/ease_color_background</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/demo_title</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/demo_subtitle</item>
+    </style>
+
+    <style name="currency_arrow_item_language">
+        <item name="background">@color/ease_color_background</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/demo_title</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/demo_subtitle</item>
+    </style>
+
 
 </resources>

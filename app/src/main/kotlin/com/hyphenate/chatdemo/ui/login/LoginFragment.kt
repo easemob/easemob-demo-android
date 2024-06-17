@@ -32,6 +32,7 @@ import com.hyphenate.chatdemo.MainActivity
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.CustomCountDownTimer
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.PreferenceManager
 import com.hyphenate.chatdemo.common.dialog.SimpleDialog
 import com.hyphenate.chatdemo.common.extensions.internal.changePwdDrawable
 import com.hyphenate.chatdemo.common.extensions.internal.clearEditTextListener
@@ -311,12 +312,7 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
 
     private val spannable: SpannableString
         private get() {
-            val tagLanguage = EasePreferenceManager.getInstance().getString(DemoConstant.TARGET_LANGUAGE)
-            val language = if (tagLanguage.isNullOrEmpty()){
-                Locale.getDefault().language
-            }else{
-                tagLanguage
-            }
+            val language = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,Locale.getDefault().language)
             val isZh = language.startsWith("zh")
             val spanStr = SpannableString(getString(R.string.em_login_agreement))
             var start1 = 29

@@ -1,6 +1,7 @@
 package com.hyphenate.chatdemo.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.hyphenate.chatdemo.repository.PushRepository
 import com.hyphenate.easeui.common.ChatPushRemindType
 import com.hyphenate.easeui.common.ChatSilentModeParam
 import com.hyphenate.easeui.common.ChatSilentModelType

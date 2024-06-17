@@ -15,12 +15,17 @@ import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.PresenceCache
+import com.hyphenate.chatdemo.controller.PresenceController
 import com.hyphenate.chatdemo.databinding.DemoFragmentAboutMeBinding
+import com.hyphenate.chatdemo.interfaces.IPresenceResultView
 import com.hyphenate.chatdemo.ui.me.AboutActivity
 import com.hyphenate.chatdemo.ui.me.CurrencyActivity
 import com.hyphenate.chatdemo.ui.me.NotifyActivity
 import com.hyphenate.chatdemo.ui.me.UserInformationActivity
+import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.LoginViewModel
+import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.base.EaseBaseFragment
 import com.hyphenate.easeui.common.ChatClient
@@ -30,17 +35,13 @@ import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.dpToPx
-import com.hyphenate.easeui.common.utils.EasePresenceUtil
 import com.hyphenate.easeui.configs.setStatusStyle
-import com.hyphenate.easeui.feature.chat.interfaces.IPresenceResultView
 import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.viewmodel.presence.EasePresenceViewModel
-import com.hyphenate.easeui.viewmodel.presence.IPresenceRequest
 import com.hyphenate.easeui.widget.EasePresenceView
 import kotlinx.coroutines.launch
 
 class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnClickListener,
-    EasePresenceView.OnPresenceClickListener,IPresenceResultView{
+    EasePresenceView.OnPresenceClickListener, IPresenceResultView {
 
     /**
      * The clipboard manager.
@@ -48,7 +49,9 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     private val clipboard by lazy { mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
 
     private lateinit var loginViewModel: LoginViewModel
-    private var presenceViewModel:IPresenceRequest? = null
+
+    private val presenceViewModel by lazy { ViewModelProvider(this)[PresenceViewModel::class.java] }
+    private val presenceController by lazy { PresenceController(mContext,presenceViewModel) }
 
     companion object{
         private val TAG = AboutMeFragment::class.java.simpleName
@@ -76,8 +79,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     override fun initViewModel() {
         super.initViewModel()
         loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-        presenceViewModel = ViewModelProvider(this)[EasePresenceViewModel::class.java]
-        presenceViewModel?.attachView(this)
+        presenceViewModel.attachView(this)
     }
 
     override fun initListener() {
@@ -92,6 +94,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             itemPrivacy.setOnClickListener(this@AboutMeFragment)
             itemAbout.setOnClickListener(this@AboutMeFragment)
             aboutMeLogout.setOnClickListener(this@AboutMeFragment)
+            aboutMeAccountCancellation.setOnClickListener(this@AboutMeFragment)
         }
     }
 
@@ -107,10 +110,11 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
 
     private fun initEvent() {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            if (it.isPresenceChange ) {
+            if (it.isPresenceChange && it.message.equals(EaseIM.getCurrentUser()?.id) ) {
                 updatePresence()
             }
         }
+
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT).register(this) {
             if (it.isContactChange && it.event == DemoConstant.EVENT_UPDATE_SELF) {
                 updatePresence()
@@ -143,9 +147,9 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
 
     private fun updatePresence(){
         EaseIM.getCurrentUser()?.let { user->
-            val presence = EaseIM.getUserPresence(user.id)
+            val presence = PresenceCache.getUserPresence(user.id)
             presence?.let {
-                binding?.epPresence?.setPresenceData(user,it)
+                binding?.epPresence?.setPresenceData(user,EasePresenceUtil.getPresenceIcon(mContext,it))
                 val subtitle = EasePresenceUtil.getPresenceString(mContext,it)
                 binding?.itemPresence?.setContent(subtitle)
             }
@@ -169,9 +173,24 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
         lifecycleScope.launch {
             loginViewModel.logout()
                 .catchChatException { e ->
-                    ChatLog.e("logout", "logout failed: ${e.description}")
+                    ChatLog.e(TAG, "logout failed: ${e.description}")
                 }
                 .collect {
+                    DemoHelper.getInstance().getDataModel().clearCache()
+                    PresenceCache.clear()
+                    DemoApplication.getInstance().getLifecycleCallbacks().skipToTarget(
+                        LoginActivity::class.java)
+                }
+        }
+    }
+
+    private fun cancelAccount(){
+        lifecycleScope.launch {
+            loginViewModel.cancelAccount()
+                .catchChatException {e ->
+                    ChatLog.e(TAG, "cancelAccount failed: ${e.errorCode} ${e.description}")
+                }
+                .collect{
                     DemoHelper.getInstance().getDataModel().clearCache()
                     DemoApplication.getInstance().getLifecycleCallbacks().skipToTarget(
                         LoginActivity::class.java)
@@ -180,7 +199,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     }
 
     private fun fetchCurrentPresence(){
-        presenceViewModel?.fetchPresenceStatus(mutableListOf(ChatClient.getInstance().currentUser))
+        presenceViewModel.fetchPresenceStatus(mutableListOf(ChatClient.getInstance().currentUser))
     }
 
     override fun onPresenceClick(v: View?) {
@@ -190,7 +209,9 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.item_presence -> {
-
+                EaseIM.getCurrentUser()?.id?.let {
+                    presenceController.showPresenceStatusDialog(PresenceCache.getUserPresence(it))
+                }
             }
             R.id.item_information -> {
                 startActivity(Intent(mContext, UserInformationActivity::class.java))
@@ -209,6 +230,9 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             }
             R.id.about_me_logout -> {
                 showLogoutDialog()
+            }
+            R.id.about_me_account_cancellation -> {
+                showCancelAccountDialog()
             }
             R.id.tv_number -> {
                 val indexOfSpace = binding?.tvNumber?.text?.indexOf(":")
@@ -242,6 +266,22 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             }
         )
         logoutDialog.show()
+    }
+
+    private fun showCancelAccountDialog(){
+        val cancelAccountDialog = CustomDialog(
+            context = mContext,
+            title = resources.getString(R.string.em_login_cancel_account_title),
+            subtitle = resources.getString(R.string.em_login_cancel_account_subtitle),
+            isEditTextMode = false,
+            onLeftButtonClickListener = {
+
+            },
+            onRightButtonClickListener = {
+                cancelAccount()
+            }
+        )
+        cancelAccountDialog.show()
     }
 
     override fun fetchPresenceStatusSuccess(presence: MutableList<ChatPresence>) {

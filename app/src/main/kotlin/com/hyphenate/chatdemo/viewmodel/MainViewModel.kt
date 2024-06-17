@@ -3,6 +3,7 @@ package com.hyphenate.chatdemo.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.hyphenate.chatdemo.interfaces.IMainRequest
 import com.hyphenate.chatdemo.interfaces.IMainResultView
+import com.hyphenate.chatdemo.repository.ChatClientRepository
 import com.hyphenate.easeui.viewmodel.EaseBaseViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow

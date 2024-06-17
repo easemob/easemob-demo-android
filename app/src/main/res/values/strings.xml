@@ -83,6 +83,8 @@
     <string name="em_header_group">Group Chat</string>
 
     <string name="em_login_out_hint">Log Out?</string>
+    <string name="em_login_cancel_account_title">注销账户</string>
+    <string name="em_login_cancel_account_subtitle">注销后账户不可恢复，您将无法使用本账户添加、发送任何消息。本账户所记录的个人信息(包括不限于头像、用户名等)、与账户有关的信息数据(包括不限于联系人、创建的会话、会话详情等)都将无法找回。</string>
 
     <string name="em_main_add_contact_success">Request sent.</string>
     <string name="em_main_add_contact_not_found">User does not exist</string>
@@ -91,7 +93,7 @@
     <string name="message_forward_fail">Message forwarding failed</string>
     <string name="message_modify_fail">Message modifying failed</string>
 
-    <string name="main_about_me_presence">User Status</string>
+    <string name="presence_status">User Status</string>
 
     <string name="main_about_me_information">Profile</string>
     <string name="main_about_me_information_avatar">Avatar</string>
@@ -104,6 +106,8 @@
     <string name="main_information_checked_model">Uploading avatars is not supported in this mode</string>
 
     <string name="main_about_me_currency">General</string>
+    <string name="main_about_me_currency_typing">onTyping</string>
+    <string name="main_about_me_currency_typing_desc">开启后，对方将看见你的输入状态</string>
     <string name="main_about_me_currency_dark_model">Dark Mode</string>
     <string name="main_about_me_currency_feature">Advanced Features</string>
     <string name="currency_feature_translation">Translation</string>
@@ -117,10 +121,11 @@
     <string name="demo_contact_edit_remark">Remarks</string>
     <string name="demo_contact_remark_count">%1$d/100</string>
 
-    <string name="main_about_me_currency_language">System Language</string>
+    <string name="currency_language">System Language</string>
+    <string name="currency_target_language">Target Language</string>
     <string name="currency_language_zh_cn">Simplified Chinese</string>
     <string name="currency_language_en">English</string>
-    <string name="main_about_me_currency_language_confirm">Done</string>
+    <string name="currency_language_confirm">Done</string>
 
     <string name="main_about_me_notify">Message Notifications</string>
     <string name="main_about_me_notify_title">Offline Message Push</string>
@@ -135,6 +140,7 @@
     <string name="about_official_website">Official Website</string>
     <string name="about_official_website_url">https://www.easemob.com/</string>
     <string name="about_official_website_title" tools:ignore="ExtraTranslation">环信 - 中国IM即时通讯服务开创者</string>
+    <string name="about_privacy_policy">Privacy Policy</string>
     <string name="about_service_hotline">Contact Us</string>
     <string name="about_service_hotline_tl" tools:ignore="TypographyDashes">400–622-1776</string>
     <string name="about_business_cooperation">Business Cooperation</string>
@@ -148,7 +154,7 @@
     <string name="main_about_me_setting">Settings</string>
     <string name="main_about_me_logout">Log Out</string>
     <string name="main_about_me_id">ID: %1$s</string>
-
+    <string name="main_about_me_account_cancellation">注销账户</string>
 
     <!-- callkit -->
     <string name="call_duration">Call duration: %1$s</string>
@@ -162,5 +168,17 @@
     <!-- contact detail -->
     <string name="detail_item_audio">Audio</string>
     <string name="detail_item_video">Video</string>
+
+    <!--presence-->
+    <string name="ease_presence_online">Online</string>
+    <string name="ease_presence_busy">Busy</string>
+    <string name="ease_presence_do_not_disturb">Do not Disturb</string>
+    <string name="ease_presence_away">Away</string>
+    <string name="ease_presence_offline">Offline</string>
+    <string name="ease_presence_custom">Custom Status</string>
+    <string name="ease_presence_status">Status</string>
+    <string name="ease_presence_done">Done</string>
+    <string name="presence_dialog_title">Customize online status</string>
+    <string name="presence_dialog_input_hint">Please enter</string>
 
 </resources>

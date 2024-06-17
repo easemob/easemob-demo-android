@@ -12,15 +12,21 @@ import androidx.lifecycle.lifecycleScope
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.callkit.CallKitManager
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.PresenceCache
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
+import com.hyphenate.chatdemo.interfaces.IPresenceResultView
+import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
+import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatUserInfoType
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
+import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.feature.contact.EaseContactDetailsActivity
 import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseMenuItem
@@ -28,11 +34,13 @@ import com.hyphenate.easeui.widget.EaseArrowItemView
 import kotlinx.coroutines.launch
 
 
-class ChatContactDetailActivity:EaseContactDetailsActivity() {
+class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultView {
     private lateinit var model: ProfileInfoViewModel
+    private lateinit var presenceModel: PresenceViewModel
     private val remarkItem: EaseArrowItemView by lazy { findViewById(R.id.item_remark) }
 
     companion object {
+        private const val TAG = "ChatContactDetailActivity"
         private const val REQUEST_UPDATE_REMARK = 100
         private const val RESULT_UPDATE_REMARK = "result_update_remark"
     }
@@ -44,6 +52,8 @@ class ChatContactDetailActivity:EaseContactDetailsActivity() {
     override fun initView() {
         super.initView()
         model = ViewModelProvider(this)[ProfileInfoViewModel::class.java]
+        presenceModel = ViewModelProvider(this)[PresenceViewModel::class.java]
+        presenceModel.attachView(this)
         updateUserInfo()
     }
 
@@ -57,8 +67,20 @@ class ChatContactDetailActivity:EaseContactDetailsActivity() {
         binding.tvNumber
     }
 
+    override fun initEvent() {
+        super.initEvent()
+        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
+            if (it.isPresenceChange ) {
+                updatePresence()
+            }
+        }
+    }
+
     override fun initData() {
         super.initData()
+        user?.let {
+            presenceModel.fetchChatPresence(mutableListOf(it.userId))
+        }
         lifecycleScope.launch {
             user?.let { user->
                 model.fetchUserInfoAttribute(listOf(user.userId), listOf(ChatUserInfoType.NICKNAME, ChatUserInfoType.AVATAR_URL))
@@ -150,6 +172,24 @@ class ChatContactDetailActivity:EaseContactDetailsActivity() {
     private fun notifyUpdateRemarkEvent() {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX)
             .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_USER_SUFFIX, EaseEvent.TYPE.CONTACT, user?.userId))
+    }
+
+    private fun updatePresence(){
+        val map = PresenceCache.getPresenceInfo
+        user?.let { user->
+            map.let {
+                binding.epPresence.setPresenceData(user.toProfile(),EasePresenceUtil.getPresenceIcon(mContext,it[user.userId]))
+            }
+        }
+    }
+
+    override fun fetchChatPresenceSuccess(presence: MutableList<ChatPresence>) {
+        ChatLog.e(TAG,"fetchChatPresenceSuccess $presence")
+        updatePresence()
+    }
+
+    override fun fetchChatPresenceFail(code: Int, error: String) {
+        ChatLog.e(TAG,"fetchChatPresenceFail $code $error")
     }
 
 }

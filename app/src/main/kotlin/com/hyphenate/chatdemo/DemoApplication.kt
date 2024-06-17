@@ -3,15 +3,15 @@ package com.hyphenate.chatdemo
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.hyphenate.chatdemo.base.UserActivityLifecycleCallbacks
+import com.hyphenate.chatdemo.bean.LanguageType
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.LanguageUtil
+import com.hyphenate.chatdemo.common.PreferenceManager
 import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.tencent.bugly.crashreport.CrashReport
-import java.util.Locale
 
 class DemoApplication: Application() {
     private val mLifecycleCallbacks = UserActivityLifecycleCallbacks()
@@ -40,16 +40,21 @@ class DemoApplication: Application() {
         val enableTranslation = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_TRANSLATION,true)
         val enableThread = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_THREAD,true)
         val enableReaction = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_REACTION,true)
-        val targetLanguage = EasePreferenceManager.getInstance().getString(DemoConstant.TARGET_LANGUAGE)
-        targetLanguage?.let {
+        val enableTyping = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_TYPING_ON,false)
+
+        val appLanguage = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,"")
+        appLanguage.let {
             if (it.isNotEmpty()){
                 LanguageUtil.changeLanguage(it)
             }
         }
-        EaseIM.getConfig()?.chatConfig?.targetTranslationLanguage = Locale.getDefault().language
+        val targetLanguage = PreferenceManager.getValue(DemoConstant.TARGET_LANGUAGE,LanguageType.EN.value)
+        EaseIM.getConfig()?.chatConfig?.targetTranslationLanguage = targetLanguage
+
         EaseIM.getConfig()?.chatConfig?.enableTranslationMessage = enableTranslation
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage = enableThread
         EaseIM.getConfig()?.chatConfig?.enableMessageReaction = enableReaction
+        EaseIM.getConfig()?.chatConfig?.enableChatTyping = enableTyping
     }
 
     private fun initBugly(){

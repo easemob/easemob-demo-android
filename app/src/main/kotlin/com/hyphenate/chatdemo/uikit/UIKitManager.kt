@@ -9,7 +9,7 @@ import com.hyphenate.chatdemo.ui.contact.ChatContactCheckActivity
 import com.hyphenate.chatdemo.ui.contact.ChatContactDetailActivity
 import com.hyphenate.chatdemo.ui.group.ChatGroupDetailActivity
 import com.hyphenate.chatdemo.ui.group.ChatCreateGroupActivity
-import com.hyphenate.chatdemo.viewmodel.ProfileInfoRepository
+import com.hyphenate.chatdemo.repository.ProfileInfoRepository
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatMessage

@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.BuildConfig
@@ -38,6 +38,8 @@ class EMClientRepository: BaseRepository() {
                 BuildConfig.APP_BASE_USER + BuildConfig.APP_SERVER_LOGIN
         private const val SEND_SMS_URL = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN +
                 BuildConfig.APP_SEND_SMS_FROM_SERVER
+        private const val CANCEL_ACCOUNT = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN +
+                BuildConfig.APP_BASE_USER
     }
 
     /**
@@ -301,4 +303,53 @@ class EMClientRepository: BaseRepository() {
             onError(ChatError.NETWORK_ERROR, e.message)
         }
     }
+
+    /**
+     * 注销账户
+     * @return
+     */
+    suspend fun cancelAccount(): Int? =
+        withContext(Dispatchers.IO) {
+            suspendCoroutine { continuation ->
+                cancelAccountFromServer(
+                    onSuccess = {
+                        continuation.resume(ChatError.EM_NO_ERROR)
+                    },
+                    onError = {code, error ->
+                        continuation.resumeWithException(ChatException(code,error))
+                    })
+            }
+        }
+
+    private fun cancelAccountFromServer(onSuccess: OnSuccess, onError: OnError){
+        try {
+            val headers: MutableMap<String, String> = java.util.HashMap()
+            headers["Content-Type"] = "application/json"
+            val url = "$CANCEL_ACCOUNT/${ChatClient.getInstance().currentUser}/"
+            EMLog.d("cancelAccountFromServer url : ", url)
+            val response =
+                HttpClientManager.httpExecute(url, headers, null, HttpClientManager.Method_DELETE)
+            val code = response.code
+            val responseInfo = response.content
+            if (code == 200) {
+                onSuccess()
+            } else {
+                if (responseInfo != null && responseInfo.isNotEmpty()) {
+                    val errorInfo = try {
+                        val responseObject = JSONObject(responseInfo)
+                        responseObject.getString("errorInfo")
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        responseInfo
+                    }
+                    onError(code, errorInfo)
+                } else {
+                    onError(code, responseInfo)
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            onError(ChatError.NETWORK_ERROR, e.message)
+        }
+    }
+
 }
