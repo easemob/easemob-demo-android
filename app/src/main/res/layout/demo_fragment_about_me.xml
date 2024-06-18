@@ -111,7 +111,6 @@
             app:arrowItemTitle="@string/main_about_me_privacy"
             app:arrowItemAvatarSrc="@drawable/icon_privacy"
             style="@style/main_about_me_arrow_item"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="54dp"/>
 

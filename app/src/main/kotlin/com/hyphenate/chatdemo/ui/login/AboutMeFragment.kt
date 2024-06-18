@@ -36,6 +36,7 @@ import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.configs.setStatusStyle
+import com.hyphenate.easeui.feature.contact.EaseBlockListActivity
 import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.widget.EaseCustomAvatarView
 import kotlinx.coroutines.launch
@@ -216,7 +217,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
                 startActivity(Intent(mContext, NotifyActivity::class.java))
             }
             R.id.item_privacy -> {
-
+                startActivity(Intent(mContext, EaseBlockListActivity::class.java))
             }
             R.id.item_about -> {
                 startActivity(Intent(mContext, AboutActivity::class.java))

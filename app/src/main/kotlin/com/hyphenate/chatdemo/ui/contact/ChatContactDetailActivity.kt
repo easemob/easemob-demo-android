@@ -2,6 +2,7 @@ package com.hyphenate.chatdemo.ui.contact
 
 import android.app.Activity
 import android.content.Intent
+import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -64,7 +65,6 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
                 launcherToUpdateRemark.launch(ChatContactRemarkActivity.createIntent(mContext,it.userId))
             }
         }
-        binding.tvNumber
     }
 
     override fun initEvent() {
@@ -190,6 +190,15 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
 
     override fun fetchChatPresenceFail(code: Int, error: String) {
         ChatLog.e(TAG,"fetchChatPresenceFail $code $error")
+    }
+
+    override fun updateBlockLayout(isChecked: Boolean) {
+        super.updateBlockLayout(isChecked)
+        if (isChecked){
+            remarkItem.visibility = View.GONE
+        }else{
+            remarkItem.visibility = View.VISIBLE
+        }
     }
 
 }
