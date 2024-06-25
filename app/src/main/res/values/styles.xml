@@ -170,7 +170,7 @@
         <item name="arrowItemTitleStyle">bold</item>
         <item name="arrowItemTitleColor">@color/ease_contact_arrow_item_title_color</item>
         <item name="arrowItemShowArrow">true</item>
-        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemShowDivider">false</item>
         <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
     </style>
 

@@ -41,7 +41,7 @@ class ChatActivity: EaseChatActivity() {
                 mContext.showToast(R.string.message_modify_fail)
             }
         })
-        builder.turnOnTypingMonitor(EaseIM.getConfig()?.chatConfig?.enableChatTyping?:false)
+        builder.turnOnTypingMonitor(EaseIM.getConfig()?.chatConfig?.enableChatTyping?:true)
         builder.setCustomFragment(ChatFragment())
             .setCustomAdapter(CustomMessagesAdapter())
     }

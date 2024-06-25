@@ -39,6 +39,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
     private lateinit var model: ProfileInfoViewModel
     private lateinit var presenceModel: PresenceViewModel
     private val remarkItem: EaseArrowItemView by lazy { findViewById(R.id.item_remark) }
+    private val spacing: View by lazy { findViewById(R.id.item_spacing) }
 
     companion object {
         private const val TAG = "ChatContactDetailActivity"
@@ -196,8 +197,10 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         super.updateBlockLayout(isChecked)
         if (isChecked){
             remarkItem.visibility = View.GONE
+            spacing.visibility = View.GONE
         }else{
             remarkItem.visibility = View.VISIBLE
+            spacing.visibility = View.VISIBLE
         }
     }
 

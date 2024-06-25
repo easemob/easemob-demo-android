@@ -83,8 +83,8 @@
     <string name="em_header_group">Group Chat</string>
 
     <string name="em_login_out_hint">Log Out?</string>
-    <string name="em_login_cancel_account_title">注销账户</string>
-    <string name="em_login_cancel_account_subtitle">注销后账户不可恢复，您将无法使用本账户添加、发送任何消息。本账户所记录的个人信息(包括不限于头像、用户名等)、与账户有关的信息数据(包括不限于联系人、创建的会话、会话详情等)都将无法找回。</string>
+    <string name="em_login_cancel_account_title">Account Cancellation</string>
+    <string name="em_login_cancel_account_subtitle">Please note that canceling your account will result in the permanent deletion of all data associated with it.</string>
 
     <string name="em_main_add_contact_success">Request sent.</string>
     <string name="em_main_add_contact_not_found">User does not exist</string>

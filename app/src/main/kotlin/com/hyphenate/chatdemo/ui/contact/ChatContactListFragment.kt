@@ -11,8 +11,10 @@ import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PresenceCache
+import com.hyphenate.chatdemo.controller.PresenceController
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
+import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.bus.EaseFlowBus
@@ -28,6 +30,8 @@ class ChatContactListFragment : EaseContactsListFragment() {
 
     private var contactViewModel: IContactListRequest? = null
     private var isFirstLoadData = false
+    private val presenceViewModel by lazy { ViewModelProvider(this)[PresenceViewModel::class.java] }
+    private val presenceController by lazy { PresenceController(mContext, presenceViewModel) }
     companion object{
         private val TAG = ChatContactListFragment::class.java.simpleName
     }
@@ -58,6 +62,15 @@ class ChatContactListFragment : EaseContactsListFragment() {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
             if (it.isPresenceChange && it.message.equals(EaseIM.getCurrentUser()?.id) ) {
                 updateProfile()
+            }
+        }
+    }
+
+    override fun initListener() {
+        super.initListener()
+        binding?.titleContact?.setLogoClickListener {
+            EaseIM.getCurrentUser()?.id?.let {
+                presenceController.showPresenceStatusDialog(PresenceCache.getUserPresence(it))
             }
         }
     }
