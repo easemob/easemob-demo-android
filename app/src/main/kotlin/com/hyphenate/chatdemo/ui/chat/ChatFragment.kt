@@ -100,7 +100,7 @@ class ChatFragment: EaseChatFragment() , IPresenceResultView {
                     titleBar.setLogoStatus(logoStatus)
                     titleBar.setSubtitle(subtitle)
                     titleBar.getStatusView().visibility = View.VISIBLE
-                    titleBar.setLogoStatusSize(resources.getDimensionPixelSize(com.hyphenate.easeui.R.dimen.ease_title_bar_status_icon_size))
+                    titleBar.setLogoStatusSize(resources.getDimensionPixelSize(R.dimen.em_title_bar_status_icon_size))
                 }
             }
         }

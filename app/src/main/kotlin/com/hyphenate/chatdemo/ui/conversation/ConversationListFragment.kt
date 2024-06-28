@@ -77,12 +77,10 @@ class ConversationListFragment: EaseConversationListFragment() {
                 val presence = PresenceCache.getUserPresence(profile.id)
                 presence?.let {
                     val logoStatus = EasePresenceUtil.getPresenceIcon(mContext,it)
-                    val subtitle = EasePresenceUtil.getPresenceString(mContext,it)
                     titlebar.setLogoStatusMargin(end = -1, bottom = -1)
                     titlebar.setLogoStatus(logoStatus)
-                    titlebar.setSubtitle(subtitle)
                     titlebar.getStatusView().visibility = View.VISIBLE
-                    titlebar.setLogoStatusSize(resources.getDimensionPixelSize(com.hyphenate.easeui.R.dimen.ease_title_bar_status_icon_size))
+                    titlebar.setLogoStatusSize(resources.getDimensionPixelSize(R.dimen.em_title_bar_status_icon_size))
                 }
                 ChatLog.e("ConversationListFragment","updateProfile ${profile.id} ${profile.name} ${profile.avatar}")
                 titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.ease_default_avatar, 32.dpToPx(mContext))

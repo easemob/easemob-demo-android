@@ -122,7 +122,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             val id = getString(R.string.main_about_me_id,ChatClient.getInstance().currentUser)
             EaseIM.getConfig()?.avatarConfig?.setStatusStyle(epPresence.getStatusView(),4.dpToPx(mContext),
                 ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_background))
-            epPresence.setPresenceStatusMargin(end = -3, bottom = -3)
+            epPresence.setPresenceStatusMargin(end = -4, bottom = -4)
             epPresence.setPresenceStatusSize(resources.getDimensionPixelSize(com.hyphenate.easeui.R.dimen.ease_contact_status_icon_size))
 
             val layoutParams = epPresence.getUserAvatar().layoutParams
@@ -144,6 +144,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             val presence = PresenceCache.getUserPresence(user.id)
             presence?.let {
                 binding?.epPresence?.setUserAvatarData(user,EasePresenceUtil.getPresenceIcon(mContext,it))
+                binding?.epPresence?.getStatusView()?.visibility = View.VISIBLE
                 val subtitle = EasePresenceUtil.getPresenceString(mContext,it)
                 binding?.itemPresence?.setContent(subtitle)
             }

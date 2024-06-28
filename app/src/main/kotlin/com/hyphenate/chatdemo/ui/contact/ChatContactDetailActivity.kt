@@ -179,6 +179,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         val map = PresenceCache.getPresenceInfo
         user?.let { user->
             map.let {
+                binding.epPresence.getStatusView().visibility = View.VISIBLE
                 binding.epPresence.setUserAvatarData(user.toProfile(),EasePresenceUtil.getPresenceIcon(mContext,it[user.userId]))
             }
         }
