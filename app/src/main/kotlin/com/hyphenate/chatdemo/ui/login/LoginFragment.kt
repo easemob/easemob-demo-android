@@ -399,6 +399,7 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
                 etLoginCode.clearEditTextListener()
                 DemoHelper.getInstance().getDataModel().enableCustomSet(false)
                 DemoHelper.getInstance().getDataModel().setDeveloperMode(false)
+                ChatClient.getInstance().options.enableDNSConfig(true)
             }
         }
     }
