@@ -109,7 +109,6 @@ class EMClientRepository: BaseRepository() {
                             }
                         }
                     } else {
-                        ChatClient.getInstance().options.enableDNSConfig(true)
                         ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
                     }
                 }
