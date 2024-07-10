@@ -30,7 +30,7 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
             emit(mRepository.loginFromServer(userName, userPassword))
         }
             .flatMapConcat { result ->
-                flow { emit(mRepository.loginToServer(result.username!!, result.token!!, true)) }
+                flow { emit(mRepository.loginToServer(result?.username!!, result.token!!, true)) }
             }
 
     /**

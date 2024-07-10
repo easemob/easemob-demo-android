@@ -41,7 +41,6 @@ class PresenceController(
         presenceDialog = SimpleListSheetDialog(
             context = context,
             itemList = defaultItems(),
-            title = context.getString(R.string.presence_status),
             itemListener = object : SimpleListSheetItemClickListener {
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     simpleMenuItemClickListener(position, menu)

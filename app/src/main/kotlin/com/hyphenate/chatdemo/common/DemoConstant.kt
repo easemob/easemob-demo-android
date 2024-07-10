@@ -19,7 +19,6 @@ object DemoConstant {
     const val IS_TYPING_ON = "isTyping"
 
     const val PRESENCE_ONLINE = "Online"
-    const val PRESENCE_OFFLINE = "Offline"
     const val PRESENCE_BUSY = "Busy"
     const val PRESENCE_DO_NOT_DISTURB = "Do Not Disturb"
     const val PRESENCE_AWAY = "Away"

@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.navigation.NavigationBarView
-import com.hyphenate.chat.EMMessage
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.databinding.ActivityMainBinding
@@ -27,6 +26,7 @@ import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
@@ -66,7 +66,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     }
 
     private val chatMessageListener = object : EaseMessageListener() {
-        override fun onMessageReceived(messages: MutableList<EMMessage>?) {
+        override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
             mainViewModel.getUnreadMessageCount()
         }
     }

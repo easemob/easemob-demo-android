@@ -92,6 +92,8 @@
     <string name="message_forward_success">消息转发成功</string>
     <string name="message_forward_fail">消息转发失败</string>
     <string name="message_modify_fail">消息编辑失败</string>
+    <string name="message_combine_success">消息合并成功</string>
+    <string name="message_combine_fail">消息合并失败</string>
 
     <string name="presence_status">在线状态</string>
 
@@ -155,6 +157,7 @@
     <string name="main_about_me_logout">退出登录</string>
     <string name="main_about_me_id">ID: %1$s</string>
     <string name="main_about_me_account_cancellation">注销账户</string>
+    <string name="main_account_cancellation">当前模式下不支持注销账号</string>
 
     <!-- callkit -->
     <string name="call_duration">通话时长: %1$s</string>
@@ -180,5 +183,6 @@
     <string name="ease_presence_done">完成</string>
     <string name="presence_dialog_title">自定义在线状态</string>
     <string name="presence_dialog_input_hint">请输入</string>
+
 
 </resources>

@@ -9,7 +9,6 @@ import android.webkit.WebViewClient
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.databinding.DemoActivityWebviewBinding
 import com.hyphenate.easeui.base.EaseBaseActivity
-import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
 
 class WebViewActivity : EaseBaseActivity<DemoActivityWebviewBinding>() {
     private var url = "https://www.easemob.com/"
@@ -45,7 +44,7 @@ class WebViewActivity : EaseBaseActivity<DemoActivityWebviewBinding>() {
     companion object {
         private const val LOAD_TYPE = "webView_load_type"
         fun actionStart(context: Context,type:WebViewLoadType) {
-            Intent(context, EaseChatActivity::class.java).apply {
+            Intent(context, WebViewActivity::class.java).apply {
                 putExtra(LOAD_TYPE, type.ordinal)
                 context.startActivity(this)
             }

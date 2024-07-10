@@ -27,6 +27,7 @@ import com.hyphenate.easeui.provider.EaseCustomActivityRoute
 import com.hyphenate.easeui.provider.EaseGroupProfileProvider
 import com.hyphenate.easeui.provider.EaseSettingsProvider
 import com.hyphenate.easeui.provider.EaseUserProfileProvider
+import com.hyphenate.easeui.widget.EaseImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -135,7 +136,7 @@ object UIKitManager {
 
     fun setUIKitConfigs(context: Context) {
         EaseIM.getConfig()?.avatarConfig?.let {
-            it.avatarShape = com.hyphenate.easeui.widget.EaseImageView.ShapeType.RECTANGLE
+            it.avatarShape = EaseImageView.ShapeType.RECTANGLE
             it.avatarRadius = context.resources.getDimensionPixelSize(com.hyphenate.easeui.R.dimen.ease_corner_extra_small)
         }
     }

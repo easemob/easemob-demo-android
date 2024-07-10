@@ -128,7 +128,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
                         (u == null || u.updateTimes == 0) && (u?.name.isNullOrEmpty() || u?.avatar.isNullOrEmpty())
                     }
                     fetchList?.let {
-                        contactViewModel?.fetchContactInfo(fetchList)
+                        fetchContactInfo(it)
                     }
                 }
             }

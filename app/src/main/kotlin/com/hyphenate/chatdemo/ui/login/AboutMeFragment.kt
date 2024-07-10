@@ -35,6 +35,7 @@ import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.dpToPx
+import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.feature.contact.EaseBlockListActivity
 import com.hyphenate.easeui.model.EaseEvent
@@ -273,7 +274,11 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
 
             },
             onRightButtonClickListener = {
-                cancelAccount()
+                if (!DemoHelper.getInstance().getDataModel().isDeveloperMode()){
+                    cancelAccount()
+                }else{
+                    mContext.showToast(R.string.main_account_cancellation)
+                }
             }
         )
         cancelAccountDialog.show()

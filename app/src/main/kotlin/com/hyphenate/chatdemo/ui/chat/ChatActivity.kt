@@ -25,11 +25,11 @@ class ChatActivity: EaseChatActivity() {
         })
         builder.setOnSendCombineMessageCallback(object : OnSendCombineMessageCallback {
             override fun onSendCombineSuccess(message: ChatMessage?) {
-                mContext.showToast(R.string.message_forward_success)
+                mContext.showToast(R.string.message_combine_success)
             }
 
             override fun onSendCombineError(message: ChatMessage?, code: Int, errorMsg: String?) {
-                mContext.showToast(R.string.message_forward_fail)
+                mContext.showToast(R.string.message_combine_fail)
             }
         })
         builder.setOnModifyMessageListener(object : OnModifyMessageListener{

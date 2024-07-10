@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PresenceCache
@@ -18,10 +20,12 @@ import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.feature.conversation.EaseConversationListFragment
+import com.hyphenate.easeui.model.EaseConversation
 import com.hyphenate.easeui.model.EaseEvent
 
 class ConversationListFragment: EaseConversationListFragment() {
 
+    private var isFirstLoadData = false
     private val presenceViewModel by lazy { ViewModelProvider(this)[PresenceViewModel::class.java] }
     private val presenceController by lazy { PresenceController(mContext,presenceViewModel) }
 
@@ -92,5 +96,34 @@ class ConversationListFragment: EaseConversationListFragment() {
             }
         }
     }
+
+    override fun loadConversationListSuccess(userList: List<EaseConversation>) {
+        if (!isFirstLoadData){
+            fetchFirstVisibleData()
+            isFirstLoadData = true
+        }
+    }
+
+    private fun fetchFirstVisibleData(){
+        binding?.listConversation?.let { layout->
+            (layout.conversationList.layoutManager as? LinearLayoutManager)?.let { manager->
+                layout.post {
+                    val firstVisibleItemPosition = manager.findFirstVisibleItemPosition()
+                    val lastVisibleItemPosition = manager.findLastVisibleItemPosition()
+                    val visibleList = layout.getListAdapter()?.mData?.filterIndexed { index, _ ->
+                        index in firstVisibleItemPosition..lastVisibleItemPosition
+                    }
+                    val fetchList = visibleList?.filter { conv ->
+                        val u = DemoHelper.getInstance().getDataModel().getUser(conv.conversationId)
+                        (u == null || u.updateTimes == 0) && (u?.name.isNullOrEmpty() || u?.avatar.isNullOrEmpty())
+                    }
+                    fetchList?.let {
+                        layout.fetchConvUserInfo(it)
+                    }
+                }
+            }
+        }
+    }
+
 
 }

@@ -92,6 +92,8 @@
     <string name="message_forward_success">Message forwarded successfully</string>
     <string name="message_forward_fail">Message forwarding failed</string>
     <string name="message_modify_fail">Message modifying failed</string>
+    <string name="message_combine_success">Combine Message successfully</string>
+    <string name="message_combine_fail">Combine Message failed</string>
 
     <string name="presence_status">User Status</string>
 
@@ -107,7 +109,7 @@
 
     <string name="main_about_me_currency">General</string>
     <string name="main_about_me_currency_typing">onTyping</string>
-    <string name="main_about_me_currency_typing_desc">开启后，对方将看见你的输入状态</string>
+    <string name="main_about_me_currency_typing_desc">After opening, the other party will see your input status</string>
     <string name="main_about_me_currency_dark_model">Dark Mode</string>
     <string name="main_about_me_currency_feature">Advanced Features</string>
     <string name="currency_feature_translation">Translation</string>
@@ -154,7 +156,8 @@
     <string name="main_about_me_setting">Settings</string>
     <string name="main_about_me_logout">Log Out</string>
     <string name="main_about_me_id">ID: %1$s</string>
-    <string name="main_about_me_account_cancellation">注销账户</string>
+    <string name="main_about_me_account_cancellation">Account Cancellation</string>
+    <string name="main_account_cancellation">Account cancellation is not supported in this mode</string>
 
     <!-- callkit -->
     <string name="call_duration">Call duration: %1$s</string>
