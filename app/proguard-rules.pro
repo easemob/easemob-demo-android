@@ -121,10 +121,6 @@
 -keep class com.hyphenate.chatdemo.common.model.** { *; }
 -keep class com.hyphenate.chatdemo.common.db.entity.** { *; }
 
-#jar包
--libraryjars libs/mi_push_v3.6.12.jar
--libraryjars libs/vivo_push_v2.3.1.jar
-
 #小米推送
 #下面可以不需要，环信SDK混淆逻辑中已包含相关
 #-keep class com.hyphenate.push.platform.mi.EMMiMsgReceiver {*;}

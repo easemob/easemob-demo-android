@@ -139,11 +139,11 @@ android {
     }
 
     //打开注释后，可以直接在studio里查看和编辑emclient-linux里的代码
-    externalNativeBuild {
-        ndkBuild {
-            path = File("jni/Android.mk")
-        }
-    }
+//    externalNativeBuild {
+//        ndkBuild {
+//            path = File("jni/Android.mk")
+//        }
+//    }
 }
 
 dependencies {
@@ -170,10 +170,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // hms push
     implementation("com.huawei.hms:push:6.12.0.300")
+    // xiaomi push
+    implementation(files("libs/MiPush_SDK_Client_6_0_1-C_3rd.aar"))
     // hihonor push
     implementation("com.hihonor.mcs:push:7.0.61.303")
     // meizu push
-    implementation("com.meizu.flyme.internet:push-internal:4.0.4@aar")//配置集成sdk
+    implementation("com.meizu.flyme.internet:push-internal:4.3.0")//配置集成sdk
     // vivo push
     implementation(files("libs/vivo_push_v4.0.4.0_504.aar"))
     //oppo push
