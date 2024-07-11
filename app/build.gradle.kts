@@ -139,11 +139,11 @@ android {
     }
 
     //打开注释后，可以直接在studio里查看和编辑emclient-linux里的代码
-//    externalNativeBuild {
-//        ndkBuild {
-//            path = File("jni/Android.mk")
-//        }
-//    }
+    externalNativeBuild {
+        ndkBuild {
+            path = File("jni/Android.mk")
+        }
+    }
 }
 
 dependencies {
@@ -174,8 +174,10 @@ dependencies {
     implementation("com.hihonor.mcs:push:7.0.61.303")
     // meizu push
     implementation("com.meizu.flyme.internet:push-internal:4.0.4@aar")//配置集成sdk
+    // vivo push
+    implementation(files("libs/vivo_push_v4.0.4.0_504.aar"))
     //oppo push
-    implementation(files("libs/oppo_push_3.0.0.aar"))
+    implementation(files("libs/oppo_push_3.5.2.aar"))
     //oppo push需添加以下依赖
     implementation("com.google.code.gson:gson:2.6.2")
     implementation("commons-codec:commons-codec:1.6")
@@ -203,12 +205,12 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-    implementation("io.hyphenate:ease-chat-kit:4.8.0")
-//    implementation(project(mapOf("path" to ":ease-im-kit")))
+//    implementation("io.hyphenate:ease-chat-kit:4.8.0")
+    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    implementation("io.hyphenate:ease-call-kit:4.8.0")
-//    implementation(project(mapOf("path" to ":ease-call-kit")))
+//    implementation("io.hyphenate:ease-call-kit:4.8.0")
+    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.8.0")
-//    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
+//    implementation("io.hyphenate:hyphenate-chat:4.8.0")
+    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
