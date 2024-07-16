@@ -5,19 +5,12 @@ import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hyphenate.chatdemo.DemoHelper
-import com.hyphenate.chatdemo.R
-import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.databinding.DemoActivityNotifyBinding
 import com.hyphenate.chatdemo.viewmodel.PushViewModel
 import com.hyphenate.easeui.base.EaseBaseActivity
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatPushRemindType
 import com.hyphenate.easeui.common.extensions.catchChatException
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
-import com.hyphenate.easeui.widget.EaseSwitchItemView
-import com.xiaomi.push.it
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NotifyActivity:EaseBaseActivity<DemoActivityNotifyBinding>() {

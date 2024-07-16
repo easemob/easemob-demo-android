@@ -170,12 +170,16 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // hms push
     implementation("com.huawei.hms:push:6.12.0.300")
+    // xiaomi push
+    implementation(files("libs/MiPush_SDK_Client_6_0_1-C_3rd.aar"))
     // hihonor push
     implementation("com.hihonor.mcs:push:7.0.61.303")
     // meizu push
-    implementation("com.meizu.flyme.internet:push-internal:4.0.4@aar")//配置集成sdk
+    implementation("com.meizu.flyme.internet:push-internal:4.3.0")//配置集成sdk
+    // vivo push
+    implementation(files("libs/vivo_push_v4.0.4.0_504.aar"))
     //oppo push
-    implementation(files("libs/oppo_push_3.0.0.aar"))
+    implementation(files("libs/oppo_push_3.5.2.aar"))
     //oppo push需添加以下依赖
     implementation("com.google.code.gson:gson:2.6.2")
     implementation("commons-codec:commons-codec:1.6")
@@ -209,6 +213,6 @@ dependencies {
     implementation("io.hyphenate:ease-call-kit:4.8.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.8.0")
+    implementation("io.hyphenate:hyphenate-chat:4.8.1")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
