@@ -141,30 +141,18 @@
         <!-- huawei push end -->
 
         <!-- VIVO推送配置 start -->
-        <!--Vivo Push SDK的版本信息-->
         <meta-data
-            android:name="sdk_version_vivo"
-            android:value="484"/>
+            android:name="com.vivo.push.api_key"
+            android:value="${VIVO_PUSH_APPKEY}" />
+
         <meta-data
-            android:name="local_iv"
-            android:value="MzMsMzQsMzUsMzYsMzcsMzgsMzksNDAsNDEsMzIsMzgsMzcsMzYsMzUsMzQsMzMsI0AzNCwzMiwzMywzNywzMywzNCwzMiwzMywzMywzMywzNCw0MSwzNSwzNSwzMiwzMiwjQDMzLDM0LDM1LDM2LDM3LDM4LDM5LDQwLDQxLDMyLDM4LDM3LDMzLDM1LDM0LDMzLCNAMzQsMzIsMzMsMzcsMzMsMzQsMzIsMzMsMzMsMzMsMzQsNDEsMzUsMzIsMzIsMzI" />
-        <!--Vivo Push需要配置的service、activity-->
+            android:name="com.vivo.push.app_id"
+            android:value="${VIVO_PUSH_APPID}" />
+
         <service
             android:name="com.vivo.push.sdk.service.CommandClientService"
             android:permission="com.push.permission.UPSTAGESERVICE"
             android:exported="true"/>
-        <activity
-            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--推送配置项-->
-        <meta-data
-            android:name="com.vivo.push.api_key"
-            android:value="${VIVO_PUSH_APPKEY}" />
-        <meta-data
-            android:name="com.vivo.push.app_id"
-            android:value="${VIVO_PUSH_APPID}" />
 
         <receiver android:name="com.hyphenate.push.platform.vivo.EMVivoMsgReceiver"
             android:exported="false">
