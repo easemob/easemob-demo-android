@@ -192,16 +192,8 @@
         <item name="switchItemShowDivider">true</item>
     </style>
 
-    <style name="currency_typing_desc">
-        <item name="background">@color/demo_desc_bg</item>
-        <item name="android:gravity">end</item>
-        <item name="android:text">@string/main_about_me_currency_typing_desc</item>
-        <item name="android:paddingStart">@dimen/ease_size_16</item>
-        <item name="android:paddingEnd">@dimen/ease_size_16</item>
-        <item name="android:paddingTop">@dimen/ease_size_4</item>
-        <item name="android:paddingBottom">@dimen/ease_size_4</item>
-        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Large</item>
-        <item name="android:textColor">@color/demo_subtitle</item>
+    <style name="currency_typing_desc" parent="@style/ease_contact_detail_switch_item">
+
     </style>
 
     <style name="currency_switch_item_dark_mode">

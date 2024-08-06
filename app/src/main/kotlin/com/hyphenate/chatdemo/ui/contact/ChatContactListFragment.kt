@@ -1,13 +1,12 @@
 package com.hyphenate.chatdemo.ui.contact
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PresenceCache
@@ -19,6 +18,7 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.dpToPx
+import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.feature.contact.EaseContactsListFragment
@@ -75,6 +75,26 @@ class ChatContactListFragment : EaseContactsListFragment() {
         }
     }
 
+    override fun setMenuItemClick(item: MenuItem): Boolean {
+        when(item.itemId) {
+            com.hyphenate.easeui.R.id.action_add_contact -> {
+                dialogController.showAddContactDialog { content ->
+                    if (content.isNotEmpty()) {
+                        contactViewModel?.addContact(content)
+                    }
+                }
+                return true
+            }
+            else -> return false
+        }
+    }
+
+    override fun addContactFail(code: Int, error: String) {
+       if (code == 404){
+           mContext.showToast(error)
+       }
+    }
+
     private fun updateProfile(){
         binding?.titleContact?.let { titlebar->
             EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(titlebar.getLogoView())
@@ -104,7 +124,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
     override fun loadContactListSuccess(userList: MutableList<EaseUser>) {
         super.loadContactListSuccess(userList)
         if (!isFirstLoadData){
-            fetchFirstVisibleData()
+            fetchContactInfo(userList)
             isFirstLoadData = true
         }
     }
@@ -112,27 +132,6 @@ class ChatContactListFragment : EaseContactsListFragment() {
     override fun loadContactListFail(code: Int, error: String) {
         super.loadContactListFail(code, error)
         ChatLog.e(TAG,"loadContactListFail: $code $error")
-    }
-
-    private fun fetchFirstVisibleData(){
-        binding?.listContact?.let {
-            (it.rvContactList.layoutManager as? LinearLayoutManager)?.let { manager->
-                it.post {
-                    val firstVisibleItemPosition = manager.findFirstVisibleItemPosition()
-                    val lastVisibleItemPosition = manager.findLastVisibleItemPosition()
-                    val visibleList = it.getListAdapter()?.mData?.filterIndexed { index, _ ->
-                        index in firstVisibleItemPosition..lastVisibleItemPosition
-                    }
-                    val fetchList = visibleList?.filter { user ->
-                        val u = DemoHelper.getInstance().getDataModel().getUser(user.userId)
-                        (u == null || u.updateTimes == 0) && (u?.name.isNullOrEmpty() || u?.avatar.isNullOrEmpty())
-                    }
-                    fetchList?.let {
-                        fetchContactInfo(it)
-                    }
-                }
-            }
-        }
     }
 
     class Builder:EaseContactsListFragment.Builder() {

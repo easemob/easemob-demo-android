@@ -109,11 +109,11 @@
 
     <string name="main_about_me_currency">通用</string>
     <string name="main_about_me_currency_typing">显示输入状态</string>
-    <string name="main_about_me_currency_typing_desc">开启后，对方将看见你的输入状态</string>
+    <string name="main_about_me_currency_typing_desc">开启后，在对方界面显示你正在输入的状态</string>
     <string name="main_about_me_currency_dark_model">暗黑模式</string>
     <string name="main_about_me_currency_feature">特性开关</string>
     <string name="currency_feature_translation">消息翻译</string>
-    <string name="currency_feature_translation_describe">长按消息即可将其翻译为手机系统语言</string>
+    <string name="currency_feature_translation_describe">长按消息将翻译为指定的目标语言</string>
     <string name="currency_feature_topic">群组话题</string>
     <string name="currency_feature_topic_describe">通过群组内的一条消息创建一个话题</string>
     <string name="currency_feature_reaction">消息表情回应</string>
@@ -130,7 +130,7 @@
     <string name="currency_language_confirm">完成</string>
 
     <string name="main_about_me_notify">消息通知</string>
-    <string name="main_about_me_notify_title">消息离线推送</string>
+    <string name="main_about_me_notify_title">推送免打扰</string>
     <string name="main_about_me_notify_describe">打开后，除群组内被@的消息，将不再接收任何消息推送</string>
 
     <string name="main_about_me_privacy">隐私</string>
@@ -171,6 +171,8 @@
     <!-- contact detail -->
     <string name="detail_item_audio">音频通话</string>
     <string name="detail_item_video">视频通话</string>
+    <string name="demo_add_contact_not_exist">此用户不存在</string>
+    <string name="demo_contact_added_notify">你已添加 %1$s 为联系人.</string>
 
     <!--presence-->
     <string name="ease_presence_online">在线</string>
@@ -184,5 +186,8 @@
     <string name="presence_dialog_title">自定义在线状态</string>
     <string name="presence_dialog_input_hint">请输入</string>
 
+    <!--change uikit resources-->
+    <string name="ease_conv_dialog_add_contact">通过手机号或ID添加联系人</string>
+    <string name="ease_dialog_edit_input_id_hint">手机号、ID</string>
 
 </resources>

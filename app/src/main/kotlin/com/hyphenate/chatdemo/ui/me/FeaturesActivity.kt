@@ -26,12 +26,15 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
         val enableTranslation = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_TRANSLATION,true)
         val enableThread = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_THREAD,true)
         val enableReaction = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_REACTION,true)
+        val isTyping = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_TYPING_ON,true)
         binding.switchItemTranslation.setChecked(enableTranslation)
         binding.switchItemTranslation.setSwitchDefaultStyle()
         binding.switchItemTopic.setChecked(enableThread)
         binding.switchItemTopic.setSwitchDefaultStyle()
         binding.switchItemReaction.setChecked(enableReaction)
         binding.switchItemReaction.setSwitchDefaultStyle()
+        binding.switchItemTyping.setChecked(isTyping)
+        binding.switchItemTyping.setSwitchDefaultStyle()
     }
 
     fun initListener(){
@@ -42,6 +45,7 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
             it.switchItemTranslation.setOnClickListener(this)
             it.switchItemTopic.setOnClickListener(this)
             it.switchItemReaction.setOnClickListener(this)
+            it.switchItemTyping.setOnClickListener(this)
         }
     }
 
@@ -69,6 +73,14 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
                     binding.switchItemReaction.setChecked(isChecked)
                     EaseIM.getConfig()?.chatConfig?.enableMessageReaction = isChecked
                     DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.FEATURES_REACTION,isChecked)
+                }
+            }
+            R.id.switch_item_typing -> {
+                binding.switchItemTyping.switch?.let { switch ->
+                    val isChecked = switch.isChecked.not()
+                    binding.switchItemTyping.setChecked(isChecked)
+                    EaseIM.getConfig()?.chatConfig?.enableChatTyping = isChecked
+                    DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.IS_TYPING_ON,isChecked)
                 }
             }
             else -> {}

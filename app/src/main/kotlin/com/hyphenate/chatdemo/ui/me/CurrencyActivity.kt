@@ -61,7 +61,6 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),View.OnCl
     private fun initListener(){
         binding.let {
             it.switchItemDark.setOnClickListener(this)
-            it.switchItemTyping.setOnClickListener(this)
             it.arrowItemFeature.setOnClickListener(this)
             it.arrowItemLanguage.setOnClickListener(this)
             it.arrowItemTargetLanguage.setOnClickListener(this)
@@ -73,15 +72,12 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),View.OnCl
 
     private fun initSwitch(){
         val isBlack = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_BLACK_THEME)
-        val isTyping = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_TYPING_ON)
 
         val handler = Looper.myLooper()?.let { Handler(it) }
 
         handler?.postDelayed({
             binding.switchItemDark.setChecked(isBlack)
             binding.switchItemDark.setSwitchDefaultStyle()
-            binding.switchItemTyping.setSwitchDefaultStyle()
-            binding.switchItemTyping.setChecked(isTyping)
         }, 200)
 
     }
@@ -159,14 +155,6 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),View.OnCl
                 val intent = Intent(this@CurrencyActivity, LanguageSettingActivity::class.java)
                 intent.putExtra(LANGUAGE_TYPE, LANGUAGE_TYPE_TARGET)
                 launcherToTargetLanguage.launch(intent)
-            }
-            R.id.switch_item_typing -> {
-                binding.switchItemTyping.switch?.let { switch ->
-                    val isChecked = switch.isChecked.not()
-                    binding.switchItemTyping.setChecked(isChecked)
-                    EaseIM.getConfig()?.chatConfig?.enableChatTyping = isChecked
-                    DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.IS_TYPING_ON,isChecked)
-                }
             }
             R.id.switch_item_dark -> {
                 binding.switchItemDark.switch?.let { switch ->

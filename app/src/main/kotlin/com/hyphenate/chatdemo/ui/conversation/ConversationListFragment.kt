@@ -12,11 +12,13 @@ import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PresenceCache
 import com.hyphenate.chatdemo.controller.PresenceController
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
+import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.dpToPx
+import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.feature.conversation.EaseConversationListFragment
@@ -26,6 +28,7 @@ import com.hyphenate.easeui.model.EaseEvent
 class ConversationListFragment: EaseConversationListFragment() {
 
     private var isFirstLoadData = false
+    private val chatContactViewModel by lazy { ViewModelProvider(this)[ChatContactViewModel::class.java] }
     private val presenceViewModel by lazy { ViewModelProvider(this)[PresenceViewModel::class.java] }
     private val presenceController by lazy { PresenceController(mContext,presenceViewModel) }
 
@@ -62,6 +65,11 @@ class ConversationListFragment: EaseConversationListFragment() {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX).register(this) {
             if (it.isContactChange && it.message.isNullOrEmpty().not()) {
                 binding?.listConversation?.notifyDataSetChanged()
+            }
+        }
+        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name).register(viewLifecycleOwner) {
+            if (it.isContactChange) {
+                refreshData()
             }
         }
     }
@@ -122,6 +130,21 @@ class ConversationListFragment: EaseConversationListFragment() {
                     }
                 }
             }
+        }
+    }
+
+    override fun defaultActionMoreDialog() {
+        dialogController.showMoreDialog { content ->
+            if (content.isNotEmpty()) {
+                chatContactViewModel.addContact(content)
+            }
+        }
+    }
+
+    override fun addContactFail(code: Int, error: String) {
+        ChatLog.e("ConversationListFragment","ConversationListFragment addContactFail $code $error")
+        if (code == 404){
+            mContext.showToast(error)
         }
     }
 

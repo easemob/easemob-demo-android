@@ -10,6 +10,7 @@ import com.hyphenate.chatdemo.ui.contact.ChatContactDetailActivity
 import com.hyphenate.chatdemo.ui.group.ChatGroupDetailActivity
 import com.hyphenate.chatdemo.ui.group.ChatCreateGroupActivity
 import com.hyphenate.chatdemo.repository.ProfileInfoRepository
+import com.hyphenate.chatdemo.ui.contact.ChatNewRequestActivity
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatMessage
@@ -21,6 +22,7 @@ import com.hyphenate.easeui.feature.contact.EaseContactCheckActivity
 import com.hyphenate.easeui.feature.contact.EaseContactDetailsActivity
 import com.hyphenate.easeui.feature.group.EaseCreateGroupActivity
 import com.hyphenate.easeui.feature.group.EaseGroupDetailActivity
+import com.hyphenate.easeui.feature.invitation.EaseNewRequestsActivity
 import com.hyphenate.easeui.model.EaseGroupProfile
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.provider.EaseCustomActivityRoute
@@ -122,6 +124,9 @@ object UIKitManager {
                             }
                             EaseContactCheckActivity::class.java.name ->{
                                 intent.setClass(context, ChatContactCheckActivity::class.java)
+                            }
+                            EaseNewRequestsActivity::class.java.name ->{
+                                intent.setClass(context, ChatNewRequestActivity::class.java)
                             }
                             else -> {
                                 return intent

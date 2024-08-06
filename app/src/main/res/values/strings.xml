@@ -88,6 +88,7 @@
 
     <string name="em_main_add_contact_success">Request sent.</string>
     <string name="em_main_add_contact_not_found">User does not exist</string>
+    <string name="demo_contact_added_notify">You have added %1$s as a contact.</string>
 
     <string name="message_forward_success">Message forwarded successfully</string>
     <string name="message_forward_fail">Message forwarding failed</string>
@@ -109,11 +110,11 @@
 
     <string name="main_about_me_currency">General</string>
     <string name="main_about_me_currency_typing">onTyping</string>
-    <string name="main_about_me_currency_typing_desc">After opening, the other party will see your input status</string>
+    <string name="main_about_me_currency_typing_desc">After opening, Let others know when you are typing a message</string>
     <string name="main_about_me_currency_dark_model">Dark Mode</string>
     <string name="main_about_me_currency_feature">Advanced Features</string>
     <string name="currency_feature_translation">Translation</string>
-    <string name="currency_feature_translation_describe">Long press a message to translate it to the mobile system language</string>
+    <string name="currency_feature_translation_describe">Long press a message to translate it into your preferred language</string>
     <string name="currency_feature_topic">Thread</string>
     <string name="currency_feature_topic_describe">Create a thread from a message within the group</string>
     <string name="currency_feature_reaction">Emoji Reaction</string>
@@ -171,6 +172,7 @@
     <!-- contact detail -->
     <string name="detail_item_audio">Audio</string>
     <string name="detail_item_video">Video</string>
+    <string name="demo_add_contact_not_exist">The user does not exist</string>
 
     <!--presence-->
     <string name="ease_presence_online">Online</string>
@@ -183,5 +185,9 @@
     <string name="ease_presence_done">Done</string>
     <string name="presence_dialog_title">Customize online status</string>
     <string name="presence_dialog_input_hint">Please enter</string>
+
+    <!--change uikit resources-->
+    <string name="ease_conv_dialog_add_contact">Search contacts by phone number or ID.</string>
+    <string name="ease_dialog_edit_input_id_hint">User ID</string>
 
 </resources>

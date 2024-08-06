@@ -19,20 +19,6 @@
         android:visibility="visible" />
 
     <com.hyphenate.easeui.widget.EaseSwitchItemView
-        android:id="@+id/switch_item_typing"
-        app:layout_constraintTop_toBottomOf="@+id/function_layout"
-        app:switchItemTitle="@string/main_about_me_currency_typing"
-        app:switchItemClickable="false"
-        style="@style/currency_switch_item_typing"
-        android:layout_width="match_parent"
-        android:layout_height="54dp" />
-
-    <TextView
-        style="@style/currency_typing_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.hyphenate.easeui.widget.EaseSwitchItemView
         android:id="@+id/switch_item_dark"
         app:layout_constraintTop_toBottomOf="@+id/function_layout"
         app:switchItemTitle="@string/main_about_me_currency_dark_model"

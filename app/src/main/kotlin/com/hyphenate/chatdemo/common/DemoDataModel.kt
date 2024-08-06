@@ -1,8 +1,6 @@
 package com.hyphenate.chatdemo.common
 
 import android.content.Context
-import com.hyphenate.EMValueCallBack
-import com.hyphenate.chat.EMContact
 import com.hyphenate.chatdemo.common.room.AppDatabase
 import com.hyphenate.chatdemo.common.room.dao.DemoUserDao
 import com.hyphenate.chatdemo.common.room.entity.DemoUser
@@ -10,7 +8,9 @@ import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatContact
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.model.EaseProfile
@@ -66,8 +66,8 @@ class DemoDataModel(private val context: Context) {
     private fun loadContactFromDb() {
         contactList.clear()
         ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
-            EMValueCallBack<MutableList<EMContact>>{
-            override fun onSuccess(value: MutableList<EMContact>?) {
+            ChatValueCallback<MutableList<ChatContact>>{
+            override fun onSuccess(value: MutableList<ChatContact>?) {
                 getUserDao().getAll().forEach {
                     val profile = it.parse()
                     value?.forEach { contact->

@@ -6,7 +6,7 @@ import androidx.viewbinding.ViewBinding
 import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.databinding.EaseLayoutGroupSelectContactBinding
 import com.hyphenate.easeui.feature.group.adapter.EaseGroupMemberListAdapter
-import com.hyphenate.easeui.feature.group.viewholder.EaseSelectContactViewHolder
+import com.hyphenate.easeui.feature.group.viewholders.EaseSelectContactViewHolder
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
 

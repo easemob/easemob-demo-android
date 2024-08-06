@@ -17,6 +17,7 @@ import com.hyphenate.easeui.common.extensions.ioScope
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.common.impl.ValueCallbackImpl
 import com.hyphenate.easeui.interfaces.EaseConnectionListener
+import com.hyphenate.easeui.interfaces.EaseContactListener
 import com.hyphenate.easeui.interfaces.EaseMessageListener
 import com.hyphenate.easeui.model.EaseEvent
 import kotlinx.coroutines.CoroutineScope
@@ -115,10 +116,29 @@ object ListenersWrapper {
         }
     }
 
+    private val contactListener by lazy { object : EaseContactListener(){
+
+        override fun onFriendRequestAccepted(username: String?) {
+            val notifyMsg = LocalNotifyHelper.createContactNotifyMessage(username)
+            notifyMsg?.let {
+                ChatClient.getInstance().chatManager().saveMessage(notifyMsg)
+                DemoHelper.getInstance().context.let {
+                    EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name)
+                        .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.CONTACT))
+                }
+            }
+        }
+
+        override fun onContactDeleted(username: String?) {
+            LocalNotifyHelper.removeContactNotifyMessage(username)
+        }
+    } }
+
     fun registerListeners() {
         // register connection listener
         EaseIM.addConnectionListener(connectListener)
         EaseIM.addChatMessageListener(messageListener)
         EaseIM.addPresenceListener(presenceListener)
+        EaseIM.addContactListener(contactListener)
     }
 }
