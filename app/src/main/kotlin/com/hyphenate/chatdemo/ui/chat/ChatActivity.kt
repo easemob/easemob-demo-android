@@ -16,20 +16,20 @@ class ChatActivity: EaseChatActivity() {
         super.setChildSettings(builder)
         builder.setOnMessageForwardCallback(object : OnMessageForwardCallback {
             override fun onForwardSuccess(message: ChatMessage?) {
-                mContext.showToast(R.string.message_forward_success)
+                showToast(R.string.message_forward_success)
             }
 
             override fun onForwardError(code: Int, errorMsg: String?) {
-                mContext.showToast(R.string.message_forward_fail)
+                showToast(R.string.message_forward_fail)
             }
         })
         builder.setOnSendCombineMessageCallback(object : OnSendCombineMessageCallback {
             override fun onSendCombineSuccess(message: ChatMessage?) {
-                mContext.showToast(R.string.message_combine_success)
+                showToast(R.string.message_combine_success)
             }
 
             override fun onSendCombineError(message: ChatMessage?, code: Int, errorMsg: String?) {
-                mContext.showToast(R.string.message_combine_fail)
+                showToast(R.string.message_combine_fail)
             }
         })
         builder.setOnModifyMessageListener(object : OnModifyMessageListener{
@@ -38,7 +38,7 @@ class ChatActivity: EaseChatActivity() {
             }
 
             override fun onModifyMessageFailure(messageId: String?, code: Int, error: String?) {
-                mContext.showToast(R.string.message_modify_fail)
+                showToast(R.string.message_modify_fail)
             }
         })
         builder.turnOnTypingMonitor(EaseIM.getConfig()?.chatConfig?.enableChatTyping?:true)
