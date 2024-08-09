@@ -180,7 +180,7 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
                     titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
                 )
             ),
-            object : SimpleListSheetItemClickListener {
+            itemListener = object : SimpleListSheetItemClickListener {
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     simpleMenuItemClickListener(menu)
                     showSelectDialog?.dismiss()

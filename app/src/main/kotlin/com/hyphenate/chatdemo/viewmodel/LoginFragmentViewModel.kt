@@ -2,6 +2,7 @@ package com.hyphenate.chatdemo.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import com.hyphenate.chatdemo.repository.EMClientRepository
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 
@@ -29,7 +30,7 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
             emit(mRepository.loginFromServer(userName, userPassword))
         }
             .flatMapConcat { result ->
-                flow { emit(mRepository.loginToServer(result.username!!, result.token!!, true)) }
+                flow { emit(mRepository.loginToServer(result?.username!!, result.token!!, true)) }
             }
 
     /**

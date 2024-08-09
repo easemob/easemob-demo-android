@@ -38,7 +38,7 @@ class NotifyActivity:EaseBaseActivity<DemoActivityNotifyBinding>() {
                     }
                     .collect {
                         it.remindType?.let { remindType ->
-                            if (remindType == ChatPushRemindType.NONE) {
+                            if (remindType == ChatPushRemindType.MENTION_ONLY) {
                                 DemoHelper.getInstance().getDataModel().setAppPushSilent(true)
                                 binding.switchItemNotify.setChecked(true)
                             } else {

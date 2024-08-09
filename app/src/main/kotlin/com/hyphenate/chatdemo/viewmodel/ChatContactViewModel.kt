@@ -1,13 +1,16 @@
 package com.hyphenate.chatdemo.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.hyphenate.EMValueCallBack
-import com.hyphenate.chat.EMContact
 import com.hyphenate.chatdemo.DemoHelper
+import com.hyphenate.chatdemo.common.LocalNotifyHelper
 import com.hyphenate.chatdemo.common.room.entity.parse
+import com.hyphenate.chatdemo.repository.ChatContactRepository
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatContact
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.common.helper.ContactSortedHelper
@@ -15,6 +18,7 @@ import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.model.setUserInitialLetter
 import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
@@ -26,7 +30,7 @@ class ChatContactViewModel: EaseContactListViewModel() {
 
     override fun loadData(fetchServerData: Boolean){
         viewModelScope.launch {
-            if (fetchServerData || !EaseIM.isLoadedContactFromServer()) {
+            if (fetchServerData) {
                 flow {
                     emit(contactRepository.loadLocalContact())
                 }
@@ -54,10 +58,10 @@ class ChatContactViewModel: EaseContactListViewModel() {
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), mutableListOf())
                 .collect {
                     ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
-                        EMValueCallBack<MutableList<EMContact>> {
-                        override fun onSuccess(value: MutableList<EMContact>?) {
+                        ChatValueCallback<MutableList<ChatContact>> {
+                        override fun onSuccess(value: MutableList<ChatContact>?) {
                             value?.forEach { contact->
-                               val data = it?.map { user->
+                               val data = it.map { user->
                                     val profile = DemoHelper.getInstance().getDataModel().getUser(user.userId)?.parse()?: EaseProfile(user.userId)
                                     if (contact.username == user.userId && contact.remark.isNotEmpty()){
                                         profile.remark = contact.remark
@@ -89,7 +93,7 @@ class ChatContactViewModel: EaseContactListViewModel() {
         }
     }
 
-    override fun fetchContactInfo(contactList: List<EaseUser>) {
+    override fun fetchContactInfo(contactList: List<EaseUser>?) {
         contactList?.filter {
             val user = DemoHelper.getInstance().getDataModel().getUser(it.userId)
             (user == null || user.updateTimes == 0) &&
@@ -101,4 +105,38 @@ class ChatContactViewModel: EaseContactListViewModel() {
         }
     }
 
+    override fun addContact(userName: String, reason: String?) {
+        viewModelScope.launch {
+            flow {
+                try {
+                    emit(contactRepository.checkPhoneNumOrIdFromServer(userName))
+                }catch (e:ChatException){
+                    inMainScope {
+                        view?.addContactFail(e.errorCode,e.description)
+                    }
+                }
+            }
+            .flatMapConcat { username->
+                flow<String> {
+                    username?.let {
+                        super.addContact(it, reason)
+                    }
+                }
+            }
+            .catchChatException { e->
+                view?.addContactFail(e.errorCode,e.description)
+            }
+           .collect{
+                LocalNotifyHelper.createContactNotifyMessage(it)
+                view?.addContactSuccess(it)
+            }
+        }
+    }
+
+
+    private fun inMainScope(scope: ()->Unit) {
+        viewModelScope.launch(context = Dispatchers.Main) {
+            scope()
+        }
+    }
 }

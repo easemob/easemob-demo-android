@@ -20,7 +20,6 @@ suspend fun ChatContactManager.fetchResultContactsFromServer():List<EaseUser>{
     return suspendCoroutine{ continuation ->
         asyncFetchAllContactsFromServer(ValueCallbackImpl(
             onSuccess = { value ->
-                EaseIM.setLoadedContactFromServer()
                 value?.let {
                     val list = it.map { contact ->
                         EaseIM.getUserProvider()?.getSyncUser(contact.username)?.toUser() ?: EaseUser(contact.username)

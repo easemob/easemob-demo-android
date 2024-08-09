@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager

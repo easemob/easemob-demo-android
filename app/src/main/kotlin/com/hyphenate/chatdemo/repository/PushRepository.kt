@@ -1,11 +1,9 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import com.hyphenate.chatdemo.common.suspend.getSilentModeForApp
 import com.hyphenate.chatdemo.common.suspend.setSilentModeForApp
 import com.hyphenate.easeui.common.ChatClient
-import com.hyphenate.easeui.common.ChatPushRemindType
 import com.hyphenate.easeui.common.ChatSilentModeParam
-import com.hyphenate.easeui.common.ChatSilentModelType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

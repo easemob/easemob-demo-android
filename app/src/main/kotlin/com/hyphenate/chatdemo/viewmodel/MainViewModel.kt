@@ -3,9 +3,12 @@ package com.hyphenate.chatdemo.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.hyphenate.chatdemo.interfaces.IMainRequest
 import com.hyphenate.chatdemo.interfaces.IMainResultView
+import com.hyphenate.chatdemo.repository.ChatClientRepository
 import com.hyphenate.easeui.viewmodel.EaseBaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -25,6 +28,7 @@ class MainViewModel: EaseBaseViewModel<IMainResultView>(), IMainRequest {
                     it.toString()
                 }
             }
+            .flowOn(Dispatchers.Main)
             .collectLatest {
                 view?.getUnreadCountSuccess(it)
             }
@@ -45,6 +49,7 @@ class MainViewModel: EaseBaseViewModel<IMainResultView>(), IMainRequest {
                         it.toString()
                     }
                 }
+                .flowOn(Dispatchers.Main)
                 .collectLatest {
                     view?.getRequestUnreadCountSuccess(it)
                 }

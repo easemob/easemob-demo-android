@@ -18,4 +18,5 @@
 
     <dimen name="em_common_item_height">66dp</dimen>
     <dimen name="em_about_me_avatar_size">25dp</dimen>
+    <dimen name="em_title_bar_status_icon_size">14dp</dimen>
 </resources>

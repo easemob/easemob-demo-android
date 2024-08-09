@@ -18,19 +18,18 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.bean.Language
 import com.hyphenate.chatdemo.bean.LanguageType
 import com.hyphenate.chatdemo.common.DemoConstant
-import com.hyphenate.chatdemo.common.LanguageUtil
+import com.hyphenate.chatdemo.common.PreferenceManager
 import com.hyphenate.chatdemo.databinding.DemoActivityLanguageBinding
 import com.hyphenate.chatdemo.interfaces.LanguageListItemSelectListener
-import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.base.EaseBaseActivity
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
 import java.util.Locale
 
 class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
     private var tagList:MutableList<Language> = mutableListOf()
     private var languageAdapter:LanguageAdapter? = null
-    private var currentTag:String = ""
+    private var languageTag:String = ""
     private var languageCode:String = ""
+    private var languageType:Int = 0
     private var selectedPosition: Int = -1
 
     override fun getViewBinding(inflater: LayoutInflater): DemoActivityLanguageBinding {
@@ -38,11 +37,18 @@ class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
     }
 
     companion object {
-        private const val RESULT_TARGET_LANGUAGE = "target_language"
+        private const val RESULT_LANGUAGE_TAG = "language_tag"
+        private const val RESULT_LANGUAGE_CODE = "language_code"
+        private const val LANGUAGE_TYPE = "language_type"
+        private const val LANGUAGE_TYPE_APPLICATION = 0
+        private const val LANGUAGE_TYPE_TARGET = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        intent.hasExtra(LANGUAGE_TYPE).apply {
+            languageType = intent.getIntExtra(LANGUAGE_TYPE,0)
+        }
         initView()
         initListener()
     }
@@ -54,17 +60,30 @@ class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
             val layoutManager = LinearLayoutManager(mContext)
             it.rlSheetList.layoutManager = layoutManager
             it.rlSheetList.adapter = this.languageAdapter
-            val tagLanguage = EasePreferenceManager.getInstance().getString(DemoConstant.TARGET_LANGUAGE)
-            if (tagLanguage.isNullOrEmpty()){
-                val index = tagList.indexOfFirst { language-> language.type.value == Locale.getDefault().language }
-                languageAdapter?.setSelectPosition(index)
-            }else{
-                tagLanguage.let { tag->
-                    val index = tagList.indexOfFirst { language-> language.type.value == tag }
-                    languageCode = tag
-                    selectedPosition = index
-                    languageAdapter?.setSelectPosition(index)
+            when(languageType){
+                LANGUAGE_TYPE_APPLICATION -> {
+                    binding.titleBar.setTitle(getString(R.string.currency_language))
+                    PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,Locale.getDefault().language).let { tag->
+                        val index = tagList.indexOfFirst { language-> language.type.value == tag }
+                        languageCode = tag
+                        selectedPosition = index
+                        if (selectedPosition != -1){
+                            languageAdapter?.setSelectPosition(selectedPosition)
+                        }
+                    }
                 }
+                LANGUAGE_TYPE_TARGET -> {
+                    binding.titleBar.setTitle(getString(R.string.currency_target_language))
+                    PreferenceManager.getValue(DemoConstant.TARGET_LANGUAGE,LanguageType.EN.value).let { tag->
+                        val index = tagList.indexOfFirst { language-> language.type.value == tag }
+                        languageCode = tag
+                        selectedPosition = index
+                        if (selectedPosition != -1){
+                            languageAdapter?.setSelectPosition(selectedPosition)
+                        }
+                    }
+                }
+                else -> {}
             }
             updateConfirm()
         }
@@ -73,7 +92,7 @@ class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
     fun initListener(){
         languageAdapter?.setLanguageListItemClickListener(object : LanguageListItemSelectListener{
             override fun onSelectListener(position: Int,language:Language) {
-                currentTag = language.tag
+                languageTag = language.tag
                 languageCode = language.type.value
                 selectedPosition = position
                 updateConfirm()
@@ -82,7 +101,7 @@ class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
         binding.titleBar.setOnMenuItemClickListener { item->
             when (item.itemId){
                 R.id.action_language_confirm -> {
-                    chengApplicationLanguage()
+                    chengLanguage()
                 }
                 else -> {}
             }
@@ -117,13 +136,12 @@ class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
         }
     }
 
-    private fun chengApplicationLanguage(){
-        LanguageUtil.changeLanguage(languageCode)
-        EaseIM.getConfig()?.chatConfig?.targetTranslationLanguage = languageCode
-        EasePreferenceManager.getInstance().putString(DemoConstant.TARGET_LANGUAGE, languageCode)
+    private fun chengLanguage(){
         val resultIntent = Intent()
-        resultIntent.putExtra(RESULT_TARGET_LANGUAGE,currentTag)
+        resultIntent.putExtra(RESULT_LANGUAGE_TAG,languageTag)
+        resultIntent.putExtra(RESULT_LANGUAGE_CODE,languageCode)
         setResult(RESULT_OK,resultIntent)
+        finish()
     }
 
     private fun defaultLanguage(){
