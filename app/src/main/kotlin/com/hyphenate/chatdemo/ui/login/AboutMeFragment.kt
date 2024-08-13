@@ -112,7 +112,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
 
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT).register(this) {
             if (it.isContactChange && it.event == DemoConstant.EVENT_UPDATE_SELF) {
-                updatePresence()
+                updatePresence(true)
             }
         }
     }
@@ -140,16 +140,19 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
         }
     }
 
-    private fun updatePresence(){
+    private fun updatePresence(isRefreshAvatar:Boolean = false){
         EaseIM.getCurrentUser()?.let { user->
             val presence = PresenceCache.getUserPresence(user.id)
             presence?.let {
-                binding?.epPresence?.setUserAvatarData(user,EasePresenceUtil.getPresenceIcon(mContext,it))
-                binding?.epPresence?.getStatusView()?.visibility = View.VISIBLE
-                val subtitle = EasePresenceUtil.getPresenceString(mContext,it)
-                binding?.itemPresence?.setContent(subtitle)
-            }
-            if (presence == null){
+                if (isRefreshAvatar){
+                    binding?.epPresence?.setUserAvatarData(user)
+                }else{
+                    binding?.epPresence?.setUserStatusData(EasePresenceUtil.getPresenceIcon(mContext,it))
+                    binding?.epPresence?.getStatusView()?.visibility = View.VISIBLE
+                    val subtitle = EasePresenceUtil.getPresenceString(mContext,it)
+                    binding?.itemPresence?.setContent(subtitle)
+                }
+            }?:kotlin.run {
                 binding?.epPresence?.setUserAvatarData(user)
             }
             binding?.tvName?.text = user.getNotEmptyName()

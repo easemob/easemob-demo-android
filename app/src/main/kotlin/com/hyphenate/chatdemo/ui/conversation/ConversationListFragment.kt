@@ -44,7 +44,7 @@ class ConversationListFragment: EaseConversationListFragment() {
             EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(it.getLogoView())
             EaseIM.getConfig()?.avatarConfig?.setStatusStyle(it.getStatusView(),2.dpToPx(mContext),
                 ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_background))
-            updateProfile()
+            updateProfile(true)
             it.setTitleEndDrawable(R.drawable.conversation_title)
         }
     }
@@ -52,7 +52,7 @@ class ConversationListFragment: EaseConversationListFragment() {
     private fun initEventBus() {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT).register(this) {
             if (it.isContactChange && it.event == DemoConstant.EVENT_UPDATE_SELF) {
-                updateProfile()
+                updateProfile(true)
             }
         }
 
@@ -83,7 +83,7 @@ class ConversationListFragment: EaseConversationListFragment() {
         }
     }
 
-    private fun updateProfile(){
+    private fun updateProfile(isRefreshAvatar:Boolean = false){
         binding?.titleConversations?.let { titlebar->
             EaseIM.getCurrentUser()?.let { profile->
                 val presence = PresenceCache.getUserPresence(profile.id)
@@ -95,7 +95,9 @@ class ConversationListFragment: EaseConversationListFragment() {
                     titlebar.setLogoStatusSize(resources.getDimensionPixelSize(R.dimen.em_title_bar_status_icon_size))
                 }
                 ChatLog.e("ConversationListFragment","updateProfile ${profile.id} ${profile.name} ${profile.avatar}")
-                titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.ease_default_avatar, 32.dpToPx(mContext))
+                if (isRefreshAvatar){
+                    titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.ease_default_avatar, 32.dpToPx(mContext))
+                }
                 val layoutParams = titlebar.getLogoView()?.layoutParams as? ViewGroup.MarginLayoutParams
                 layoutParams?.marginStart = 12.dpToPx(mContext)
                 titlebar.getTitleView().let { text ->

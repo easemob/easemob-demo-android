@@ -326,6 +326,7 @@ class EMClientRepository: BaseRepository() {
         try {
             val headers: MutableMap<String, String> = java.util.HashMap()
             headers["Content-Type"] = "application/json"
+            headers["Authorization"] = "Bearer ${ChatClient.getInstance().accessToken}"
             val url = "$CANCEL_ACCOUNT/${DemoHelper.getInstance().getDataModel().getPhoneNumber()}"
             EMLog.d("cancelAccountFromServer url : ", url)
             val response =

@@ -175,12 +175,15 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
             .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_USER_SUFFIX, EaseEvent.TYPE.CONTACT, user?.userId))
     }
 
-    private fun updatePresence(){
+    private fun updatePresence(isRefreshAvatar:Boolean = false){
         val map = PresenceCache.getPresenceInfo
         user?.let { user->
             map.let {
                 binding.epPresence.getStatusView().visibility = View.VISIBLE
-                binding.epPresence.setUserAvatarData(user.toProfile(),EasePresenceUtil.getPresenceIcon(mContext,it[user.userId]))
+                if (isRefreshAvatar){
+                    binding.epPresence.setUserAvatarData(user.toProfile())
+                }
+                binding.epPresence.setUserStatusData(EasePresenceUtil.getPresenceIcon(mContext,it[user.userId]))
             }
         }
     }

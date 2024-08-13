@@ -44,7 +44,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
             it.setTitle("")
             it.setTitleEndDrawable(R.drawable.contact_title)
         }
-        updateProfile()
+        updateProfile(true)
     }
 
     override fun initData() {
@@ -56,7 +56,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
         }
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT).register(this) {
             if (it.isContactChange && it.event == DemoConstant.EVENT_UPDATE_SELF) {
-                updateProfile()
+                updateProfile(true)
             }
         }
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
@@ -95,7 +95,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
        }
     }
 
-    private fun updateProfile(){
+    private fun updateProfile(isRefreshAvatar:Boolean = false){
         binding?.titleContact?.let { titlebar->
             EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(titlebar.getLogoView())
             EaseIM.getConfig()?.avatarConfig?.setStatusStyle(titlebar.getStatusView(),2.dpToPx(mContext),
@@ -111,7 +111,9 @@ class ChatContactListFragment : EaseContactsListFragment() {
                     titlebar.setLogoStatusSize(resources.getDimensionPixelSize(R.dimen.em_title_bar_status_icon_size))
                 }
                 ChatLog.e(TAG,"updateProfile ${profile.id} ${profile.name} ${profile.avatar}")
-                titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.ease_default_avatar, 32.dpToPx(mContext))
+                if (isRefreshAvatar){
+                    titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.ease_default_avatar, 32.dpToPx(mContext))
+                }
                 val layoutParams = titlebar.getLogoView()?.layoutParams as? ViewGroup.MarginLayoutParams
                 layoutParams?.marginStart = 12.dpToPx(mContext)
                 titlebar.getTitleView().let { text ->

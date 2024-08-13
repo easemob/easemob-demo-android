@@ -123,8 +123,8 @@ class DemoDataModel(private val context: Context) {
      */
     fun updateUsersTimes(userIds: List<EaseProfile>) {
         if (userIds.isNotEmpty()) {
-            userIds?.map { it.id }?.let { userIds ->
-                getUserDao().updateUsersTimes(userIds)
+            userIds.map { it.id }.let { ids ->
+                getUserDao().updateUsersTimes(ids)
                 loadContactFromDb()
             }
         }
