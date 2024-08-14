@@ -73,6 +73,13 @@ class ChatContactRepository: EaseContactListRepository() {
                 ChatLog.d("checkByServer success : ", responseInfo)
                 val `object` = JSONObject(responseInfo)
                 val chatUserName = `object`.getString("chatUserName")
+                val localContacts = ChatClient.getInstance().contactManager().contactsFromLocal
+                localContacts?.let {
+                    if (it.contains(chatUserName)){
+                        callBack.onError(code, DemoApplication.getInstance().getString(R.string.demo_add_contact_already_exist))
+                        return
+                    }
+                }
                 callBack.onSuccess(chatUserName)
             }else {
                 if (responseInfo != null && responseInfo.isNotEmpty()) {

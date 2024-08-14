@@ -14,7 +14,9 @@ class ChatNewRequestActivity : EaseNewRequestsActivity(){
     }
 
     override fun addContactFail(code: Int, error: String) {
-        if (code == 404){
+        if (code == 200 ){
+            mContext.showToast(error)
+        }else if (code == 404){
             mContext.showToast(error)
         }
     }

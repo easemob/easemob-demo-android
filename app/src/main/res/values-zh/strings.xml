@@ -172,6 +172,7 @@
     <string name="detail_item_audio">音频通话</string>
     <string name="detail_item_video">视频通话</string>
     <string name="demo_add_contact_not_exist">此用户不存在</string>
+    <string name="demo_add_contact_already_exist">该用户已是好友</string>
     <string name="demo_contact_added_notify">你已添加 %1$s 为联系人.</string>
 
     <!--presence-->

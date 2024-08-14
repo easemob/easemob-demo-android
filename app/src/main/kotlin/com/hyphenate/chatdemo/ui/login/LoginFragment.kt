@@ -25,6 +25,7 @@ import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
+import androidx.core.text.clearSpans
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hyphenate.chatdemo.DemoHelper
@@ -418,6 +419,11 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
             ds.color = ContextCompat.getColor(mContext, R.color.transparent)
             ds.clearShadowLayer()
         }
+    }
+
+    override fun onDestroyView() {
+        spannable.clearSpans()
+        super.onDestroyView()
     }
 
     companion object {

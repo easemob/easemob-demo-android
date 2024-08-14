@@ -39,7 +39,7 @@ class ConversationListFragment: EaseConversationListFragment() {
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-
+        chatContactViewModel.attachView(this)
         binding?.titleConversations?.let {
             EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(it.getLogoView())
             EaseIM.getConfig()?.avatarConfig?.setStatusStyle(it.getStatusView(),2.dpToPx(mContext),
@@ -145,7 +145,9 @@ class ConversationListFragment: EaseConversationListFragment() {
 
     override fun addContactFail(code: Int, error: String) {
         ChatLog.e("ConversationListFragment","ConversationListFragment addContactFail $code $error")
-        if (code == 404){
+        if (code == 200 ){
+            mContext.showToast(error)
+        }else if (code == 404){
             mContext.showToast(error)
         }
     }
