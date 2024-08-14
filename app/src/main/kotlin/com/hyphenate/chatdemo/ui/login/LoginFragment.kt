@@ -48,7 +48,6 @@ import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.hideSoftKeyboard
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -311,49 +310,56 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
         }
     }
 
-    private val spannable: SpannableString
+    private var spannable: SpannableString? = null
         private get() {
-            val language = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,Locale.getDefault().language)
-            val isZh = language.startsWith("zh")
-            val spanStr = SpannableString(getString(R.string.em_login_agreement))
-            var start1 = 29
-            var end1 = 45
-            var start2 = 50
-            var end2 = spanStr.length
-            if (isZh) {
-                start1 = 5
-                end1 = 13
-                start2 = 14
-                end2 = spanStr.length
+            if (field == null) {
+                field = createSpannable()
             }
-            //设置下划线
-            //spanStr.setSpan(new UnderlineSpan(), 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spanStr.setSpan(object : MyClickableSpan() {
-                override fun onClick(widget: View) {
-                    jumpToAgreement()
-                }
-            }, start1, end1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            spanStr.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_primary)),
-                start1,
-                end1,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            //spanStr.setSpan(new UnderlineSpan(), 10, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spanStr.setSpan(object : MyClickableSpan() {
-                override fun onClick(widget: View) {
-                    jumpToProtocol()
-                }
-            }, start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            spanStr.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_primary)),
-                start2,
-                end2,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            return spanStr
+            return field
         }
+
+    private fun createSpannable(): SpannableString {
+        val language = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,Locale.getDefault().language)
+        val isZh = language.startsWith("zh")
+        val spanStr = SpannableString(getString(R.string.em_login_agreement))
+        var start1 = 29
+        var end1 = 45
+        var start2 = 50
+        var end2 = spanStr.length
+        if (isZh) {
+            start1 = 5
+            end1 = 13
+            start2 = 14
+            end2 = spanStr.length
+        }
+        //设置下划线
+        //spanStr.setSpan(new UnderlineSpan(), 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanStr.setSpan(object : MyClickableSpan() {
+            override fun onClick(widget: View) {
+                jumpToAgreement()
+            }
+        }, start1, end1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spanStr.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_primary)),
+            start1,
+            end1,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        //spanStr.setSpan(new UnderlineSpan(), 10, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanStr.setSpan(object : MyClickableSpan() {
+            override fun onClick(widget: View) {
+                jumpToProtocol()
+            }
+        }, start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spanStr.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_primary)),
+            start2,
+            end2,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        return spanStr
+    }
 
     override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -422,7 +428,8 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
     }
 
     override fun onDestroyView() {
-        spannable.clearSpans()
+        spannable?.clearSpans()
+        spannable = null
         super.onDestroyView()
     }
 

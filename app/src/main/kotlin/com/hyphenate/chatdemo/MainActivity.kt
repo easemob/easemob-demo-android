@@ -257,11 +257,11 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             EaseConstant.API_ASYNC_ADD_CONTACT -> {
                 if (errorCode == ChatError.EM_NO_ERROR){
                     runOnUiThread{
-                        mContext.showToast(mContext.resources.getString(R.string.em_main_add_contact_success))
+                        showToast(R.string.em_main_add_contact_success)
                     }
                 }else{
                     runOnUiThread{
-                        mContext.showToast(errorMessage.toString())
+                        showToast(errorMessage.toString())
                     }
                 }
             }
