@@ -1,8 +1,6 @@
 package com.hyphenate.chatdemo.common
 
 import android.content.Context
-import com.hyphenate.EMValueCallBack
-import com.hyphenate.chat.EMContact
 import com.hyphenate.chatdemo.common.room.AppDatabase
 import com.hyphenate.chatdemo.common.room.dao.DemoUserDao
 import com.hyphenate.chatdemo.common.room.entity.DemoUser
@@ -10,7 +8,10 @@ import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatContact
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatValueCallback
+import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
@@ -36,6 +37,10 @@ class DemoDataModel(private val context: Context) {
         database
         resetUsersTimes()
         contactList.clear()
+        val data = getAllContacts().values.map { it.toProfile() }
+        if (data.isNotEmpty()){
+            EaseIM.updateUsersInfo(data)
+        }
     }
 
     /**
@@ -61,8 +66,8 @@ class DemoDataModel(private val context: Context) {
     private fun loadContactFromDb() {
         contactList.clear()
         ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
-            EMValueCallBack<MutableList<EMContact>>{
-            override fun onSuccess(value: MutableList<EMContact>?) {
+            ChatValueCallback<MutableList<ChatContact>>{
+            override fun onSuccess(value: MutableList<ChatContact>?) {
                 getUserDao().getAll().forEach {
                     val profile = it.parse()
                     value?.forEach { contact->
@@ -118,8 +123,8 @@ class DemoDataModel(private val context: Context) {
      */
     fun updateUsersTimes(userIds: List<EaseProfile>) {
         if (userIds.isNotEmpty()) {
-            userIds?.map { it.id }?.let { userIds ->
-                getUserDao().updateUsersTimes(userIds)
+            userIds.map { it.id }.let { ids ->
+                getUserDao().updateUsersTimes(ids)
                 loadContactFromDb()
             }
         }
@@ -192,6 +197,20 @@ class DemoDataModel(private val context: Context) {
      */
     fun isAgreeAgreement(): Boolean {
         return PreferenceManager.getValue(KEY_AGREE_AGREEMENT, false)
+    }
+
+    /**
+     * Set the flag whether the current phone number.
+     */
+    fun setCurrentPhoneNumber(number:String?){
+        PreferenceManager.putValue(KEY_CURRENT_PHONE_NUMBER, number?:"")
+    }
+
+    /**
+     * Get the flag whether the current phone number.
+     */
+    fun getPhoneNumber():String{
+        return PreferenceManager.getValue(KEY_CURRENT_PHONE_NUMBER,"")
     }
 
     /**
@@ -318,6 +337,7 @@ class DemoDataModel(private val context: Context) {
     companion object {
         private const val KEY_DEVELOPER_MODE = "shared_is_developer"
         private const val KEY_AGREE_AGREEMENT = "shared_key_agree_agreement"
+        private const val KEY_CURRENT_PHONE_NUMBER = "shared_current_phone_number"
         private const val KEY_CUSTOM_APPKEY = "SHARED_KEY_CUSTOM_APPKEY"
         private const val KEY_REST_SERVER = "SHARED_KEY_REST_SERVER"
         private const val KEY_IM_SERVER = "SHARED_KEY_IM_SERVER"

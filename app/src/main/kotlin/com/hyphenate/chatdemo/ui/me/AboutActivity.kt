@@ -57,13 +57,14 @@ class AboutActivity:EaseBaseActivity<DemoActivityAboutBinding>(), View.OnClickLi
             it.arrowItemBusinessCooperation.setOnClickListener(this)
             it.arrowItemChannelCooperation.setOnClickListener(this)
             it.arrowItemComplaintSuggestions.setOnClickListener(this)
+            it.arrowItemPrivacyPolicy.setOnClickListener(this)
         }
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.arrow_item_official_website -> {
-                startActivity(Intent(this@AboutActivity,WebViewActivity::class.java))
+                WebViewActivity.actionStart(this@AboutActivity,WebViewLoadType.RemoteUrl)
             }
             R.id.arrow_item_service_hotline -> {
                 if (PermissionCompat.checkPermission(
@@ -83,6 +84,9 @@ class AboutActivity:EaseBaseActivity<DemoActivityAboutBinding>(), View.OnClickLi
             }
             R.id.arrow_item_complaint_suggestions -> {
                 sendEmail(getString(R.string.about_complaint_suggestions_email),"环信Demo投诉建议")
+            }
+            R.id.arrow_item_privacy_policy -> {
+
             }
             else -> {}
         }

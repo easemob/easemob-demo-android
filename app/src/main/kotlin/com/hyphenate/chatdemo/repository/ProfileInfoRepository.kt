@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import com.hyphenate.EMCallBack
 import com.hyphenate.EMValueCallBack
@@ -167,11 +167,11 @@ class ProfileInfoRepository: BaseRepository()  {
                 callBack.onError(ChatError.INVALID_URL," invalid url.")
                 return
             }
-            ChatLog.e("ProfileInfoRepository","uploadAvatarToAppServer ${UPLOAD_AVATAR_URL+"/${ChatClient.getInstance().currentUser}"+BuildConfig.APP_UPLOAD_AVATAR}")
+            ChatLog.e("ProfileInfoRepository","uploadAvatarToAppServer ${UPLOAD_AVATAR_URL +"/${ChatClient.getInstance().currentUser}"+BuildConfig.APP_UPLOAD_AVATAR}")
                 ChatHttpClientManagerBuilder()
                     .uploadFile(filePath)
                     .setParam("file",filePath)
-                    .setUrl(UPLOAD_AVATAR_URL+"/${ChatClient.getInstance().currentUser}"+BuildConfig.APP_UPLOAD_AVATAR)
+                    .setUrl(UPLOAD_AVATAR_URL +"/${ChatClient.getInstance().currentUser}"+BuildConfig.APP_UPLOAD_AVATAR)
                     .execute(object : HttpCallback{
                         override fun onSuccess(result: String?) {
                             result?.let {

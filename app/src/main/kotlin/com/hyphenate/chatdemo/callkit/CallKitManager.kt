@@ -92,12 +92,12 @@ object CallKitManager {
         ) {
             ChatLog.d(
                 TAG,
-                "onEndCallWithReason" + (callType?.name
-                    ?: " callType is null ") + " reason:" + reason + " time:" + callTime
+                "onEndCallWithReason: " + (callType?.name
+                    ?: " callType is null ") + " reason:" + reason + " time:" + callTime + "channelName:$channelName"
             )
             val formatter = SimpleDateFormat("mm:ss")
             formatter.timeZone = TimeZone.getTimeZone("UTC")
-            var callString: String = DemoHelper.getInstance().context.getString(R.string.call_duration, formatter.format(callTime))
+            val callString: String = DemoHelper.getInstance().context.getString(R.string.call_duration, formatter.format(callTime))
             ToastUtils.showToast(callString)
         }
 

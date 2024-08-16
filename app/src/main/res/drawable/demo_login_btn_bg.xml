@@ -3,8 +3,8 @@
     <item android:state_enabled="true">
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#009EFF"
-                android:endColor="#334BFF"
+                android:startColor="@color/demo_login_button_bg_start"
+                android:endColor="@color/demo_login_button_bg_end"
                 android:angle="270"/>
             <corners android:radius="@dimen/ease_corner_extra_small"/>
         </shape>
@@ -13,8 +13,8 @@
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#009EFF"
-                android:endColor="#334BFF"
+                android:startColor="@color/demo_login_button_bg_start"
+                android:endColor="@color/demo_login_button_bg_end"
                 android:angle="270"/>
             <corners android:radius="@dimen/ease_corner_extra_small"/>
         </shape>
