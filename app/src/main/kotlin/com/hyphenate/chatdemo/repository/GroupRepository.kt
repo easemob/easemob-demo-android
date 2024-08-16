@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.cloud.HttpClientManager
@@ -59,7 +59,7 @@ class GroupRepository: BaseRepository() {
 
 
     private fun reportToAppServer(group:ChatGroup,onSuccess: OnSuccess, onError: OnError){
-        val reportUrl = baseGroupUrl+ "/" + group.groupId + "?appkey=" + ChatClient.getInstance().options.appKey
+        val reportUrl = baseGroupUrl + "/" + group.groupId + "?appkey=" + ChatClient.getInstance().options.appKey
         val headers: MutableMap<String, String> = java.util.HashMap()
         headers["Content-Type"] = "application/json"
         EMLog.d("reportToAppServer url : ", reportUrl)

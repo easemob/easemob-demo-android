@@ -33,4 +33,14 @@
 
     <color name="ease_conversation_color_item_name">@color/ease_color_on_background_low</color>
 
+    <color name="demo_login_button_bg_start">#009EFF</color>
+    <color name="demo_login_button_bg_end">#334BFF</color>
+
+    <color name="demo_background">@color/ease_color_background</color>
+    <color name="demo_title">@color/ease_color_on_background_low</color>
+    <color name="demo_subtitle">@color/ease_color_text_secondary_high</color>
+    <color name="demo_desc_bg">@color/ease_color_spacing_view</color>
+
+
+
 </resources>

@@ -3,6 +3,7 @@ package com.hyphenate.chatdemo.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.hyphenate.chatdemo.DemoHelper
+import com.hyphenate.chatdemo.repository.ProfileInfoRepository
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatUserInfoType

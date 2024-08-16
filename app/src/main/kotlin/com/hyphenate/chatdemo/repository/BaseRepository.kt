@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import android.content.Context
 import com.hyphenate.chatdemo.DemoApplication
