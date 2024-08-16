@@ -106,7 +106,7 @@ class DemoHelper private constructor(){
              */
             pushConfig = PushConfigBuilder(context)
                 .enableVivoPush(getDataModel().isAgreeAgreement())  // need to configure appid and appkey in AndroidManifest.xml
-                .enableMiPush(BuildConfig.MI_PUSH_APPID, BuildConfig.MI_PUSH_APPID)
+                .enableMiPush(BuildConfig.MI_PUSH_APPID, BuildConfig.MI_PUSH_APPKEY)
                 .enableOppoPush(BuildConfig.OPPO_PUSH_APPKEY, BuildConfig.OPPO_PUSH_APPSECRET)
                 .enableHWPush()                                     // need to configure appid in AndroidManifest.xml
                 .enableFCM(BuildConfig.FCM_SENDERID)

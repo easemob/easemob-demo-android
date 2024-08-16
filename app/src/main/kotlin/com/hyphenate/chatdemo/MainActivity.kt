@@ -78,6 +78,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
         binding.navView.itemIconTintList = null
+        mainViewModel.getUnreadMessageCount()
+        mainViewModel.getRequestUnreadCount()
         switchToHome()
         checkIfShowSavedFragment(savedInstanceState)
         addTabBadge()
