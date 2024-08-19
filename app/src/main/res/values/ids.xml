@@ -35,4 +35,7 @@
     <item name="presence_status_away" type="id"/>
     <item name="presence_status_custom" type="id"/>
 
+    <item name="contact_complaint" type="id"/>
+    <item name="group_complaint" type="id"/>
+
 </resources>

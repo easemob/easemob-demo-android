@@ -118,7 +118,7 @@
     <com.hyphenate.easeui.widget.EaseArrowItemView
         android:id="@+id/arrow_item_complaint_suggestions"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_channel_cooperation"
-        app:arrowItemTitle="@string/about_complaint_suggestions"
+        app:arrowItemTitle="@string/demo_report_title"
         app:arrowItemSubTitle="@string/about_complaint_suggestions_email"
         app:arrowItemSubTitleColor="@color/ease_color_primary"
         app:arrowItemShowSubTitle="true"

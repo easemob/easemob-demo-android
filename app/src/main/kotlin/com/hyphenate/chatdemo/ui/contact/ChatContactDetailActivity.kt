@@ -6,20 +6,21 @@ import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import com.hyphenate.chatdemo.R
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hyphenate.chatdemo.DemoHelper
+import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.callkit.CallKitManager
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PresenceCache
+import com.hyphenate.chatdemo.common.ReportHelper
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
 import com.hyphenate.chatdemo.interfaces.IPresenceResultView
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
-import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
+import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
@@ -151,6 +152,23 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
             }
         }
         return false
+    }
+
+    override fun getDeleteDialogMenu(): MutableList<EaseMenuItem>? {
+        val menu = super.getDeleteDialogMenu()
+        menu?.add( 0,EaseMenuItem(
+            menuId = R.id.contact_complaint,
+            title = getString(R.string.demo_report_title),
+            titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
+        ))
+        return menu
+    }
+
+    override fun simpleSheetMenuItemClick(position: Int, menu: EaseMenuItem) {
+        super.simpleSheetMenuItemClick(position, menu)
+        if (menu.menuId == R.id.contact_complaint){
+            ReportHelper.openEmailClient(this,user?.userId)
+        }
     }
 
     private fun onActivityResult(result: ActivityResult, requestCode: Int) {

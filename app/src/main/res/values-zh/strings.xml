@@ -149,8 +149,9 @@
     <string name="about_business_cooperation_email">bd@easemob.com</string>
     <string name="about_channel_cooperation">渠道合作</string>
     <string name="about_channel_cooperation_email">qudao@easemob.com</string>
-    <string name="about_complaint_suggestions">投诉建议</string>
-    <string name="about_complaint_suggestions_email">issues@easemob.com</string>
+    <string name="about_complaint_suggestions">环信官方DEMO举报%1$s</string>
+    <string name="about_complaint_suggestions_email">report@easemob.com</string>
+    <string name="about_report_body">感谢您的反馈，请描述您要举报的内容和相关截图。</string>
 
     <string name="main_about_me_login">账号</string>
     <string name="main_about_me_setting">设置</string>
@@ -174,6 +175,10 @@
     <string name="demo_add_contact_not_exist">此用户不存在</string>
     <string name="demo_add_contact_already_exist">该用户已是好友</string>
     <string name="demo_contact_added_notify">你已添加 %1$s 为联系人.</string>
+
+    <string name="demo_report_title">投诉建议</string>
+    <string name="demo_select_email">请选择邮箱应用</string>
+    <string name="demo_email_available">没有可用的邮箱应用</string>
 
     <!--presence-->
     <string name="ease_presence_online">在线</string>
