@@ -210,7 +210,7 @@ dependencies {
     implementation("io.hyphenate:ease-chat-kit:4.8.2")
 //    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    implementation("io.hyphenate:ease-call-kit:4.8.1")
+    implementation("io.hyphenate:ease-call-kit:4.8.2")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
     implementation("io.hyphenate:hyphenate-chat:4.8.2")
