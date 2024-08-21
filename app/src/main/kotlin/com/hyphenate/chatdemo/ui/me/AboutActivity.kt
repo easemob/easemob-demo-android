@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.R
+import com.hyphenate.chatdemo.common.ReportHelper
 import com.hyphenate.chatdemo.databinding.DemoActivityAboutBinding
 import com.hyphenate.easeui.base.EaseBaseActivity
 import com.hyphenate.easeui.common.ChatLog
@@ -77,13 +78,13 @@ class AboutActivity:EaseBaseActivity<DemoActivityAboutBinding>(), View.OnClickLi
                 }
             }
             R.id.arrow_item_business_cooperation -> {
-                sendEmail(getString(R.string.about_business_cooperation_email))
+                ReportHelper.openEmailClient(this,getString(R.string.about_business_cooperation_email),"")
             }
             R.id.arrow_item_channel_cooperation -> {
-                sendEmail(getString(R.string.about_channel_cooperation_email))
+                ReportHelper.openEmailClient(this,getString(R.string.about_channel_cooperation_email),"")
             }
             R.id.arrow_item_complaint_suggestions -> {
-                sendEmail(getString(R.string.about_complaint_suggestions_email),"环信Demo投诉建议")
+                ReportHelper.openEmailClient(this)
             }
             R.id.arrow_item_privacy_policy -> {
 
@@ -111,22 +112,6 @@ class AboutActivity:EaseBaseActivity<DemoActivityAboutBinding>(), View.OnClickLi
             Uri.parse("tel:4006221776")
         )
         startActivity(dialIntent)
-    }
-
-    private fun sendEmail(email:String,title:String?="") {
-        val intent = Intent(Intent.ACTION_SEND)
-        //邮件发送类型：无附件，纯文本
-        intent.type = "plain/text"
-        //邮件接收者（数组，可以是多位接收者）
-        val emailReciver = arrayOf(email)
-        //设置邮件地址
-        intent.putExtra(Intent.EXTRA_EMAIL, emailReciver)
-        //设置邮件标题
-        intent.putExtra(Intent.EXTRA_SUBJECT, title)
-        //设置发送的内容
-        intent.putExtra(Intent.EXTRA_TEXT, "")
-        //调用系统的邮件系统
-        startActivity(Intent.createChooser(intent, "请选择邮件发送软件"))
     }
 
 }

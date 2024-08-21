@@ -3,6 +3,7 @@ package com.hyphenate.chatdemo.ui.group
 import androidx.core.content.ContextCompat
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.callkit.CallKitManager
+import com.hyphenate.chatdemo.common.ReportHelper
 import com.hyphenate.chatdemo.common.extensions.internal.parse
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatGroup
@@ -44,5 +45,22 @@ class ChatGroupDetailActivity :EaseGroupDetailActivity(){
     override fun fetchGroupDetailSuccess(group: ChatGroup) {
         EaseIM.updateGroupInfo(listOf(group.parse()))
         super.fetchGroupDetailSuccess(group)
+    }
+
+    override fun getBottomSheetMenu(): MutableList<EaseMenuItem>? {
+        val menu = super.getBottomSheetMenu()
+        menu?.add( 0,EaseMenuItem(
+            menuId = R.id.contact_complaint,
+            title = getString(R.string.demo_report_title),
+            titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
+        ))
+        return menu
+    }
+
+    override fun simpleMenuItemClickListener(position: Int, menu: EaseMenuItem) {
+        super.simpleMenuItemClickListener(position, menu)
+        if (menu.menuId == R.id.contact_complaint){
+            ReportHelper.openEmailClient(this,groupId)
+        }
     }
 }
