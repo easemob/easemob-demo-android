@@ -24,7 +24,7 @@ class WebViewActivity : EaseBaseActivity<DemoActivityWebviewBinding>() {
             val type =  WebViewLoadType.from(intent.getIntExtra(LOAD_TYPE,0))
             url = if (type == WebViewLoadType.LocalHtml){
                 binding.titleBar.setTitle(getString(R.string.about_privacy_policy))
-                "html"
+                "file:///android_asset/privacy_protocol.html"
             }else{
                 "https://www.easemob.com/"
             }
