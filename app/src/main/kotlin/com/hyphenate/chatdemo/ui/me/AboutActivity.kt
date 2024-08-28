@@ -87,7 +87,7 @@ class AboutActivity:EaseBaseActivity<DemoActivityAboutBinding>(), View.OnClickLi
                 ReportHelper.openEmailClient(this)
             }
             R.id.arrow_item_privacy_policy -> {
-
+                WebViewActivity.actionStart(this@AboutActivity,WebViewLoadType.LocalHtml)
             }
             else -> {}
         }
