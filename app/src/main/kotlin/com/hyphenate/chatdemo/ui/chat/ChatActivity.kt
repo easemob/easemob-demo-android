@@ -1,7 +1,6 @@
 package com.hyphenate.chatdemo.ui.chat
 
 import com.hyphenate.chatdemo.R
-import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.feature.chat.EaseChatFragment
@@ -41,7 +40,6 @@ class ChatActivity: EaseChatActivity() {
                 showToast(R.string.message_modify_fail)
             }
         })
-        builder.turnOnTypingMonitor(EaseIM.getConfig()?.chatConfig?.enableChatTyping?:true)
         builder.setCustomFragment(ChatFragment())
             .setCustomAdapter(CustomMessagesAdapter())
     }
