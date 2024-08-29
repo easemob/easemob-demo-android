@@ -1,6 +1,5 @@
 package com.hyphenate.chatdemo
 
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.navigation.NavigationBarView
-import com.hyphenate.chat.EMMessage
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.databinding.ActivityMainBinding
@@ -27,6 +25,7 @@ import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
@@ -50,9 +49,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     /**
      * The clipboard manager.
      */
-    private val clipboard by lazy { getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
-    private var lastClipText: String? = null
-
     private var mConversationListFragment: Fragment? = null
     private var mContactFragment:Fragment? = null
     private var mAboutMeFragment:Fragment? = null
@@ -66,7 +62,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     }
 
     private val chatMessageListener = object : EaseMessageListener() {
-        override fun onMessageReceived(messages: MutableList<EMMessage>?) {
+        override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
             mainViewModel.getUnreadMessageCount()
         }
     }
@@ -82,6 +78,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
         binding.navView.itemIconTintList = null
+        mainViewModel.getUnreadMessageCount()
+        mainViewModel.getRequestUnreadCount()
         switchToHome()
         checkIfShowSavedFragment(savedInstanceState)
         addTabBadge()
@@ -93,13 +91,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         EaseIM.addEventResultListener(this)
         EaseIM.addChatMessageListener(chatMessageListener)
         EaseIM.addContactListener(contactListener)
-        clipboard.addPrimaryClipChangedListener {
-            val currentClipText = clipboard.primaryClip?.getItemAt(0)?.text?.toString()
-            if (!currentClipText.equals(lastClipText)) {
-                mContext.showToast(getString(R.string.system_copy_success))
-                lastClipText = currentClipText
-            }
-        }
     }
 
     override fun initData() {
@@ -185,8 +176,10 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         EaseIM.removeEventResultListener(this)
+        EaseIM.removeContactListener(contactListener)
+        EaseIM.removeChatMessageListener(chatMessageListener)
+        super.onDestroy()
     }
 
     private fun replace(fragment: Fragment, tag: String) {
@@ -266,15 +259,11 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             EaseConstant.API_ASYNC_ADD_CONTACT -> {
                 if (errorCode == ChatError.EM_NO_ERROR){
                     runOnUiThread{
-                        mContext.showToast(mContext.resources.getString(R.string.em_main_add_contact_success))
+                        showToast(R.string.em_main_add_contact_success)
                     }
                 }else{
                     runOnUiThread{
-                        if (errorCode == ChatError.USER_NOT_FOUND){
-                            mContext.showToast(mContext.resources.getString(R.string.em_main_add_contact_not_found))
-                        }else{
-                            mContext.showToast(errorMessage.toString())
-                        }
+                        showToast(errorMessage.toString())
                     }
                 }
             }

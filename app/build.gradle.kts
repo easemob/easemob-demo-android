@@ -26,8 +26,8 @@ android {
         applicationId = "com.hyphenate.chatdemo"
         minSdk = 21
         targetSdk = 34
-        versionCode = 130
-        versionName = "4.8.1"
+        versionCode = 132
+        versionName = "4.9.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -41,7 +41,7 @@ android {
         buildConfigField ("String", "APP_UPLOAD_AVATAR", "\"${properties.getProperty("APP_UPLOAD_AVATAR")}\"")
         buildConfigField ("String", "APP_GROUP_AVATAR", "\"${properties.getProperty("APP_GROUP_AVATAR")}\"")
         buildConfigField ("String", "APP_RTC_TOKEN_URL", "\"${properties.getProperty("APP_RTC_TOKEN_URL")}\"")
-        buildConfigField ("String", "APP_RTC_CHANNEL_MAPPER_URL", "\"${properties.getProperty("RTC_CHANNEL_MAPPER_URL")}\"")
+        buildConfigField ("String", "APP_RTC_CHANNEL_MAPPER_URL", "\"${properties.getProperty("APP_RTC_CHANNEL_MAPPER_URL")}\"")
 
         // Set appkey from local.properties
         buildConfigField("String", "APPKEY", "\"${properties.getProperty("APPKEY")}\"")
@@ -207,12 +207,12 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-    implementation("io.hyphenate:ease-chat-kit:4.8.1")
+    implementation("io.hyphenate:ease-chat-kit:4.9.0")
 //    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    implementation("io.hyphenate:ease-call-kit:4.8.0")
+    implementation("io.hyphenate:ease-call-kit:4.9.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.8.1")
+    implementation("io.hyphenate:hyphenate-chat:4.9.0")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/demo_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -117,10 +118,20 @@
     <com.hyphenate.easeui.widget.EaseArrowItemView
         android:id="@+id/arrow_item_complaint_suggestions"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_channel_cooperation"
-        app:arrowItemTitle="@string/about_complaint_suggestions"
+        app:arrowItemTitle="@string/demo_report_title"
         app:arrowItemSubTitle="@string/about_complaint_suggestions_email"
         app:arrowItemSubTitleColor="@color/ease_color_primary"
         app:arrowItemShowSubTitle="true"
+        style="@style/ease_group_detail_arrow_item"
+        app:arrowItemShowArrow="true"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"/>
+
+    <com.hyphenate.easeui.widget.EaseArrowItemView
+        android:id="@+id/arrow_item_privacy_policy"
+        app:layout_constraintTop_toBottomOf="@+id/arrow_item_complaint_suggestions"
+        app:arrowItemTitle="@string/about_privacy_policy"
+        app:arrowItemShowSubTitle="false"
         style="@style/ease_group_detail_arrow_item"
         app:arrowItemShowArrow="true"
         android:layout_width="match_parent"

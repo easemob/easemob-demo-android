@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.viewmodel
+package com.hyphenate.chatdemo.repository
 
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.BuildConfig
@@ -38,6 +38,8 @@ class EMClientRepository: BaseRepository() {
                 BuildConfig.APP_BASE_USER + BuildConfig.APP_SERVER_LOGIN
         private const val SEND_SMS_URL = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN +
                 BuildConfig.APP_SEND_SMS_FROM_SERVER
+        private const val CANCEL_ACCOUNT = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN +
+                BuildConfig.APP_BASE_USER
     }
 
     /**
@@ -146,6 +148,7 @@ class EMClientRepository: BaseRepository() {
         withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
                 EaseIM.logout(unbindDeviceToken, onSuccess = {
+                    DemoHelper.getInstance().getDataModel().setCurrentPhoneNumber("")
                     continuation.resume(ChatError.EM_NO_ERROR)
                 }, onError = { code, error ->
                     continuation.resumeWithException(ChatException(code, error))
@@ -166,12 +169,13 @@ class EMClientRepository: BaseRepository() {
     /**
      * Login to app server and get token.
      */
-    suspend fun loginFromServer(userName: String, userPassword: String): LoginResult =
+    suspend fun loginFromServer(userName: String, userPassword: String): LoginResult? =
         withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
                 loginFromAppServer(userName, userPassword, object : ChatValueCallback<LoginResult> {
                     override fun onSuccess(value: LoginResult?) {
-                        continuation.resume(value!!)
+                        DemoHelper.getInstance().getDataModel().setCurrentPhoneNumber(value?.phone)
+                        continuation.resume(value)
                     }
 
                     override fun onError(code: Int, error: String?) {
@@ -213,7 +217,7 @@ class EMClientRepository: BaseRepository() {
                 result.code = code
                 callBack.onSuccess(result)
             } else {
-                if (responseInfo != null && responseInfo.length > 0) {
+                if (responseInfo != null && responseInfo.isNotEmpty()) {
                     var errorInfo: String? = null
                     try {
                         val responseObject = JSONObject(responseInfo)
@@ -275,7 +279,7 @@ class EMClientRepository: BaseRepository() {
             if (code == 200) {
                 onSuccess()
             } else {
-                if (responseInfo != null && responseInfo.length > 0) {
+                if (responseInfo != null && responseInfo.isNotEmpty()) {
                     var errorInfo: String? = null
                     try {
                         val responseObject = JSONObject(responseInfo)
@@ -300,4 +304,55 @@ class EMClientRepository: BaseRepository() {
             onError(ChatError.NETWORK_ERROR, e.message)
         }
     }
+
+    /**
+     * 注销账户
+     * @return
+     */
+    suspend fun cancelAccount(): Int? =
+        withContext(Dispatchers.IO) {
+            suspendCoroutine { continuation ->
+                cancelAccountFromServer(
+                    onSuccess = {
+                        continuation.resume(ChatError.EM_NO_ERROR)
+                    },
+                    onError = {code, error ->
+                        continuation.resumeWithException(ChatException(code,error))
+                    })
+            }
+        }
+
+    private fun cancelAccountFromServer(onSuccess: OnSuccess, onError: OnError){
+        try {
+            val headers: MutableMap<String, String> = java.util.HashMap()
+            headers["Content-Type"] = "application/json"
+            headers["Authorization"] = "Bearer ${ChatClient.getInstance().accessToken}"
+            val url = "$CANCEL_ACCOUNT/${DemoHelper.getInstance().getDataModel().getPhoneNumber()}"
+            EMLog.d("cancelAccountFromServer url : ", url)
+            val response =
+                HttpClientManager.httpExecute(url, headers, null, HttpClientManager.Method_DELETE)
+            val code = response.code
+            val responseInfo = response.content
+            EMLog.d("cancelAccountFromServer", "code:$code response:$responseInfo")
+            if (code == 200) {
+                onSuccess()
+            } else {
+                if (responseInfo != null && responseInfo.isNotEmpty()) {
+                    val errorInfo = try {
+                        val responseObject = JSONObject(responseInfo)
+                        responseObject.getString("errorInfo")
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        responseInfo
+                    }
+                    onError(code, errorInfo)
+                } else {
+                    onError(code, responseInfo)
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            onError(ChatError.NETWORK_ERROR, e.message)
+        }
+    }
+
 }

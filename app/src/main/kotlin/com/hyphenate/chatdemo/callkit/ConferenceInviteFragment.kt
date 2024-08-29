@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
 import com.hyphenate.easeui.common.EaseConstant
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupMemberFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupMemberFragment
 import com.hyphenate.easeui.feature.search.interfaces.OnContactSelectListener
 import com.hyphenate.easeui.interfaces.OnContactSelectedListener
 import com.hyphenate.easeui.model.EaseUser
