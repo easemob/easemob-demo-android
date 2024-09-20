@@ -225,7 +225,13 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
                 startActivity(Intent(mContext, EaseBlockListActivity::class.java))
             }
             R.id.item_about -> {
-                startActivity(Intent(mContext, AboutActivity::class.java))
+                var clazz:Class<*>?
+                try {
+                    clazz  = Class.forName("com.hyphenate.chatdemo.EMActivity")
+                }catch (e:Exception){
+                    clazz = Class.forName("com.hyphenate.chatdemo.ui.me.AboutActivity")
+                }
+                startActivity(Intent(mContext, clazz))
             }
             R.id.about_me_logout -> {
                 showLogoutDialog()
