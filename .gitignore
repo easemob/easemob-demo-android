@@ -10,6 +10,10 @@
 .idea/
 .DS_Store
 /build
+/app/agconnect-services.json
+/app/google-services.json
+/app/mcs-services.json
+/app/release
 /captures
 .externalNativeBuild
 .cxx
