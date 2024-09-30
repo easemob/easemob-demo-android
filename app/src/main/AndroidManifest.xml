@@ -92,6 +92,9 @@
         </intent>
     </queries>
 
+    <!-- 悬浮窗权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
