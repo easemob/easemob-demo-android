@@ -13,6 +13,8 @@ import com.hyphenate.chatdemo.repository.ProfileInfoRepository
 import com.hyphenate.chatdemo.ui.contact.ChatNewRequestActivity
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatException
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatUserInfoType
 import com.hyphenate.easeui.common.extensions.toProfile
@@ -57,19 +59,23 @@ object UIKitManager {
                             onValueSuccess(mutableListOf())
                             return@launch
                         }
-                        val users = ProfileInfoRepository().getUserInfoAttribute(userIds, mutableListOf(ChatUserInfoType.NICKNAME, ChatUserInfoType.AVATAR_URL))
-                        val callbackList = users.values.map { it.toProfile() }.map {
-                            DemoHelper.getInstance().getDataModel().getUser(it.id)?.remark?.let { remark->
-                                it.remark = remark
+                        try {
+                            val users = ProfileInfoRepository().getUserInfoAttribute(userIds, mutableListOf(ChatUserInfoType.NICKNAME, ChatUserInfoType.AVATAR_URL))
+                            val callbackList = users.values.map { it.toProfile() }.map {
+                                DemoHelper.getInstance().getDataModel().getUser(it.id)?.remark?.let { remark->
+                                    it.remark = remark
+                                }
+                                it
                             }
-                            it
+                            if (callbackList.isNotEmpty()) {
+                                DemoHelper.getInstance().getDataModel().insertUsers(callbackList)
+                                DemoHelper.getInstance().getDataModel().updateUsersTimes(callbackList)
+                                EaseIM.updateUsersInfo(callbackList)
+                            }
+                            onValueSuccess(callbackList)
+                        }catch (e:ChatException){
+                            ChatLog.e("fetchUsers", "fetchUsers error: ${e.description}")
                         }
-                        if (callbackList.isNotEmpty()) {
-                            DemoHelper.getInstance().getDataModel().insertUsers(callbackList)
-                            DemoHelper.getInstance().getDataModel().updateUsersTimes(callbackList)
-                            EaseIM.updateUsersInfo(callbackList)
-                        }
-                        onValueSuccess(callbackList)
                     }
                 }
             })
