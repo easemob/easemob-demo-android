@@ -20,14 +20,14 @@ properties.load( inputStream )
 
 android {
     namespace = "com.hyphenate.chatdemo"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.hyphenate.chatdemo"
         minSdk = 21
-        targetSdk = 34
-        versionCode = 133
-        versionName = "4.10.0"
+        targetSdk = 35
+        versionCode = 134
+        versionName = "4.10.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -213,6 +213,6 @@ dependencies {
     implementation("io.hyphenate:ease-call-kit:4.10.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.10.0")
+    implementation("io.hyphenate:hyphenate-chat:4.10.1")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
