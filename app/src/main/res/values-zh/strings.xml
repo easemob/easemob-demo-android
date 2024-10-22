@@ -119,6 +119,11 @@
     <string name="currency_feature_reaction">消息表情回应</string>
     <string name="currency_feature_reaction_describe">长按消息添加表情回应</string>
 
+    <string name="currency_feature_message_style">长按消息菜单</string>
+    <string name="currency_feature_extend_style">发送附件菜单</string>
+    <string name="currency_feature_style_num1">样式 1</string>
+    <string name="currency_feature_style_num2">样式 2</string>
+
     <string name="demo_contact_remark">备注</string>
     <string name="demo_contact_edit_remark">修改备注</string>
     <string name="demo_contact_remark_count">%1$d/100</string>
