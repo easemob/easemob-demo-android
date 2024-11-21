@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import com.hyphenate.chatdemo.R
 import com.hyphenate.util.EMLog
 
-object EaseEditTextUtils {
+object ChatUIKitEditTextUtils {
 
     /**
      * 单行，根据关键字确定省略号的不同位置
@@ -119,7 +119,7 @@ object EaseEditTextUtils {
             var takeUpCount = paint.breakText(reverse, 0, reverse.length, true, requestWidth, null)
             takeUpCount = getTakeUpCount(paint, reverse, takeUpCount, requestWidth)
             str = str.substring(0, maxCount - takeUpCount) + suffix
-            EMLog.i("EaseEditTextUtils", "last str = $str")
+            EMLog.i("ChatUIKitEditTextUtils", "last str = $str")
         }
         return str
     }

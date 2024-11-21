@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import androidx.annotation.StringRes
 import com.hyphenate.chatdemo.R
 
-class EaseProgressDialog protected constructor(context: Context, themeResId: Int = 0) :
+class ChatUIKitProgressDialog protected constructor(context: Context, themeResId: Int = 0) :
     ProgressDialog(context, themeResId) {
     class Builder(private val mContext: Context) {
         private var message: String? = null
@@ -38,8 +38,8 @@ class EaseProgressDialog protected constructor(context: Context, themeResId: Int
             return this
         }
 
-        fun build(): EaseProgressDialog {
-            val dialog = EaseProgressDialog(mContext, R.style.Dialog_Light)
+        fun build(): ChatUIKitProgressDialog {
+            val dialog = ChatUIKitProgressDialog(mContext, R.style.Dialog_Light)
             dialog.setCancelable(cancelable)
             dialog.setCanceledOnTouchOutside(canceledOnTouchOutside)
             dialog.setMessage(message)
@@ -47,7 +47,7 @@ class EaseProgressDialog protected constructor(context: Context, themeResId: Int
             return dialog
         }
 
-        fun show(): EaseProgressDialog {
+        fun show(): ChatUIKitProgressDialog {
             val dialog = build()
             dialog.show()
             return dialog

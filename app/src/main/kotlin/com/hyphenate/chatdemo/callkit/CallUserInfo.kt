@@ -1,8 +1,8 @@
 package com.hyphenate.chatdemo.callkit
 
 import com.hyphenate.easecallkit.base.EaseCallUserInfo
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.model.EaseProfile
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.model.ChatUIKitProfile
 import com.hyphenate.easeui.provider.getSyncUser
 
 data class CallUserInfo(
@@ -13,13 +13,13 @@ data class CallUserInfo(
 
 internal fun CallUserInfo.getUserInfo(groupId: String?): CallUserInfo {
     return if (!groupId.isNullOrEmpty()) {
-        EaseProfile.getGroupMember(groupId, this.userId)?.let {
+        ChatUIKitProfile.getGroupMember(groupId, this.userId)?.let {
             this.nickName = it.getRemarkOrName()
             this.headImage = it.avatar
         }
         this
     } else {
-        EaseIM.getUserProvider()?.getSyncUser(this.userId)?.let {
+        ChatUIKitClient.getUserProvider()?.getSyncUser(this.userId)?.let {
             this.nickName = it.getRemarkOrName()
             this.headImage = it.avatar
         }

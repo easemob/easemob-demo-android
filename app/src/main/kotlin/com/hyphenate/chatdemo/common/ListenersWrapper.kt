@@ -4,7 +4,7 @@ import android.content.Intent
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.ui.login.LoginActivity
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
@@ -12,14 +12,14 @@ import com.hyphenate.easeui.common.ChatLoginExtensionInfo
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatPresenceListener
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.ioScope
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.common.impl.ValueCallbackImpl
-import com.hyphenate.easeui.interfaces.EaseConnectionListener
-import com.hyphenate.easeui.interfaces.EaseContactListener
-import com.hyphenate.easeui.interfaces.EaseMessageListener
-import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.easeui.interfaces.ChatUIKitConnectionListener
+import com.hyphenate.easeui.interfaces.ChatUIKitContactListener
+import com.hyphenate.easeui.interfaces.ChatUIKitMessageListener
+import com.hyphenate.easeui.model.ChatUIKitEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +28,7 @@ object ListenersWrapper {
     private var isLoadGroupList = false
 
     private val connectListener by lazy {
-        object : EaseConnectionListener() {
+        object : ChatUIKitConnectionListener() {
             override fun onConnected() {
                 // do something
                 CoroutineScope(Dispatchers.IO).launch {
@@ -37,9 +37,9 @@ object ListenersWrapper {
                         ChatClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(ValueCallbackImpl<List<ChatGroup>>(onSuccess = {
                             isLoadGroupList = true
                             if (it.isEmpty().not()) {
-                                EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
+                                ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name)
                                     .post(DemoHelper.getInstance().context.ioScope(),
-                                        EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.GROUP))
+                                        ChatUIKitEvent(ChatUIKitEvent.EVENT.UPDATE.name, ChatUIKitEvent.TYPE.GROUP))
                             }
                         }, onError = {_,_ ->
 
@@ -63,7 +63,7 @@ object ListenersWrapper {
     }
 
     private fun logout(unbindPushToken:Boolean = true){
-        EaseIM.logout(unbindPushToken,
+        ChatUIKitClient.logout(unbindPushToken,
             onSuccess = {
                 ChatLog.e("ListenersWrapper","logout success")
                 DemoApplication.getInstance().getLifecycleCallbacks().activityList.forEach {
@@ -81,7 +81,7 @@ object ListenersWrapper {
         )
     }
 
-    private val messageListener by lazy { object : EaseMessageListener(){
+    private val messageListener by lazy { object : ChatUIKitMessageListener(){
         override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
             super.onMessageReceived(messages)
             if (DemoHelper.getInstance().getDataModel().isAppPushSilent()) {
@@ -90,7 +90,7 @@ object ListenersWrapper {
             // do something
             messages?.forEach { message ->
 
-                if (EaseIM.checkMutedConversationList(message.conversationId())) {
+                if (ChatUIKitClient.checkMutedConversationList(message.conversationId())) {
                     return@forEach
                 }
                 if (DemoApplication.getInstance().getLifecycleCallbacks().isFront.not()) {
@@ -109,22 +109,22 @@ object ListenersWrapper {
     private fun defaultPresencesEvent(presences: MutableList<ChatPresence>?){
         presences?.forEach { presence->
             PresenceCache.insertPresences(presence.publisher,presence)
-            EaseIM.getContext()?.let {
-                EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
-                    .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.PRESENCE,presence.publisher))
+            ChatUIKitClient.getContext()?.let {
+                ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name)
+                    .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.UPDATE.name, ChatUIKitEvent.TYPE.PRESENCE,presence.publisher))
             }
         }
     }
 
-    private val contactListener by lazy { object : EaseContactListener(){
+    private val contactListener by lazy { object : ChatUIKitContactListener(){
 
         override fun onFriendRequestAccepted(username: String?) {
             val notifyMsg = LocalNotifyHelper.createContactNotifyMessage(username)
             notifyMsg?.let {
                 ChatClient.getInstance().chatManager().saveMessage(notifyMsg)
                 DemoHelper.getInstance().context.let {
-                    EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name)
-                        .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.CONTACT))
+                    ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name)
+                        .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.ADD.name, ChatUIKitEvent.TYPE.CONTACT))
                 }
             }
         }
@@ -136,9 +136,9 @@ object ListenersWrapper {
 
     fun registerListeners() {
         // register connection listener
-        EaseIM.addConnectionListener(connectListener)
-        EaseIM.addChatMessageListener(messageListener)
-        EaseIM.addPresenceListener(presenceListener)
-        EaseIM.addContactListener(contactListener)
+        ChatUIKitClient.addConnectionListener(connectListener)
+        ChatUIKitClient.addChatMessageListener(messageListener)
+        ChatUIKitClient.addPresenceListener(presenceListener)
+        ChatUIKitClient.addContactListener(contactListener)
     }
 }

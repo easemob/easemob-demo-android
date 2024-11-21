@@ -9,7 +9,7 @@ import com.hyphenate.chatdemo.common.suspend.fetUserInfo
 import com.hyphenate.chatdemo.common.suspend.updateOwnAttribute
 import com.hyphenate.cloud.HttpCallback
 import com.hyphenate.cloud.HttpClientManager
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
@@ -18,7 +18,7 @@ import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatUserInfo
 import com.hyphenate.easeui.common.ChatUserInfoType
 import com.hyphenate.easeui.common.ChatValueCallback
-import com.hyphenate.easeui.model.EaseProfile
+import com.hyphenate.easeui.model.ChatUIKitProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
@@ -41,9 +41,9 @@ class ProfileInfoRepository: BaseRepository()  {
             ChatClient.getInstance().userInfoManager().fetUserInfo(userIds,attributes)
         }
 
-    suspend fun synchronizeProfile(isSyncFromServer:Boolean):EaseProfile? =
+    suspend fun synchronizeProfile(isSyncFromServer:Boolean):ChatUIKitProfile? =
         withContext(Dispatchers.IO) {
-            val currentProfile = EaseIM.getCurrentUser()?:EaseProfile(ChatClient.getInstance().currentUser)
+            val currentProfile = ChatUIKitClient.getCurrentUser()?:ChatUIKitProfile(ChatClient.getInstance().currentUser)
             val user = DemoHelper.getInstance().getDataModel().getUser(currentProfile.id)
             ChatLog.e("ProfileInfoRepository","synchronizeProfile $user $isSyncFromServer - $currentProfile")
             suspendCoroutine { continuation ->
@@ -60,7 +60,7 @@ class ProfileInfoRepository: BaseRepository()  {
                                         map[profile.id]?.let {
                                             profile.name = it.nickname
                                             profile.avatar = it.avatarUrl
-                                            EaseIM.updateUsersInfo(mutableListOf(profile))
+                                            ChatUIKitClient.updateUsersInfo(mutableListOf(profile))
                                             continuation.resume(profile)
                                         }
                                     }
@@ -78,7 +78,7 @@ class ProfileInfoRepository: BaseRepository()  {
                     currentProfile.let {
                         it.name = user.name
                         it.avatar = user.avatar
-                        EaseIM.updateUsersInfo(mutableListOf(it))
+                        ChatUIKitClient.updateUsersInfo(mutableListOf(it))
                     }
                     continuation.resume(currentProfile)
                 }

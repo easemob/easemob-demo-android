@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.webkit.WebViewClient
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.databinding.DemoActivityWebviewBinding
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 
-class WebViewActivity : EaseBaseActivity<DemoActivityWebviewBinding>() {
+class WebViewActivity : ChatUIKitBaseActivity<DemoActivityWebviewBinding>() {
     private var url = "https://www.easemob.com/"
 
     override fun getViewBinding(inflater: LayoutInflater): DemoActivityWebviewBinding? {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.hyphenate.easeui.widget.EaseTitleBar
+    <com.hyphenate.easeui.widget.ChatUIKitTitleBar
         android:id="@+id/title_bar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,11 +19,11 @@
         app:titleBarSubtitleTextColor="@color/ease_color_text_secondary"
         android:visibility="visible" />
 
-    <com.hyphenate.easeui.widget.EaseImageView
+    <com.hyphenate.easeui.widget.ChatUIKitImageView
         android:id="@+id/iv_logo"
         android:layout_marginTop="20dp"
         android:src="@mipmap/logo"
-        app:ease_shape_type="rectangle"
+        app:image_shape_type="rectangle"
         app:ease_radius="18dp"
         app:layout_constraintTop_toBottomOf="@+id/title_bar"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_official_website"
         app:layout_constraintTop_toBottomOf="@+id/tv_kit_version"
         app:arrowItemTitle="@string/about_official_website"
@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_service_hotline"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_official_website"
         app:arrowItemTitle="@string/about_service_hotline"
@@ -91,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_business_cooperation"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_service_hotline"
         app:arrowItemTitle="@string/about_business_cooperation"
@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_channel_cooperation"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_business_cooperation"
         app:arrowItemTitle="@string/about_channel_cooperation"
@@ -115,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_complaint_suggestions"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_channel_cooperation"
         app:arrowItemTitle="@string/demo_report_title"
@@ -127,7 +127,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_privacy_policy"
         app:layout_constraintTop_toBottomOf="@+id/arrow_item_complaint_suggestions"
         app:arrowItemTitle="@string/about_privacy_policy"

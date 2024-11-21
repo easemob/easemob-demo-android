@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.hyphenate.easeui.widget.EaseTitleBar
+    <com.hyphenate.easeui.widget.ChatUIKitTitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ease_toolbar_height"
@@ -18,7 +18,7 @@
         app:titleBarSubtitleTextColor="@color/ease_color_text_secondary"
         android:visibility="visible" />
 
-    <com.hyphenate.easeui.widget.EaseSwitchItemView
+    <com.hyphenate.easeui.widget.ChatUIKitSwitchItemView
         android:id="@+id/switch_item_dark"
         app:layout_constraintTop_toBottomOf="@+id/function_layout"
         app:switchItemTitle="@string/main_about_me_currency_dark_model"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp" />
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_feature"
         app:layout_constraintTop_toBottomOf="@+id/item_member_list"
         app:arrowItemTitle="@string/main_about_me_currency_feature"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_language"
         app:layout_constraintTop_toBottomOf="@+id/item_member_list"
         app:arrowItemTitle="@string/currency_language"
@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.EaseArrowItemView
+    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_target_language"
         app:layout_constraintTop_toBottomOf="@+id/item_member_list"
         app:arrowItemTitle="@string/currency_target_language"

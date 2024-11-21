@@ -181,19 +181,19 @@
     <string name="demo_email_available">No email applications available</string>
 
     <!--presence-->
-    <string name="ease_presence_online">Online</string>
-    <string name="ease_presence_busy">Busy</string>
-    <string name="ease_presence_do_not_disturb">Do not Disturb</string>
+    <string name="uikit_presence_online">Online</string>
+    <string name="uikit_presence_busy">Busy</string>
+    <string name="uikit_presence_do_not_disturb">Do not Disturb</string>
     <string name="ease_presence_away">Away</string>
-    <string name="ease_presence_offline">Offline</string>
-    <string name="ease_presence_custom">Custom Status</string>
+    <string name="uikit_presence_offline">Offline</string>
+    <string name="uikit_presence_custom">Custom Status</string>
     <string name="ease_presence_status">Status</string>
     <string name="ease_presence_done">Done</string>
     <string name="presence_dialog_title">Customize online status</string>
     <string name="presence_dialog_input_hint">Please enter</string>
 
     <!--change uikit resources-->
-    <string name="ease_conv_dialog_add_contact">Search contacts by phone number or ID.</string>
-    <string name="ease_dialog_edit_input_id_hint">User ID</string>
+    <string name="uikit_conv_dialog_add_contact">Search contacts by phone number or ID.</string>
+    <string name="uikit_dialog_edit_input_id_hint">User ID</string>
 
 </resources>

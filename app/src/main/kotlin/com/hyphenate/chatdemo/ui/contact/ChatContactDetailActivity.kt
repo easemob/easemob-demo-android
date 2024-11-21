@@ -21,25 +21,25 @@ import com.hyphenate.chatdemo.interfaces.IPresenceResultView
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatUserInfoType
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.toProfile
-import com.hyphenate.easeui.feature.contact.EaseContactDetailsActivity
-import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.model.EaseMenuItem
-import com.hyphenate.easeui.widget.EaseArrowItemView
+import com.hyphenate.easeui.feature.contact.ChatUIKitContactDetailsActivity
+import com.hyphenate.easeui.model.ChatUIKitEvent
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
+import com.hyphenate.easeui.widget.ChatUIKitArrowItemView
 import kotlinx.coroutines.launch
 
 
-class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultView {
+class ChatContactDetailActivity:ChatUIKitContactDetailsActivity(), IPresenceResultView {
     private lateinit var model: ProfileInfoViewModel
     private lateinit var presenceModel: PresenceViewModel
-    private val remarkItem: EaseArrowItemView by lazy { findViewById(R.id.item_remark) }
+    private val remarkItem: ChatUIKitArrowItemView by lazy { findViewById(R.id.item_remark) }
     private val spacing: View by lazy { findViewById(R.id.item_spacing) }
 
     companion object {
@@ -71,7 +71,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
 
     override fun initEvent() {
         super.initEvent()
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this) {
             if (it.isPresenceChange ) {
                 updatePresence()
             }
@@ -93,7 +93,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
                         it[user.userId]?.parseToDbBean()?.let {u->
                             u.parse().apply {
                                 remark = ChatClient.getInstance().contactManager().fetchContactFromLocal(id)?.remark
-                                EaseIM.updateUsersInfo(mutableListOf(this))
+                                ChatUIKitClient.updateUsersInfo(mutableListOf(this))
                                 DemoHelper.getInstance().getDataModel().insertUser(this)
                             }
                             updateUserInfo()
@@ -113,19 +113,19 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         }
     }
 
-    override fun getDetailItem(): MutableList<EaseMenuItem>? {
+    override fun getDetailItem(): MutableList<ChatUIKitMenuItem>? {
         val list = super.getDetailItem()
-        val audioItem = EaseMenuItem(
+        val audioItem = ChatUIKitMenuItem(
             title = getString(R.string.detail_item_audio),
-            resourceId = R.drawable.ease_phone_pick,
+            resourceId = R.drawable.uikit_phone_pick,
             menuId = R.id.contact_item_audio_call,
             titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
             order = 2
         )
 
-        val videoItem = EaseMenuItem(
+        val videoItem = ChatUIKitMenuItem(
             title = getString(R.string.detail_item_video),
-            resourceId = R.drawable.ease_video_camera,
+            resourceId = R.drawable.uikit_video_camera,
             menuId = R.id.contact_item_video_call,
             titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
             order = 3
@@ -135,7 +135,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         return list
     }
 
-    override fun onMenuItemClick(item: EaseMenuItem?, position: Int): Boolean {
+    override fun onMenuItemClick(item: ChatUIKitMenuItem?, position: Int): Boolean {
         item?.let {
             when(item.menuId){
                 R.id.contact_item_audio_call -> {
@@ -154,9 +154,9 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         return false
     }
 
-    override fun getDeleteDialogMenu(): MutableList<EaseMenuItem>? {
+    override fun getDeleteDialogMenu(): MutableList<ChatUIKitMenuItem>? {
         val menu = super.getDeleteDialogMenu()
-        menu?.add( 0,EaseMenuItem(
+        menu?.add( 0,ChatUIKitMenuItem(
             menuId = R.id.contact_complaint,
             title = getString(R.string.demo_report_title),
             titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
@@ -164,7 +164,7 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
         return menu
     }
 
-    override fun simpleSheetMenuItemClick(position: Int, menu: EaseMenuItem) {
+    override fun simpleSheetMenuItemClick(position: Int, menu: ChatUIKitMenuItem) {
         super.simpleSheetMenuItemClick(position, menu)
         if (menu.menuId == R.id.contact_complaint){
             ReportHelper.openEmailClient(this,user?.userId)
@@ -189,8 +189,8 @@ class ChatContactDetailActivity:EaseContactDetailsActivity(), IPresenceResultVie
     }
 
     private fun notifyUpdateRemarkEvent() {
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX)
-            .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_USER_SUFFIX, EaseEvent.TYPE.CONTACT, user?.userId))
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX)
+            .post(lifecycleScope, ChatUIKitEvent(DemoConstant.EVENT_UPDATE_USER_SUFFIX, ChatUIKitEvent.TYPE.CONTACT, user?.userId))
     }
 
     private fun updatePresence(isRefreshAvatar:Boolean = false){

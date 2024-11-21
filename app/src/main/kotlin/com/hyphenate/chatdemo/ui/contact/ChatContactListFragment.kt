@@ -14,19 +14,19 @@ import com.hyphenate.chatdemo.controller.PresenceController
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.configs.setStatusStyle
-import com.hyphenate.easeui.feature.contact.EaseContactsListFragment
-import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.feature.contact.ChatUIKitContactsListFragment
+import com.hyphenate.easeui.model.ChatUIKitEvent
+import com.hyphenate.easeui.model.ChatUIKitUser
 import com.hyphenate.easeui.viewmodel.contacts.IContactListRequest
 
-class ChatContactListFragment : EaseContactsListFragment() {
+class ChatContactListFragment : ChatUIKitContactsListFragment() {
 
     private var contactViewModel: IContactListRequest? = null
     private var isFirstLoadData = false
@@ -49,18 +49,18 @@ class ChatContactListFragment : EaseContactsListFragment() {
 
     override fun initData() {
         super.initData()
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX).register(this) {
             if (it.isContactChange && it.message.isNullOrEmpty().not()) {
                 binding?.listContact?.loadContactData(false)
             }
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT).register(this) {
             if (it.isContactChange && it.event == DemoConstant.EVENT_UPDATE_SELF) {
                 updateProfile(true)
             }
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            if (it.isPresenceChange && it.message.equals(EaseIM.getCurrentUser()?.id) ) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this) {
+            if (it.isPresenceChange && it.message.equals(ChatUIKitClient.getCurrentUser()?.id) ) {
                 updateProfile()
             }
         }
@@ -69,7 +69,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
     override fun initListener() {
         super.initListener()
         binding?.titleContact?.setLogoClickListener {
-            EaseIM.getCurrentUser()?.id?.let {
+            ChatUIKitClient.getCurrentUser()?.id?.let {
                 presenceController.showPresenceStatusDialog(PresenceCache.getUserPresence(it))
             }
         }
@@ -99,11 +99,11 @@ class ChatContactListFragment : EaseContactsListFragment() {
 
     private fun updateProfile(isRefreshAvatar:Boolean = false){
         binding?.titleContact?.let { titlebar->
-            EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(titlebar.getLogoView())
-            EaseIM.getConfig()?.avatarConfig?.setStatusStyle(titlebar.getStatusView(),2.dpToPx(mContext),
+            ChatUIKitClient.getConfig()?.avatarConfig?.setAvatarStyle(titlebar.getLogoView())
+            ChatUIKitClient.getConfig()?.avatarConfig?.setStatusStyle(titlebar.getStatusView(),2.dpToPx(mContext),
                 ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_background))
 
-            EaseIM.getCurrentUser()?.let { profile->
+            ChatUIKitClient.getCurrentUser()?.let { profile->
                 val presence = PresenceCache.getUserPresence(profile.id)
                 presence?.let {
                     val logoStatus = EasePresenceUtil.getPresenceIcon(mContext,it)
@@ -114,7 +114,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
                 }
                 ChatLog.e(TAG,"updateProfile ${profile.id} ${profile.name} ${profile.avatar}")
                 if (isRefreshAvatar){
-                    titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.ease_default_avatar, 32.dpToPx(mContext))
+                    titlebar.setLogo(profile.avatar, com.hyphenate.easeui.R.drawable.uikit_default_avatar, 32.dpToPx(mContext))
                 }
                 val layoutParams = titlebar.getLogoView()?.layoutParams as? ViewGroup.MarginLayoutParams
                 layoutParams?.marginStart = 12.dpToPx(mContext)
@@ -125,7 +125,7 @@ class ChatContactListFragment : EaseContactsListFragment() {
         }
     }
 
-    override fun loadContactListSuccess(userList: MutableList<EaseUser>) {
+    override fun loadContactListSuccess(userList: MutableList<ChatUIKitUser>) {
         super.loadContactListSuccess(userList)
         if (!isFirstLoadData){
             fetchContactInfo(userList)
@@ -138,8 +138,8 @@ class ChatContactListFragment : EaseContactsListFragment() {
         ChatLog.e(TAG,"loadContactListFail: $code $error")
     }
 
-    class Builder:EaseContactsListFragment.Builder() {
-        override fun build(): EaseContactsListFragment {
+    class Builder:ChatUIKitContactsListFragment.Builder() {
+        override fun build(): ChatUIKitContactsListFragment {
             if (customFragment == null) {
                 customFragment = ChatContactListFragment()
             }

@@ -19,19 +19,19 @@ import com.hyphenate.easecallkit.base.EaseCallKitTokenCallback
 import com.hyphenate.easecallkit.base.EaseCallType
 import com.hyphenate.easecallkit.base.EaseGetUserAccountCallback
 import com.hyphenate.easecallkit.base.EaseUserAccount
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatHttpClientManagerBuilder
 import com.hyphenate.easeui.common.ChatHttpResponse
 import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
 import com.hyphenate.easeui.common.dialog.SimpleSheetType
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
-import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitEvent
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 import com.hyphenate.easeui.provider.getSyncUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,7 +112,7 @@ object CallKitManager {
             } ?: kotlin.run {
                 currentCallGroupId = null
                 CallUserInfo(userId).apply {
-                    EaseIM.getUserProvider()?.getSyncUser(userId)?.let { user ->
+                    ChatUIKitClient.getUserProvider()?.getSyncUser(userId)?.let { user ->
                         this.nickName = user.getRemarkOrName()
                         this.headImage = user.avatar
                     }
@@ -131,8 +131,8 @@ object CallKitManager {
 
         override fun onInViteCallMessageSent() {
             if (ChatClient.getInstance().options.isIncludeSendMessageInMessageListener.not()) {
-                EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.MESSAGE)
-                    .post(DemoHelper.getInstance().context.mainScope(), EaseEvent(DemoConstant.CALL_INVITE_MESSAGE, EaseEvent.TYPE.MESSAGE))
+                ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD + ChatUIKitEvent.TYPE.MESSAGE)
+                    .post(DemoHelper.getInstance().context.mainScope(), ChatUIKitEvent(DemoConstant.CALL_INVITE_MESSAGE, ChatUIKitEvent.TYPE.MESSAGE))
             }
         }
 
@@ -195,14 +195,14 @@ object CallKitManager {
     fun showSelectDialog(context: Context, conversationId: String?) {
         val context = (context as FragmentActivity)
         val mutableListOf = mutableListOf(
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.chat_video_call_voice,
                 title = context.getString(R.string.voice_call),
                 resourceId = R.drawable.phone_pick,
                 titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary),
                 resourceTintColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
             ),
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.chat_video_call_video,
                 title = context.getString(R.string.video_call),
                 resourceId =  R.drawable.video_camera,
@@ -215,7 +215,7 @@ object CallKitManager {
             itemList = mutableListOf,
             type = SimpleSheetType.ITEM_LAYOUT_DIRECTION_START)
         dialog.setSimpleListSheetItemClickListener(object : SimpleListSheetItemClickListener {
-            override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
+            override fun onItemClickListener(position: Int, menu: ChatUIKitMenuItem) {
                 dialog.dismiss()
                 when(menu.menuId){
                     R.id.chat_video_call_voice -> {

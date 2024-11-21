@@ -42,10 +42,10 @@ import com.hyphenate.chatdemo.databinding.DemoFragmentLoginBinding
 import com.hyphenate.chatdemo.utils.PhoneNumberUtils
 import com.hyphenate.chatdemo.utils.ToastUtils.showToast
 import com.hyphenate.chatdemo.viewmodel.LoginFragmentViewModel
-import com.hyphenate.easeui.base.EaseBaseFragment
+import com.hyphenate.easeui.base.ChatUIKitBaseFragment
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.hideSoftKeyboard
 import kotlinx.coroutines.flow.SharingStarted
@@ -55,7 +55,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener, TextWatcher,
+class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener, TextWatcher,
     CompoundButton.OnCheckedChangeListener, OnEditorActionListener {
     private var mUserPhone: String? = null
     private var mCode: String? = null
@@ -137,7 +137,7 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
             }
 
             R.id.tv_login_developer -> {
-                EaseFlowBus.with<String>(DemoConstant.SKIP_DEVELOPER_CONFIG).post(lifecycleScope, LoginFragment::class.java.simpleName)
+                ChatUIKitFlowBus.with<String>(DemoConstant.SKIP_DEVELOPER_CONFIG).post(lifecycleScope, LoginFragment::class.java.simpleName)
             }
         }
     }

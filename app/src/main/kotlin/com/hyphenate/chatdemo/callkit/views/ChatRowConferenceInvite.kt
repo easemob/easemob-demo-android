@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.widget.TextView
 import com.hyphenate.chatdemo.R
 import com.hyphenate.easeui.common.ChatTextMessageBody
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow
+import com.hyphenate.easeui.widget.chatrow.ChatUIKitRow
 
 @SuppressLint("ViewConstructor")
 class ChatRowConferenceInvite @JvmOverloads constructor(
@@ -14,7 +14,7 @@ class ChatRowConferenceInvite @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     isSender: Boolean
-) : EaseChatRow(context, attrs, defStyleAttr, isSender) {
+) : ChatUIKitRow(context, attrs, defStyleAttr, isSender) {
     protected val contentView: TextView? by lazy { findViewById(R.id.tv_chatcontent) }
     override fun onInflateView() {
         inflater.inflate(

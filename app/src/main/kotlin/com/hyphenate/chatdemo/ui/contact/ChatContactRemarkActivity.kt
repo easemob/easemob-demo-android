@@ -13,11 +13,11 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.ui.me.EditUserNicknameActivity
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.extensions.catchChatException
-import com.hyphenate.easeui.model.EaseProfile
+import com.hyphenate.easeui.model.ChatUIKitProfile
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -96,7 +96,7 @@ class ChatContactRemarkActivity: EditUserNicknameActivity() {
                     stateIn(lifecycleScope, SharingStarted.WhileSubscribed(3000), -1)?.
                     collect {
                         if (it == ChatError.EM_NO_ERROR) {
-                            val profile = DemoHelper.getInstance().getDataModel().getUser(Id)?.parse()?: EaseProfile(Id)
+                            val profile = DemoHelper.getInstance().getDataModel().getUser(Id)?.parse()?: ChatUIKitProfile(Id)
                             profile.let { info->
                                 if (remark.isEmpty()){
                                     info.remark = null
@@ -104,7 +104,7 @@ class ChatContactRemarkActivity: EditUserNicknameActivity() {
                                     info.remark = remark
                                 }
                                 DemoHelper.getInstance().getDataModel().insertUser(info)
-                                EaseIM.updateUsersInfo(mutableListOf(info))
+                                ChatUIKitClient.updateUsersInfo(mutableListOf(info))
                             }
                             val resultIntent = Intent()
                             resultIntent.putExtra(RESULT_UPDATE_REMARK, remark)

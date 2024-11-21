@@ -7,9 +7,9 @@ import com.hyphenate.easecallkit.base.EaseCallType
 import com.hyphenate.easecallkit.utils.EaseMsgUtils
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageDirection
-import com.hyphenate.easeui.feature.chat.viewholders.EaseChatRowViewHolder
+import com.hyphenate.easeui.feature.chat.viewholders.ChatUIKitRowViewHolder
 
-class ChatVoiceCallViewHolder(itemView: View): EaseChatRowViewHolder(itemView) {
+class ChatVoiceCallViewHolder(itemView: View): ChatUIKitRowViewHolder(itemView) {
 
     override fun onBubbleClick(message: ChatMessage?) {
         super.onBubbleClick(message)

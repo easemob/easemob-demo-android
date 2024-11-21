@@ -10,9 +10,9 @@ import com.hyphenate.easecallkit.base.EaseCallType
 import com.hyphenate.easecallkit.utils.EaseMsgUtils
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageDirection
-import com.hyphenate.easeui.feature.chat.adapter.EaseMessagesAdapter
+import com.hyphenate.easeui.feature.chat.adapter.ChatUIKitMessagesAdapter
 
-class CustomMessagesAdapter: EaseMessagesAdapter() {
+class CustomMessagesAdapter: ChatUIKitMessagesAdapter() {
 
     companion object {
         const val VIEW_TYPE_MESSAGE_CALL_SEND = 1000

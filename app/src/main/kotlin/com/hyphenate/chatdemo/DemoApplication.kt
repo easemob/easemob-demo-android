@@ -7,7 +7,7 @@ import com.hyphenate.chatdemo.bean.LanguageType
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.LanguageUtil
 import com.hyphenate.chatdemo.common.PreferenceManager
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -33,7 +33,7 @@ class DemoApplication: Application() {
     }
 
     private fun initFeatureConfig(){
-        // Call this method after EaseIM#init
+        // Call this method after ChatUIKitClient#init
         val isBlack = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_BLACK_THEME)
         AppCompatDelegate.setDefaultNightMode(if (isBlack) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 
@@ -49,12 +49,12 @@ class DemoApplication: Application() {
             }
         }
         val targetLanguage = PreferenceManager.getValue(DemoConstant.TARGET_LANGUAGE,LanguageType.EN.value)
-        EaseIM.getConfig()?.chatConfig?.targetTranslationLanguage = targetLanguage
+        ChatUIKitClient.getConfig()?.chatConfig?.targetTranslationLanguage = targetLanguage
 
-        EaseIM.getConfig()?.chatConfig?.enableTranslationMessage = enableTranslation
-        EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage = enableThread
-        EaseIM.getConfig()?.chatConfig?.enableMessageReaction = enableReaction
-        EaseIM.getConfig()?.chatConfig?.enableChatTyping = enableTyping
+        ChatUIKitClient.getConfig()?.chatConfig?.enableTranslationMessage = enableTranslation
+        ChatUIKitClient.getConfig()?.chatConfig?.enableChatThreadMessage = enableThread
+        ChatUIKitClient.getConfig()?.chatConfig?.enableMessageReaction = enableReaction
+        ChatUIKitClient.getConfig()?.chatConfig?.enableChatTyping = enableTyping
     }
 
     private fun initBugly(){
