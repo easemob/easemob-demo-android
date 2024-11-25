@@ -19,7 +19,7 @@ import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.databinding.ActivityMainBinding
 import com.hyphenate.chatdemo.ui.conversation.ConversationListFragment
 import com.hyphenate.chatdemo.interfaces.IMainResultView
-import com.hyphenate.chatdemo.ui.login.AboutMeFragment
+import com.hyphenate.chatdemo.ui.me.AboutMeFragment
 import com.hyphenate.chatdemo.ui.contact.ChatContactListFragment
 import com.hyphenate.chatdemo.viewmodel.MainViewModel
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel

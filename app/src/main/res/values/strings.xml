@@ -119,6 +119,11 @@
     <string name="currency_feature_reaction">Emoji Reaction</string>
     <string name="currency_feature_reaction_describe">Long press a message to add emoji reactions</string>
 
+    <string name="currency_feature_message_style">Long press the message menu</string>
+    <string name="currency_feature_extend_style">Send attachment menu</string>
+    <string name="currency_feature_style_num1">Style 1</string>
+    <string name="currency_feature_style_num2">Style 2</string>
+
     <string name="demo_contact_remark">Remarks</string>
     <string name="demo_contact_edit_remark">Remarks</string>
     <string name="demo_contact_remark_count">%1$d/100</string>

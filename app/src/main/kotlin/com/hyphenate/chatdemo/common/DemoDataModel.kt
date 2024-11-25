@@ -11,7 +11,6 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatContact
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
-import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.model.ChatUIKitProfile
 import com.hyphenate.easeui.model.ChatUIKitUser
@@ -37,9 +36,9 @@ class DemoDataModel(private val context: Context) {
         database
         resetUsersTimes()
         contactList.clear()
-        val data = getAllContacts().values.map { it.toProfile() }
-        if (data.isNotEmpty()){
-            ChatUIKitClient.updateUsersInfo(data)
+        val users = database.userDao().getAll().map { it.parse() }
+        if (users.isNotEmpty()){
+            ChatUIKitClient.updateUsersInfo(users)
         }
     }
 

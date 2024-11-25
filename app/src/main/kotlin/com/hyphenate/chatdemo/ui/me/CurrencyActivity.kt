@@ -26,17 +26,25 @@ import java.util.Locale
 class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View.OnClickListener {
     private var targetLanguage:String? = ""
     private var appLanguage:String? = ""
+    private var messageStyle:String? = ""
+    private var extendStyle:String? = ""
+
     override fun getViewBinding(inflater: LayoutInflater): DemoActivityCurrencyBinding {
         return DemoActivityCurrencyBinding.inflate(inflater)
     }
     companion object {
         private const val LANGUAGE_TYPE_APPLICATION = 0
         private const val LANGUAGE_TYPE_TARGET = 1
+        private const val MESSAGE_STYLE = 0
+        private const val EXTEND_STYLE = 1
         private const val RESULT_CHOICE_APP_LANGUAGE = 100
         private const val RESULT_CHOICE_TARGET_LANGUAGE = 101
+        private const val RESULT_STYLE_SETTING = 102
         private const val RESULT_LANGUAGE_TAG = "language_tag"
         private const val RESULT_LANGUAGE_CODE = "language_code"
         private const val LANGUAGE_TYPE = "language_type"
+        private const val STYLE_TYPE = "style_type"
+        private const val STYLE_NUMBER = "style_number"
     }
 
     private val launcherToAppLanguage: ActivityResultLauncher<Intent> = registerForActivityResult(
@@ -47,6 +55,10 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
         ActivityResultContracts.StartActivityForResult()
     ) { result -> onActivityResult(result, RESULT_CHOICE_TARGET_LANGUAGE) }
 
+    private val launcherToStyleSetting: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result -> onActivityResult(result, RESULT_STYLE_SETTING) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
@@ -56,6 +68,7 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
     private fun initView(){
         initSwitch()
         initLanguage()
+        initStyle()
     }
 
     private fun initListener(){
@@ -64,6 +77,8 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
             it.arrowItemFeature.setOnClickListener(this)
             it.arrowItemLanguage.setOnClickListener(this)
             it.arrowItemTargetLanguage.setOnClickListener(this)
+            it.arrowItemMessageStyle.setOnClickListener(this)
+            it.arrowItemExtendStyle.setOnClickListener(this)
             it.titleBar.setNavigationOnClickListener{
                 mContext.onBackPressed()
             }
@@ -100,6 +115,24 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
         updateLanguage()
     }
 
+    private fun initStyle(){
+        PreferenceManager.getValue(DemoConstant.MSG_STYLE,true).let {
+            messageStyle = if (it){
+                getString(R.string.currency_feature_style_num1)
+            } else{
+                getString(R.string.currency_feature_style_num2)
+            }
+        }
+        PreferenceManager.getValue(DemoConstant.EXTEND_STYLE,true).let {
+            extendStyle = if (it){
+                getString(R.string.currency_feature_style_num1)
+            } else {
+                getString(R.string.currency_feature_style_num2)
+            }
+        }
+        updateStyle()
+    }
+
     private fun onActivityResult(result: ActivityResult, requestCode: Int) {
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.let {
@@ -123,8 +156,22 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
                         }
                         else -> {}
                     }
+                    updateLanguage()
+                }else if (it.hasExtra(STYLE_TYPE) && it.hasExtra(STYLE_NUMBER)){
+                    val type = it.getIntExtra(STYLE_TYPE,0)
+                    val tag = it.getStringExtra(STYLE_NUMBER)
+                    when (requestCode) {
+                        RESULT_STYLE_SETTING -> {
+                            if (type == MESSAGE_STYLE){
+                                messageStyle = tag
+                            }else{
+                                extendStyle = tag
+                            }
+                        }
+                        else -> {}
+                    }
+                    updateStyle()
                 }
-                updateLanguage()
             }
         }
     }
@@ -138,6 +185,13 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
         binding.let {
             it.arrowItemLanguage.setContent(appLanguage?:"")
             it.arrowItemTargetLanguage.setContent(targetLanguage?:"")
+        }
+    }
+
+    private fun updateStyle(){
+        binding.let {
+            it.arrowItemMessageStyle.setContent(messageStyle?:"")
+            it.arrowItemExtendStyle.setContent(extendStyle?:"")
         }
     }
 
@@ -162,6 +216,16 @@ class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View
                     binding.switchItemDark.setChecked(isChecked)
                     changeTheme(isChecked)
                 }
+            }
+            R.id.arrow_item_message_style -> {
+                val intent = Intent(this@CurrencyActivity, StyleSettingActivity::class.java)
+                intent.putExtra(STYLE_TYPE, MESSAGE_STYLE)
+                launcherToStyleSetting.launch(intent)
+            }
+            R.id.arrow_item_extend_style -> {
+                val intent = Intent(this@CurrencyActivity, StyleSettingActivity::class.java)
+                intent.putExtra(STYLE_TYPE, EXTEND_STYLE)
+                launcherToStyleSetting.launch(intent)
             }
             else -> {}
         }
