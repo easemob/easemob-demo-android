@@ -43,10 +43,10 @@ class DemoApplication: Application() {
         val enableTyping = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_TYPING_ON,false)
 
         PreferenceManager.getValue(DemoConstant.MSG_STYLE,true).let {
-            EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle = it
+            ChatUIKitClient.getConfig()?.chatConfig?.enableWxMessageStyle = it
         }
         PreferenceManager.getValue(DemoConstant.EXTEND_STYLE,true).let {
-            EaseIM.getConfig()?.chatConfig?.enableWxExtendStyle = it
+            ChatUIKitClient.getConfig()?.chatConfig?.enableWxExtendStyle = it
         }
 
         val appLanguage = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,"")
