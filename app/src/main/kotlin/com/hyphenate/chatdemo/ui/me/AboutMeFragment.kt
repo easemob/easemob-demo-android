@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.ui.login
+package com.hyphenate.chatdemo.ui.me
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -19,10 +19,7 @@ import com.hyphenate.chatdemo.common.PresenceCache
 import com.hyphenate.chatdemo.controller.PresenceController
 import com.hyphenate.chatdemo.databinding.DemoFragmentAboutMeBinding
 import com.hyphenate.chatdemo.interfaces.IPresenceResultView
-import com.hyphenate.chatdemo.ui.me.AboutActivity
-import com.hyphenate.chatdemo.ui.me.CurrencyActivity
-import com.hyphenate.chatdemo.ui.me.NotifyActivity
-import com.hyphenate.chatdemo.ui.me.UserInformationActivity
+import com.hyphenate.chatdemo.ui.login.LoginActivity
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.LoginViewModel
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
