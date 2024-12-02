@@ -14,7 +14,7 @@ import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
 class PresenceController(
     private val context: Context,
@@ -29,11 +29,11 @@ class PresenceController(
     fun showPresenceStatusDialog(presence: ChatPresence?){
         val tag = EasePresenceUtil.getPresenceString(context,presence)
         if (
-            tag == context.getString(R.string.ease_presence_online) ||
-            tag == context.getString(R.string.ease_presence_busy) ||
-            tag == context.getString(R.string.ease_presence_do_not_disturb) ||
+            tag == context.getString(R.string.uikit_presence_online) ||
+            tag == context.getString(R.string.uikit_presence_busy) ||
+            tag == context.getString(R.string.uikit_presence_do_not_disturb) ||
             tag == context.getString(R.string.ease_presence_away) ||
-            tag == context.getString(R.string.ease_presence_offline) || tag.isEmpty()
+            tag == context.getString(R.string.uikit_presence_offline) || tag.isEmpty()
         ){ }else{
             currentPresence = tag
         }
@@ -42,7 +42,7 @@ class PresenceController(
             context = context,
             itemList = defaultItems(),
             itemListener = object : SimpleListSheetItemClickListener {
-                override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
+                override fun onItemClickListener(position: Int, menu: ChatUIKitMenuItem) {
                     simpleMenuItemClickListener(position, menu)
                 }
             })
@@ -53,7 +53,7 @@ class PresenceController(
         }
     }
 
-    private fun simpleMenuItemClickListener(position: Int,menu: EaseMenuItem){
+    private fun simpleMenuItemClickListener(position: Int,menu: ChatUIKitMenuItem){
         when(menu.menuId){
             R.id.presence_status_online -> {
                 presenceVideModel.publishPresence("")
@@ -79,31 +79,31 @@ class PresenceController(
         }
     }
 
-    private fun defaultItems():MutableList<EaseMenuItem>{
+    private fun defaultItems():MutableList<ChatUIKitMenuItem>{
         return mutableListOf(
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.presence_status_online,
-                title = context.getString(R.string.ease_presence_online),
+                title = context.getString(R.string.uikit_presence_online),
                 titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
             ),
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.presence_status_busy,
-                title = context.getString(R.string.ease_presence_busy),
+                title = context.getString(R.string.uikit_presence_busy),
                 titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
             ),
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.presence_status_away,
                 title = context.getString(R.string.ease_presence_away),
                 titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
             ),
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.presence_status_do_not_disturb,
-                title = context.getString(R.string.ease_presence_do_not_disturb),
+                title = context.getString(R.string.uikit_presence_do_not_disturb),
                 titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
             ),
-            EaseMenuItem(
+            ChatUIKitMenuItem(
                 menuId = R.id.presence_status_custom,
-                title = currentPresence?:context.getString(R.string.ease_presence_custom),
+                title = currentPresence?:context.getString(R.string.uikit_presence_custom),
                 titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
             )
         )

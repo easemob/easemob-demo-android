@@ -10,7 +10,8 @@ object DemoConstant {
     const val IS_BLACK_THEME = "isBlack"
     const val TARGET_LANGUAGE = "target_language"
     const val APP_LANGUAGE = "app_language"
-    const val MSG_NO_DISTURBANCE = "msg_no_disturbance"
+    const val MSG_STYLE = "message_style"
+    const val EXTEND_STYLE = "extend_style"
 
     const val FEATURES_TRANSLATION = "features_translation"
     const val FEATURES_THREAD = "features_thread"

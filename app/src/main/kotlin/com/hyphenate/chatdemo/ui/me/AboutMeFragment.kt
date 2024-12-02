@@ -1,4 +1,4 @@
-package com.hyphenate.chatdemo.ui.login
+package com.hyphenate.chatdemo.ui.me
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -19,31 +19,28 @@ import com.hyphenate.chatdemo.common.PresenceCache
 import com.hyphenate.chatdemo.controller.PresenceController
 import com.hyphenate.chatdemo.databinding.DemoFragmentAboutMeBinding
 import com.hyphenate.chatdemo.interfaces.IPresenceResultView
-import com.hyphenate.chatdemo.ui.me.AboutActivity
-import com.hyphenate.chatdemo.ui.me.CurrencyActivity
-import com.hyphenate.chatdemo.ui.me.NotifyActivity
-import com.hyphenate.chatdemo.ui.me.UserInformationActivity
+import com.hyphenate.chatdemo.ui.login.LoginActivity
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.LoginViewModel
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseFragment
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseFragment
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatPresence
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.configs.setStatusStyle
-import com.hyphenate.easeui.feature.contact.EaseBlockListActivity
-import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.widget.EaseCustomAvatarView
+import com.hyphenate.easeui.feature.contact.ChatUIKitBlockListActivity
+import com.hyphenate.easeui.model.ChatUIKitEvent
+import com.hyphenate.easeui.widget.ChatUIKitCustomAvatarView
 import kotlinx.coroutines.launch
 
-class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnClickListener,
-    EaseCustomAvatarView.OnPresenceClickListener, IPresenceResultView {
+class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View.OnClickListener,
+    ChatUIKitCustomAvatarView.OnPresenceClickListener, IPresenceResultView {
 
     /**
      * The clipboard manager.
@@ -104,13 +101,13 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     }
 
     private fun initEvent() {
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            if (it.isPresenceChange && it.message.equals(EaseIM.getCurrentUser()?.id) ) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this) {
+            if (it.isPresenceChange && it.message.equals(ChatUIKitClient.getCurrentUser()?.id) ) {
                 updatePresence()
             }
         }
 
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT).register(this) {
             if (it.isContactChange && it.event == DemoConstant.EVENT_UPDATE_SELF) {
                 updatePresence(true)
             }
@@ -121,7 +118,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
         binding?.run {
             var name:String? = ChatClient.getInstance().currentUser
             val id = getString(R.string.main_about_me_id,ChatClient.getInstance().currentUser)
-            EaseIM.getConfig()?.avatarConfig?.setStatusStyle(epPresence.getStatusView(),4.dpToPx(mContext),
+            ChatUIKitClient.getConfig()?.avatarConfig?.setStatusStyle(epPresence.getStatusView(),4.dpToPx(mContext),
                 ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_background))
             epPresence.setPresenceStatusMargin(end = -4, bottom = -4)
             epPresence.setPresenceStatusSize(resources.getDimensionPixelSize(com.hyphenate.easeui.R.dimen.ease_contact_status_icon_size))
@@ -131,7 +128,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
             layoutParams.height = 100.dpToPx(mContext)
             epPresence.getUserAvatar().layoutParams = layoutParams
 
-            EaseIM.getCurrentUser()?.let {
+            ChatUIKitClient.getCurrentUser()?.let {
                 epPresence.setUserAvatarData(it)
                 name = it.getRemarkOrName()
             }
@@ -141,7 +138,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     }
 
     private fun updatePresence(isRefreshAvatar:Boolean = false){
-        EaseIM.getCurrentUser()?.let { user->
+        ChatUIKitClient.getCurrentUser()?.let { user->
             val presence = PresenceCache.getUserPresence(user.id)
             presence?.let {
                 if (isRefreshAvatar){
@@ -160,7 +157,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     }
 
     private fun initStatus(){
-        val isSilent = EaseIM.checkMutedConversationList(ChatClient.getInstance().currentUser)
+        val isSilent = ChatUIKitClient.checkMutedConversationList(ChatClient.getInstance().currentUser)
         if (isSilent) {
             binding?.icNotice?.visibility = View.VISIBLE
         }else{
@@ -208,7 +205,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.item_presence -> {
-                EaseIM.getCurrentUser()?.id?.let {
+                ChatUIKitClient.getCurrentUser()?.id?.let {
                     presenceController.showPresenceStatusDialog(PresenceCache.getUserPresence(it))
                 }
             }
@@ -222,7 +219,7 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>(), View.OnCl
                 startActivity(Intent(mContext, NotifyActivity::class.java))
             }
             R.id.item_privacy -> {
-                startActivity(Intent(mContext, EaseBlockListActivity::class.java))
+                startActivity(Intent(mContext, ChatUIKitBlockListActivity::class.java))
             }
             R.id.item_about -> {
                 var clazz:Class<*>?

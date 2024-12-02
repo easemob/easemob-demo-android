@@ -5,10 +5,10 @@ import com.hyphenate.easecallkit.utils.EaseMsgUtils
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageType
-import com.hyphenate.easeui.menu.chat.EaseChatMenuHelper
+import com.hyphenate.easeui.menu.chat.ChatUIKitChatMenuHelper
 
 object MenuFilterHelper {
-    fun filterMenu(helper: EaseChatMenuHelper?, message: ChatMessage?){
+    fun filterMenu(helper: ChatUIKitChatMenuHelper?, message: ChatMessage?){
         message?.let {
             when(it.type){
                 ChatMessageType.TXT ->{

@@ -6,15 +6,14 @@ import com.hyphenate.chatdemo.common.room.dao.DemoUserDao
 import com.hyphenate.chatdemo.common.room.entity.DemoUser
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatContact
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
-import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.common.extensions.toUser
-import com.hyphenate.easeui.model.EaseProfile
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitProfile
+import com.hyphenate.easeui.model.ChatUIKitUser
 import java.util.concurrent.ConcurrentHashMap
 
 class DemoDataModel(private val context: Context) {
@@ -31,15 +30,15 @@ class DemoDataModel(private val context: Context) {
      * Initialize the local database.
      */
     fun initDb() {
-        if (EaseIM.isInited().not()) {
-            throw IllegalStateException("EaseIM SDK must be inited before using.")
+        if (ChatUIKitClient.isInited().not()) {
+            throw IllegalStateException("ChatUIKitClient SDK must be inited before using.")
         }
         database
         resetUsersTimes()
         contactList.clear()
-        val data = getAllContacts().values.map { it.toProfile() }
-        if (data.isNotEmpty()){
-            EaseIM.updateUsersInfo(data)
+        val users = database.userDao().getAll().map { it.parse() }
+        if (users.isNotEmpty()){
+            ChatUIKitClient.updateUsersInfo(users)
         }
     }
 
@@ -47,8 +46,8 @@ class DemoDataModel(private val context: Context) {
      * Get the user data access object.
      */
     fun getUserDao(): DemoUserDao {
-        if (EaseIM.isInited().not()) {
-            throw IllegalStateException("EaseIM SDK must be inited before using.")
+        if (ChatUIKitClient.isInited().not()) {
+            throw IllegalStateException("ChatUIKitClient SDK must be inited before using.")
         }
         return database.userDao()
     }
@@ -56,7 +55,7 @@ class DemoDataModel(private val context: Context) {
     /**
      * Get all contacts from cache.
      */
-    fun getAllContacts(): Map<String, EaseUser> {
+    fun getAllContacts(): Map<String, ChatUIKitUser> {
         if (contactList.isEmpty()) {
             loadContactFromDb()
         }
@@ -101,7 +100,7 @@ class DemoDataModel(private val context: Context) {
     /**
      * Insert user to local db.
      */
-    fun insertUser(user: EaseProfile,isInsertDb:Boolean = true) {
+    fun insertUser(user: ChatUIKitProfile,isInsertDb:Boolean = true) {
         if (isInsertDb){
             getUserDao().insertUser(user.parseToDbBean())
         }
@@ -111,7 +110,7 @@ class DemoDataModel(private val context: Context) {
     /**
      * Insert users to local db.
      */
-    fun insertUsers(users: List<EaseProfile>) {
+    fun insertUsers(users: List<ChatUIKitProfile>) {
         getUserDao().insertUsers(users.map { it.parseToDbBean() })
         users.forEach {
             contactList[it.id] = it.parseToDbBean()
@@ -121,7 +120,7 @@ class DemoDataModel(private val context: Context) {
     /**
      * Update user update times.
      */
-    fun updateUsersTimes(userIds: List<EaseProfile>) {
+    fun updateUsersTimes(userIds: List<ChatUIKitProfile>) {
         if (userIds.isNotEmpty()) {
             userIds.map { it.id }.let { ids ->
                 getUserDao().updateUsersTimes(ids)
@@ -149,7 +148,7 @@ class DemoDataModel(private val context: Context) {
         ChatClient.getInstance().contactManager().fetchContactFromLocal(userId)?.remark?.let { remark ->
             user.remark = remark
         }
-        EaseIM.updateUsersInfo(mutableListOf(user))
+        ChatUIKitClient.updateUsersInfo(mutableListOf(user))
     }
 
 

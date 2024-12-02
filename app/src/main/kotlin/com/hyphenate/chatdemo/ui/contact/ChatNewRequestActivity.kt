@@ -3,9 +3,9 @@ package com.hyphenate.chatdemo.ui.contact
 import androidx.lifecycle.ViewModelProvider
 import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.invitation.EaseNewRequestsActivity
+import com.hyphenate.easeui.feature.invitation.ChatUIKitNewRequestsActivity
 
-class ChatNewRequestActivity : EaseNewRequestsActivity(){
+class ChatNewRequestActivity : ChatUIKitNewRequestsActivity(){
 
     private val chatContactViewModel by lazy { ViewModelProvider(this)[ChatContactViewModel::class.java] }
     override fun initView() {

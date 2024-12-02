@@ -14,17 +14,17 @@ import com.hyphenate.chatdemo.interfaces.IPresenceResultView
 import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.chatdemo.interfaces.IPresenceRequest
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatPresence
-import com.hyphenate.easeui.common.bus.EaseFlowBus
-import com.hyphenate.easeui.feature.chat.EaseChatFragment
-import com.hyphenate.easeui.feature.chat.enums.EaseChatType
-import com.hyphenate.easeui.feature.chat.widgets.EaseChatLayout
-import com.hyphenate.easeui.menu.chat.EaseChatMenuHelper
-import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
+import com.hyphenate.easeui.feature.chat.UIKitChatFragment
+import com.hyphenate.easeui.feature.chat.enums.ChatUIKitType
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitLayout
+import com.hyphenate.easeui.menu.chat.ChatUIKitChatMenuHelper
+import com.hyphenate.easeui.model.ChatUIKitEvent
 
-class ChatFragment: EaseChatFragment() , IPresenceResultView {
+class ChatFragment: UIKitChatFragment() , IPresenceResultView {
     private var presenceViewModel: IPresenceRequest? = null
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -34,16 +34,16 @@ class ChatFragment: EaseChatFragment() , IPresenceResultView {
 
     override fun initEventBus() {
         super.initEventBus()
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX).register(this) {
             if (it.isContactChange && it.message.isNullOrEmpty().not()) {
                 val userId = it.message
-                if (chatType == EaseChatType.SINGLE_CHAT && userId == conversationId) {
+                if (chatType == ChatUIKitType.SINGLE_CHAT && userId == conversationId) {
                     setDefaultHeader(true)
                 }
                 binding?.layoutChat?.chatMessageListLayout?.refreshMessages()
             }
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this) {
             if (it.isPresenceChange && it.message.equals(conversationId) ) {
                 updatePresence()
             }
@@ -59,7 +59,7 @@ class ChatFragment: EaseChatFragment() , IPresenceResultView {
     override fun initData() {
         super.initData()
         conversationId?.let {
-            if (it != EaseIM.getCurrentUser()?.id){
+            if (it != ChatUIKitClient.getCurrentUser()?.id){
                 presenceViewModel?.fetchChatPresence(mutableListOf(it))
                 presenceViewModel?.subscribePresences(mutableListOf(it))
             }
@@ -77,20 +77,20 @@ class ChatFragment: EaseChatFragment() , IPresenceResultView {
     }
 
     private fun showVideoCall() {
-        if (chatType == EaseChatType.SINGLE_CHAT) {
+        if (chatType == ChatUIKitType.SINGLE_CHAT) {
             CallKitManager.showSelectDialog(mContext, conversationId)
         } else {
             CallKitManager.startConferenceCall(mContext, conversationId)
         }
     }
 
-    override fun onPreMenu(helper: EaseChatMenuHelper?, message: ChatMessage?) {
+    override fun onPreMenu(helper: ChatUIKitChatMenuHelper?, message: ChatMessage?) {
         super.onPreMenu(helper, message)
         MenuFilterHelper.filterMenu(helper, message)
     }
 
     private fun updatePresence(){
-        if (chatType == EaseChatType.SINGLE_CHAT){
+        if (chatType == ChatUIKitType.SINGLE_CHAT){
             conversationId?.let {
                 val presence = PresenceCache.getUserPresence(it)
                 val logoStatus = EasePresenceUtil.getPresenceIcon(mContext,presence)
@@ -107,10 +107,10 @@ class ChatFragment: EaseChatFragment() , IPresenceResultView {
     }
 
     override fun onPeerTyping(action: String?) {
-        if (TextUtils.equals(action, EaseChatLayout.ACTION_TYPING_BEGIN)) {
+        if (TextUtils.equals(action, ChatUIKitLayout.ACTION_TYPING_BEGIN)) {
             binding?.titleBar?.setSubtitle(getString(com.hyphenate.easeui.R.string.alert_during_typing))
             binding?.titleBar?.visibility = View.VISIBLE
-        } else if (TextUtils.equals(action, EaseChatLayout.ACTION_TYPING_END)) {
+        } else if (TextUtils.equals(action, ChatUIKitLayout.ACTION_TYPING_END)) {
             updatePresence()
         }
     }
@@ -118,7 +118,7 @@ class ChatFragment: EaseChatFragment() , IPresenceResultView {
 
     override fun onDestroy() {
         conversationId?.let {
-            if (it != EaseIM.getCurrentUser()?.id){
+            if (it != ChatUIKitClient.getCurrentUser()?.id){
                 presenceViewModel?.unsubscribePresences(mutableListOf(it))
             }
         }

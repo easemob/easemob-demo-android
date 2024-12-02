@@ -27,24 +27,24 @@ import com.hyphenate.chatdemo.databinding.DemoActivityMeInformationBinding
 import com.hyphenate.chatdemo.ui.me.controller.CameraAndCroppingController
 import com.hyphenate.chatdemo.utils.CameraAndCropFileUtils
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 import com.hyphenate.easeui.common.ChatImageUtils
 import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.common.permission.PermissionCompat
-import com.hyphenate.easeui.common.utils.EaseCompat
-import com.hyphenate.easeui.common.utils.EaseFileUtils
+import com.hyphenate.easeui.common.utils.ChatUIKitCompat
+import com.hyphenate.easeui.common.utils.ChatUIKitFileUtils
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
-import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.model.EaseMenuItem
-import com.hyphenate.easeui.model.EaseProfile
+import com.hyphenate.easeui.model.ChatUIKitEvent
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
+import com.hyphenate.easeui.model.ChatUIKitProfile
 import com.yalantis.ucrop.UCrop
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onCompletion
@@ -54,13 +54,13 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 
-class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>(),
+class UserInformationActivity:ChatUIKitBaseActivity<DemoActivityMeInformationBinding>(),
     View.OnClickListener {
 
     private val cameraAndCroppingController: CameraAndCroppingController by lazy {
         CameraAndCroppingController(mContext)
     }
-    private var selfProfile:EaseProfile? = null
+    private var selfProfile:ChatUIKitProfile? = null
     private var showSelectDialog:SimpleListSheetDialog? = null
     private var imageUri:Uri?= null
     private lateinit var model: ProfileInfoViewModel
@@ -129,7 +129,7 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
     }
 
     private fun initView(){
-        EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(binding.ivAvatar)
+        ChatUIKitClient.getConfig()?.avatarConfig?.setAvatarStyle(binding.ivAvatar)
         binding.run {
             ivAvatar.setRadius(8.dpToPx(this@UserInformationActivity))
             ivAvatar.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -151,10 +151,10 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
 
     private fun updateLocalData(){
         binding.run {
-            selfProfile = EaseIM.getCurrentUser()
+            selfProfile = ChatUIKitClient.getCurrentUser()
             selfProfile?.let { profile->
-                val ph = AppCompatResources.getDrawable(this@UserInformationActivity, com.hyphenate.easeui.R.drawable.ease_default_avatar)
-                val ep = AppCompatResources.getDrawable(this@UserInformationActivity, com.hyphenate.easeui.R.drawable.ease_default_avatar)
+                val ph = AppCompatResources.getDrawable(this@UserInformationActivity, com.hyphenate.easeui.R.drawable.uikit_default_avatar)
+                val ep = AppCompatResources.getDrawable(this@UserInformationActivity, com.hyphenate.easeui.R.drawable.uikit_default_avatar)
                 ivAvatar.load(profile.avatar ?: ph) {
                     placeholder(ph)
                     error(ep)
@@ -169,19 +169,19 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
         showSelectDialog = SimpleListSheetDialog(
             context = context,
             itemList = mutableListOf(
-                EaseMenuItem(
+                ChatUIKitMenuItem(
                     menuId = R.id.about_information_camera,
                     title = getString(R.string.main_about_me_information_camera),
                     titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
                 ),
-                EaseMenuItem(
+                ChatUIKitMenuItem(
                     menuId = R.id.about_information_picture,
                     title = getString(R.string.main_about_me_information_picture),
                     titleColor = ContextCompat.getColor(context, com.hyphenate.easeui.R.color.ease_color_primary)
                 )
             ),
             itemListener = object : SimpleListSheetItemClickListener {
-                override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
+                override fun onItemClickListener(position: Int, menu: ChatUIKitMenuItem) {
                     simpleMenuItemClickListener(menu)
                     showSelectDialog?.dismiss()
                 }
@@ -189,7 +189,7 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
         supportFragmentManager.let { showSelectDialog?.show(it,"image_select_dialog") }
     }
 
-    fun simpleMenuItemClickListener(menu: EaseMenuItem){
+    fun simpleMenuItemClickListener(menu: ChatUIKitMenuItem){
         when(menu.menuId){
             R.id.about_information_camera -> {
                 if (PermissionCompat.checkPermission(
@@ -305,7 +305,7 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
                 selectedImage?.let { cameraAndCroppingController.gotoCrop(it) }
             }else{
                 if (selectedImage != null) {
-                    var filePath: String = EaseFileUtils.getFilePath(mContext, selectedImage)
+                    var filePath: String = ChatUIKitFileUtils.getFilePath(mContext, selectedImage)
                     if (!TextUtils.isEmpty(filePath) && File(filePath).exists()) {
                         imageUri = Uri.parse(filePath)
                     } else {
@@ -324,13 +324,13 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
      * select local image
      */
     private fun selectPicFromLocal(launcher: ActivityResultLauncher<Intent>?) {
-        EaseCompat.openImageByLauncher(launcher, mContext)
+        ChatUIKitCompat.openImageByLauncher(launcher, mContext)
     }
 
     private fun updateUserAvatar(){
-        selfProfile = EaseIM.getCurrentUser()
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT)
-            .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_SELF, EaseEvent.TYPE.CONTACT))
+        selfProfile = ChatUIKitClient.getCurrentUser()
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT)
+            .post(lifecycleScope, ChatUIKitEvent(DemoConstant.EVENT_UPDATE_SELF, ChatUIKitEvent.TYPE.CONTACT))
     }
 
     private fun updateUsername(nickname: String){
@@ -349,14 +349,14 @@ class UserInformationActivity:EaseBaseActivity<DemoActivityMeInformationBinding>
                 .stateIn(lifecycleScope, SharingStarted.WhileSubscribed(5000), null)
                 .collect {
 
-                    EaseIM.getCurrentUser()?.let {profile ->
+                    ChatUIKitClient.getCurrentUser()?.let {profile ->
                         profile.name = nickname
                         DemoHelper.getInstance().getDataModel().insertUser(profile)
-                        EaseIM.updateCurrentUser(profile)
+                        ChatUIKitClient.updateCurrentUser(profile)
                     }
                     binding.tvNickName.text = nickname
-                    EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT)
-                        .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_SELF, EaseEvent.TYPE.CONTACT))
+                    ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT)
+                        .post(lifecycleScope, ChatUIKitEvent(DemoConstant.EVENT_UPDATE_SELF, ChatUIKitEvent.TYPE.CONTACT))
                 }
         }
     }

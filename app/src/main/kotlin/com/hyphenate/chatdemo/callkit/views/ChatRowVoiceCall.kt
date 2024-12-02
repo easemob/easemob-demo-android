@@ -9,7 +9,7 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.easecallkit.base.EaseCallType
 import com.hyphenate.easecallkit.utils.EaseMsgUtils
 import com.hyphenate.easeui.common.ChatTextMessageBody
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow
+import com.hyphenate.easeui.widget.chatrow.ChatUIKitRow
 
 @SuppressLint("ViewConstructor")
 class ChatRowVoiceCall @JvmOverloads constructor(
@@ -17,7 +17,7 @@ class ChatRowVoiceCall @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     isSender: Boolean
-) : EaseChatRow(context, attrs, defStyleAttr, isSender) {
+) : ChatUIKitRow(context, attrs, defStyleAttr, isSender) {
     protected val contentView: TextView? by lazy { findViewById(R.id.tv_chatcontent) }
     private val ivCallIcon: ImageView by lazy { findViewById(R.id.iv_call_icon) }
     override fun onInflateView() {

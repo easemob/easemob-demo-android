@@ -9,12 +9,12 @@ import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.group.EaseCreateGroupActivity
+import com.hyphenate.easeui.feature.group.ChatUIKitCreateGroupActivity
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-class ChatCreateGroupActivity: EaseCreateGroupActivity() {
+class ChatCreateGroupActivity: ChatUIKitCreateGroupActivity() {
     private val profileViewModel by lazy { ViewModelProvider(this)[ProfileInfoViewModel::class.java] }
 
     override fun createGroupSuccess(group: ChatGroup) {

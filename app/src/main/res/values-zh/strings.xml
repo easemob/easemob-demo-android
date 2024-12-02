@@ -119,6 +119,11 @@
     <string name="currency_feature_reaction">消息表情回应</string>
     <string name="currency_feature_reaction_describe">长按消息添加表情回应</string>
 
+    <string name="currency_feature_message_style">长按消息菜单</string>
+    <string name="currency_feature_extend_style">发送附件菜单</string>
+    <string name="currency_feature_style_num1">样式 1</string>
+    <string name="currency_feature_style_num2">样式 2</string>
+
     <string name="demo_contact_remark">备注</string>
     <string name="demo_contact_edit_remark">修改备注</string>
     <string name="demo_contact_remark_count">%1$d/100</string>
@@ -181,19 +186,19 @@
     <string name="demo_email_available">没有可用的邮箱应用</string>
 
     <!--presence-->
-    <string name="ease_presence_online">在线</string>
-    <string name="ease_presence_busy">忙碌</string>
-    <string name="ease_presence_do_not_disturb">请勿打扰</string>
+    <string name="uikit_presence_online">在线</string>
+    <string name="uikit_presence_busy">忙碌</string>
+    <string name="uikit_presence_do_not_disturb">请勿打扰</string>
     <string name="ease_presence_away">离开</string>
-    <string name="ease_presence_offline">离线</string>
-    <string name="ease_presence_custom">自定义状态</string>
+    <string name="uikit_presence_offline">离线</string>
+    <string name="uikit_presence_custom">自定义状态</string>
     <string name="ease_presence_status">状态</string>
     <string name="ease_presence_done">完成</string>
     <string name="presence_dialog_title">自定义在线状态</string>
     <string name="presence_dialog_input_hint">请输入</string>
 
     <!--change uikit resources-->
-    <string name="ease_conv_dialog_add_contact">通过手机号或ID添加联系人</string>
-    <string name="ease_dialog_edit_input_id_hint">手机号、ID</string>
+    <string name="uikit_conv_dialog_add_contact">通过手机号或ID添加联系人</string>
+    <string name="uikit_dialog_edit_input_id_hint">手机号、ID</string>
 
 </resources>

@@ -21,10 +21,10 @@ import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PreferenceManager
 import com.hyphenate.chatdemo.databinding.DemoActivityLanguageBinding
 import com.hyphenate.chatdemo.interfaces.LanguageListItemSelectListener
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 import java.util.Locale
 
-class LanguageSettingActivity:EaseBaseActivity<DemoActivityLanguageBinding>() {
+class LanguageSettingActivity:ChatUIKitBaseActivity<DemoActivityLanguageBinding>() {
     private var tagList:MutableList<Language> = mutableListOf()
     private var languageAdapter:LanguageAdapter? = null
     private var languageTag:String = ""

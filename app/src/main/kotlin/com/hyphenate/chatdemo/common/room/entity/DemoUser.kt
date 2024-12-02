@@ -3,7 +3,7 @@ package com.hyphenate.chatdemo.common.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.hyphenate.easeui.model.EaseProfile
+import com.hyphenate.easeui.model.ChatUIKitProfile
 
 @Entity
 data class DemoUser(
@@ -18,4 +18,4 @@ data class DemoUser(
 /**
  * Convert the user data to the profile data.
  */
-internal fun DemoUser.parse() = EaseProfile(userId, name, avatar, remark)
+internal fun DemoUser.parse() = ChatUIKitProfile(userId, name, avatar, remark)

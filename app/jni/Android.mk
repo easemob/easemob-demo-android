@@ -19,5 +19,7 @@ include $(CLEAR_VARS)
 PB_LITE=1
 ENABLE_CALL=0
 USE_SQLCIPHER=1
+# 获取当前时间戳
+BUILD_NO := $(shell date +%s)
 #libhyphenate.so
 include $(LOCAL_PATH)/../../../emclient-linux/Android.mk

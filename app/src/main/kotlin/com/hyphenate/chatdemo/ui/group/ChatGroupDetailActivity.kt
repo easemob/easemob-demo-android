@@ -5,18 +5,18 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.callkit.CallKitManager
 import com.hyphenate.chatdemo.common.ReportHelper
 import com.hyphenate.chatdemo.common.extensions.internal.parse
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatGroup
-import com.hyphenate.easeui.feature.group.EaseGroupDetailActivity
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.feature.group.ChatUIKitGroupDetailActivity
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
-class ChatGroupDetailActivity :EaseGroupDetailActivity(){
+class ChatGroupDetailActivity :ChatUIKitGroupDetailActivity(){
 
-    override fun getDetailItem(): MutableList<EaseMenuItem>? {
+    override fun getDetailItem(): MutableList<ChatUIKitMenuItem>? {
         val list = super.getDetailItem()
-        val videoItem = EaseMenuItem(
+        val videoItem = ChatUIKitMenuItem(
             title = getString(R.string.menu_video_call),
-            resourceId = R.drawable.ease_video_camera,
+            resourceId = R.drawable.uikit_video_camera,
             menuId = R.id.group_item_video_call,
             titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
             order = 2,
@@ -26,7 +26,7 @@ class ChatGroupDetailActivity :EaseGroupDetailActivity(){
         return list
     }
 
-    override fun onMenuItemClick(item: EaseMenuItem?, position: Int): Boolean {
+    override fun onMenuItemClick(item: ChatUIKitMenuItem?, position: Int): Boolean {
         item?.let {menu->
             return when(menu.menuId){
                 R.id.group_item_video_call -> {
@@ -43,13 +43,13 @@ class ChatGroupDetailActivity :EaseGroupDetailActivity(){
     }
 
     override fun fetchGroupDetailSuccess(group: ChatGroup) {
-        EaseIM.updateGroupInfo(listOf(group.parse()))
+        ChatUIKitClient.updateGroupInfo(listOf(group.parse()))
         super.fetchGroupDetailSuccess(group)
     }
 
-    override fun getBottomSheetMenu(): MutableList<EaseMenuItem>? {
+    override fun getBottomSheetMenu(): MutableList<ChatUIKitMenuItem>? {
         val menu = super.getBottomSheetMenu()
-        menu?.add( 0,EaseMenuItem(
+        menu?.add( 0,ChatUIKitMenuItem(
             menuId = R.id.contact_complaint,
             title = getString(R.string.demo_report_title),
             titleColor = ContextCompat.getColor(this, com.hyphenate.easeui.R.color.ease_color_primary),
@@ -57,7 +57,7 @@ class ChatGroupDetailActivity :EaseGroupDetailActivity(){
         return menu
     }
 
-    override fun simpleMenuItemClickListener(position: Int, menu: EaseMenuItem) {
+    override fun simpleMenuItemClickListener(position: Int, menu: ChatUIKitMenuItem) {
         super.simpleMenuItemClickListener(position, menu)
         if (menu.menuId == R.id.contact_complaint){
             ReportHelper.openEmailClient(this,groupId)

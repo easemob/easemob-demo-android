@@ -2,19 +2,19 @@ package com.hyphenate.chatdemo.callkit
 
 import android.os.Bundle
 import android.view.View
-import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
-import com.hyphenate.easeui.common.EaseConstant
-import com.hyphenate.easeui.feature.group.fragments.EaseGroupMemberFragment
+import com.hyphenate.easeui.base.ChatUIKitBaseRecyclerViewAdapter
+import com.hyphenate.easeui.common.ChatUIKitConstant
+import com.hyphenate.easeui.feature.group.fragments.ChatUIKitGroupMemberFragment
 import com.hyphenate.easeui.feature.search.interfaces.OnContactSelectListener
 import com.hyphenate.easeui.interfaces.OnContactSelectedListener
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitUser
 
-class ConferenceInviteFragment: EaseGroupMemberFragment() {
+class ConferenceInviteFragment: ChatUIKitGroupMemberFragment() {
     companion object {
         fun newInstance(groupId: String, existMembers: MutableList<String>): ConferenceInviteFragment {
             val fragment = ConferenceInviteFragment()
             val bundle = Bundle()
-            bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, groupId)
+            bundle.putString(ChatUIKitConstant.EXTRA_CONVERSATION_ID, groupId)
             bundle.putStringArrayList(CallKitManager.EXTRA_CONFERENCE_GROUP_EXIT_MEMBERS, ArrayList(existMembers))
             fragment.arguments = bundle
             return fragment
@@ -25,7 +25,7 @@ class ConferenceInviteFragment: EaseGroupMemberFragment() {
     private var selectedMembers:MutableList<String> = mutableListOf()
     private var contactSelectedListener: OnContactSelectedListener? = null
 
-    override fun initAdapter(): EaseBaseRecyclerViewAdapter<EaseUser> {
+    override fun initAdapter(): ChatUIKitBaseRecyclerViewAdapter<ChatUIKitUser> {
         return ConferenceInviteAdapter(groupId)
     }
 

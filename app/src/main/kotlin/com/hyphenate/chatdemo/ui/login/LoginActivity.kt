@@ -10,7 +10,7 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.databinding.DemoActivityLoginBinding
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 
 class LoginActivity : BaseInitActivity<DemoActivityLoginBinding>() {
 
@@ -34,7 +34,7 @@ class LoginActivity : BaseInitActivity<DemoActivityLoginBinding>() {
     }
 
     private fun initEvent() {
-        EaseFlowBus.with<String>(DemoConstant.SKIP_DEVELOPER_CONFIG).register(this) {
+        ChatUIKitFlowBus.with<String>(DemoConstant.SKIP_DEVELOPER_CONFIG).register(this) {
             if (it == LoginFragment::class.java.simpleName) {
                 replace(ServerSetFragment())
             }

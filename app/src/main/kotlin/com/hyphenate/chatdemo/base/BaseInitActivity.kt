@@ -3,9 +3,9 @@ package com.hyphenate.chatdemo.base
 import android.content.Intent
 import android.os.Bundle
 import androidx.viewbinding.ViewBinding
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 
-abstract class BaseInitActivity<B : ViewBinding> : EaseBaseActivity<B>() {
+abstract class BaseInitActivity<B : ViewBinding> : ChatUIKitBaseActivity<B>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initIntent(intent)

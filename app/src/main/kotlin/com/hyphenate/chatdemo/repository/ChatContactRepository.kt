@@ -5,14 +5,14 @@ import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.suspend.fetchResultContactsFromServer
 import com.hyphenate.cloud.HttpClientManager
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
-import com.hyphenate.easeui.model.EaseUser
-import com.hyphenate.easeui.repository.EaseContactListRepository
+import com.hyphenate.easeui.model.ChatUIKitUser
+import com.hyphenate.easeui.repository.ChatUIKitContactListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
@@ -21,7 +21,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class ChatContactRepository: EaseContactListRepository() {
+class ChatContactRepository: ChatUIKitContactListRepository() {
 
     companion object{
         const val checkUrl = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN + BuildConfig.APP_BASE_USER
@@ -31,7 +31,7 @@ class ChatContactRepository: EaseContactListRepository() {
     /**
      * Load server contacts.
      */
-    override suspend fun loadData():List<EaseUser> =
+    override suspend fun loadData():List<ChatUIKitUser> =
         withContext(Dispatchers.IO){
             chatContactManager.fetchResultContactsFromServer()
         }
@@ -59,7 +59,7 @@ class ChatContactRepository: EaseContactListRepository() {
             val headers: MutableMap<String, String> = HashMap()
             headers["Content-Type"] = "application/json"
             headers["Authorization"] = ChatClient.getInstance().accessToken
-            val url = "$checkUrl/$phoneNumberOrId$OPERATOR${EaseIM.getCurrentUser()?.id}"
+            val url = "$checkUrl/$phoneNumberOrId$OPERATOR${ChatUIKitClient.getCurrentUser()?.id}"
             ChatLog.d(" checkByServer url : ", url )
             val response = HttpClientManager.httpExecute(
                 url,

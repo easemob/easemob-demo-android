@@ -8,7 +8,7 @@ import com.hyphenate.chatdemo.common.ListenersWrapper
 import com.hyphenate.chatdemo.common.extensions.internal.checkAppKey
 import com.hyphenate.chatdemo.common.push.PushManager
 import com.hyphenate.chatdemo.uikit.UIKitManager
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatOptions
 import com.hyphenate.easeui.common.PushConfigBuilder
@@ -33,7 +33,7 @@ class DemoHelper private constructor(){
      * Check if the SDK has been initialized.
      */
     fun isSDKInited(): Boolean {
-        return EaseIM.isInited()
+        return ChatUIKitClient.isInited()
     }
 
     /**
@@ -53,8 +53,8 @@ class DemoHelper private constructor(){
             }
             // Register necessary listeners
             ListenersWrapper.registerListeners()
-            EaseIM.init(context, this)
-            if (EaseIM.isInited()) {
+            ChatUIKitClient.init(context, this)
+            if (ChatUIKitClient.isInited()) {
                 // debug mode, you'd better set it to false, if you want release your App officially.
                 ChatClient.getInstance().setDebugMode(true)
                 // Initialize push.
@@ -78,7 +78,7 @@ class DemoHelper private constructor(){
     /**
      * Get the notifier.
      */
-    fun getNotifier() = EaseIM.getNotifier()
+    fun getNotifier() = ChatUIKitClient.getNotifier()
 
     private fun initCallKit() {
         CallKitManager.init(context)
