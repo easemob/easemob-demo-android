@@ -186,19 +186,19 @@
     <string name="demo_email_available">没有可用的邮箱应用</string>
 
     <!--presence-->
-    <string name="ease_presence_online">在线</string>
-    <string name="ease_presence_busy">忙碌</string>
-    <string name="ease_presence_do_not_disturb">请勿打扰</string>
+    <string name="uikit_presence_online">在线</string>
+    <string name="uikit_presence_busy">忙碌</string>
+    <string name="uikit_presence_do_not_disturb">请勿打扰</string>
     <string name="ease_presence_away">离开</string>
-    <string name="ease_presence_offline">离线</string>
-    <string name="ease_presence_custom">自定义状态</string>
+    <string name="uikit_presence_offline">离线</string>
+    <string name="uikit_presence_custom">自定义状态</string>
     <string name="ease_presence_status">状态</string>
     <string name="ease_presence_done">完成</string>
     <string name="presence_dialog_title">自定义在线状态</string>
     <string name="presence_dialog_input_hint">请输入</string>
 
     <!--change uikit resources-->
-    <string name="ease_conv_dialog_add_contact">通过手机号或ID添加联系人</string>
-    <string name="ease_dialog_edit_input_id_hint">手机号、ID</string>
+    <string name="uikit_conv_dialog_add_contact">通过手机号或ID添加联系人</string>
+    <string name="uikit_dialog_edit_input_id_hint">手机号、ID</string>
 
 </resources>

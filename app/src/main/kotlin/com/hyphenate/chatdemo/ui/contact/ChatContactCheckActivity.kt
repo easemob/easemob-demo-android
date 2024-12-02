@@ -9,18 +9,18 @@ import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.common.room.extensions.parseToDbBean
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatUserInfoType
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
-import com.hyphenate.easeui.feature.contact.EaseContactCheckActivity
-import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.easeui.feature.contact.ChatUIKitContactCheckActivity
+import com.hyphenate.easeui.model.ChatUIKitEvent
 import kotlinx.coroutines.launch
 
-class ChatContactCheckActivity:EaseContactCheckActivity() {
+class ChatContactCheckActivity:ChatUIKitContactCheckActivity() {
     private lateinit var model: ProfileInfoViewModel
 
     override fun initData() {
@@ -36,7 +36,7 @@ class ChatContactCheckActivity:EaseContactCheckActivity() {
                         it[user.userId]?.parseToDbBean()?.let {u->
                             u.parse().apply {
                                 remark = ChatClient.getInstance().contactManager().fetchContactFromLocal(id)?.remark
-                                EaseIM.updateUsersInfo(mutableListOf(this))
+                                ChatUIKitClient.updateUsersInfo(mutableListOf(this))
                                 DemoHelper.getInstance().getDataModel().insertUser(this)
                             }
                             updateUserInfo()
@@ -49,8 +49,8 @@ class ChatContactCheckActivity:EaseContactCheckActivity() {
 
     private fun updateUserInfo() {
         DemoHelper.getInstance().getDataModel().getUser(user?.userId)?.let {
-            val ph = AppCompatResources.getDrawable(this, R.drawable.ease_default_avatar)
-            val ep = AppCompatResources.getDrawable(this, R.drawable.ease_default_avatar)
+            val ph = AppCompatResources.getDrawable(this, R.drawable.uikit_default_avatar)
+            val ep = AppCompatResources.getDrawable(this, R.drawable.uikit_default_avatar)
             binding.ivAvatar.load(it.parse().avatar ?: ph) {
                 placeholder(ph)
                 error(ep)
@@ -61,8 +61,8 @@ class ChatContactCheckActivity:EaseContactCheckActivity() {
 
     private fun notifyUpdateRemarkEvent() {
         DemoHelper.getInstance().getDataModel().updateUserCache(user?.userId)
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX)
-            .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_USER_SUFFIX, EaseEvent.TYPE.CONTACT, user?.userId))
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT + DemoConstant.EVENT_UPDATE_USER_SUFFIX)
+            .post(lifecycleScope, ChatUIKitEvent(DemoConstant.EVENT_UPDATE_USER_SUFFIX, ChatUIKitEvent.TYPE.CONTACT, user?.userId))
     }
 
 

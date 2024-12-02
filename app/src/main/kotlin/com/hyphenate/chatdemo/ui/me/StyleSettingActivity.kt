@@ -18,10 +18,10 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PreferenceManager
 import com.hyphenate.chatdemo.databinding.DemoStyleSettingLayoutBinding
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 
-class StyleSettingActivity: EaseBaseActivity<DemoStyleSettingLayoutBinding>() {
+class StyleSettingActivity: ChatUIKitBaseActivity<DemoStyleSettingLayoutBinding>() {
     companion object {
         private const val STYLE_TYPE = "style_type"
         private const val STYLE_NUMBER = "style_number"
@@ -92,19 +92,19 @@ class StyleSettingActivity: EaseBaseActivity<DemoStyleSettingLayoutBinding>() {
                         MESSAGE_STYLE -> {
                             if (selectedPosition == 1){
                                 PreferenceManager.putValue(DemoConstant.MSG_STYLE,false)
-                                EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle = false
+                                ChatUIKitClient.getConfig()?.chatConfig?.enableWxMessageStyle = false
                             }else{
                                 PreferenceManager.putValue(DemoConstant.MSG_STYLE,true)
-                                EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle = true
+                                ChatUIKitClient.getConfig()?.chatConfig?.enableWxMessageStyle = true
                             }
                         }
                         EXTEND_STYLE -> {
                             if (selectedPosition == 1){
                                 PreferenceManager.putValue(DemoConstant.EXTEND_STYLE,false)
-                                EaseIM.getConfig()?.chatConfig?.enableWxExtendStyle = false
+                                ChatUIKitClient.getConfig()?.chatConfig?.enableWxExtendStyle = false
                             }else{
                                 PreferenceManager.putValue(DemoConstant.EXTEND_STYLE,true)
-                                EaseIM.getConfig()?.chatConfig?.enableWxExtendStyle = true
+                                ChatUIKitClient.getConfig()?.chatConfig?.enableWxExtendStyle = true
                             }
                         }
                         else -> {}

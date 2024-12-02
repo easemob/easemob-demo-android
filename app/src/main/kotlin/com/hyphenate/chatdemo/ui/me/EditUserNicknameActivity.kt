@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.databinding.DemoActivityMeInformationEditBinding
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseActivity
-import com.hyphenate.easeui.model.EaseProfile
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
+import com.hyphenate.easeui.model.ChatUIKitProfile
 
-open class EditUserNicknameActivity:EaseBaseActivity<DemoActivityMeInformationEditBinding>() {
-    var selfProfile:EaseProfile? = null
+open class EditUserNicknameActivity:ChatUIKitBaseActivity<DemoActivityMeInformationEditBinding>() {
+    var selfProfile:ChatUIKitProfile? = null
     private var newName:String = ""
 
     companion object{
@@ -26,7 +26,7 @@ open class EditUserNicknameActivity:EaseBaseActivity<DemoActivityMeInformationEd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        selfProfile = EaseIM.getCurrentUser()
+        selfProfile = ChatUIKitClient.getCurrentUser()
         initTitle()
         initListener()
         showKeyboard(binding.etName)

@@ -5,11 +5,11 @@ import com.hyphenate.chatdemo.interfaces.IPresenceRequest
 import com.hyphenate.chatdemo.repository.ChatPresenceRepository
 import com.hyphenate.chatdemo.interfaces.IPresenceResultView
 import com.hyphenate.easeui.common.extensions.catchChatException
-import com.hyphenate.easeui.viewmodel.EaseBaseViewModel
+import com.hyphenate.easeui.viewmodel.ChatUIKitBaseViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
-class PresenceViewModel: EaseBaseViewModel<IPresenceResultView>(), IPresenceRequest {
+class PresenceViewModel: ChatUIKitBaseViewModel<IPresenceResultView>(), IPresenceRequest {
 
     private val presenceRepository by lazy { ChatPresenceRepository() }
     private val expiryTime = (7 * 24 * 60 * 60).toLong()

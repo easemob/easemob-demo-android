@@ -11,10 +11,10 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.dialog.SimpleDialog
 import com.hyphenate.chatdemo.common.extensions.internal.addDefaultTextChangedListener
 import com.hyphenate.chatdemo.databinding.DemoFragmentServerSetBinding
-import com.hyphenate.easeui.base.EaseBaseFragment
+import com.hyphenate.easeui.base.ChatUIKitBaseFragment
 import kotlin.system.exitProcess
 
-class ServerSetFragment: EaseBaseFragment<DemoFragmentServerSetBinding>() {
+class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
 
     private val changeArray = BooleanArray(4)
     private var isEnableCustomServer = false

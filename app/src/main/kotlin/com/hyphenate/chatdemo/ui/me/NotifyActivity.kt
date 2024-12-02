@@ -7,13 +7,13 @@ import androidx.lifecycle.lifecycleScope
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.databinding.DemoActivityNotifyBinding
 import com.hyphenate.chatdemo.viewmodel.PushViewModel
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatPushRemindType
 import com.hyphenate.easeui.common.extensions.catchChatException
 import kotlinx.coroutines.launch
 
-class NotifyActivity:EaseBaseActivity<DemoActivityNotifyBinding>() {
+class NotifyActivity:ChatUIKitBaseActivity<DemoActivityNotifyBinding>() {
 
     private  var pushViewModel: PushViewModel? = null
 
@@ -56,8 +56,8 @@ class NotifyActivity:EaseBaseActivity<DemoActivityNotifyBinding>() {
     }
 
     private fun initSwitch(){
-        binding.switchItemNotify.setSwitchTarckDrawable(com.hyphenate.easeui.R.drawable.ease_switch_track_selector)
-        binding.switchItemNotify.setSwitchThumbDrawable(com.hyphenate.easeui.R.drawable.ease_switch_thumb_selector)
+        binding.switchItemNotify.setSwitchTarckDrawable(com.hyphenate.easeui.R.drawable.uikit_switch_track_selector)
+        binding.switchItemNotify.setSwitchThumbDrawable(com.hyphenate.easeui.R.drawable.uikit_switch_thumb_selector)
     }
 
     private fun initListener(){

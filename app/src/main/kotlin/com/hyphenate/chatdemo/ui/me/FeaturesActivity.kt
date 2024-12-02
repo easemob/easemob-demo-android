@@ -8,10 +8,10 @@ import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.extensions.internal.setSwitchDefaultStyle
 import com.hyphenate.chatdemo.databinding.DemoActivityFeaturesBinding
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 
-class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnClickListener {
+class FeaturesActivity:ChatUIKitBaseActivity<DemoActivityFeaturesBinding>(),View.OnClickListener {
     override fun getViewBinding(inflater: LayoutInflater): DemoActivityFeaturesBinding {
         return DemoActivityFeaturesBinding.inflate(inflater)
     }
@@ -55,7 +55,7 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
                 binding.switchItemTranslation.switch?.let { switch ->
                     val isChecked = switch.isChecked.not()
                     binding.switchItemTranslation.setChecked(isChecked)
-                    EaseIM.getConfig()?.chatConfig?.enableTranslationMessage = isChecked
+                    ChatUIKitClient.getConfig()?.chatConfig?.enableTranslationMessage = isChecked
                     DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.FEATURES_TRANSLATION,isChecked)
                 }
             }
@@ -63,7 +63,7 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
                 binding.switchItemTopic.switch?.let { switch ->
                     val isChecked = switch.isChecked.not()
                     binding.switchItemTopic.setChecked(isChecked)
-                    EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage = isChecked
+                    ChatUIKitClient.getConfig()?.chatConfig?.enableChatThreadMessage = isChecked
                     DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.FEATURES_THREAD,isChecked)
                 }
             }
@@ -71,7 +71,7 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
                 binding.switchItemReaction.switch?.let { switch ->
                     val isChecked = switch.isChecked.not()
                     binding.switchItemReaction.setChecked(isChecked)
-                    EaseIM.getConfig()?.chatConfig?.enableMessageReaction = isChecked
+                    ChatUIKitClient.getConfig()?.chatConfig?.enableMessageReaction = isChecked
                     DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.FEATURES_REACTION,isChecked)
                 }
             }
@@ -79,7 +79,7 @@ class FeaturesActivity:EaseBaseActivity<DemoActivityFeaturesBinding>(),View.OnCl
                 binding.switchItemTyping.switch?.let { switch ->
                     val isChecked = switch.isChecked.not()
                     binding.switchItemTyping.setChecked(isChecked)
-                    EaseIM.getConfig()?.chatConfig?.enableChatTyping = isChecked
+                    ChatUIKitClient.getConfig()?.chatConfig?.enableChatTyping = isChecked
                     DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.IS_TYPING_ON,isChecked)
                 }
             }

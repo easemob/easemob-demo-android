@@ -12,11 +12,11 @@ import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.ReportHelper
 import com.hyphenate.chatdemo.databinding.DemoActivityAboutBinding
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.permission.PermissionCompat
 
-class AboutActivity:EaseBaseActivity<DemoActivityAboutBinding>(), View.OnClickListener {
+class AboutActivity:ChatUIKitBaseActivity<DemoActivityAboutBinding>(), View.OnClickListener {
     companion object{
         private const val RESULT_CALL_PHONE = 111
     }

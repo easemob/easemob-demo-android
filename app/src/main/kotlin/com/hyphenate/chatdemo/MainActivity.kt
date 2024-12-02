@@ -23,19 +23,19 @@ import com.hyphenate.chatdemo.ui.me.AboutMeFragment
 import com.hyphenate.chatdemo.ui.contact.ChatContactListFragment
 import com.hyphenate.chatdemo.viewmodel.MainViewModel
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.common.EaseConstant
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.ChatUIKitConstant
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.conversation.EaseConversationListFragment
-import com.hyphenate.easeui.interfaces.EaseContactListener
-import com.hyphenate.easeui.interfaces.EaseMessageListener
+import com.hyphenate.easeui.feature.conversation.ChatUIKitConversationListFragment
+import com.hyphenate.easeui.interfaces.ChatUIKitContactListener
+import com.hyphenate.easeui.interfaces.ChatUIKitMessageListener
 import com.hyphenate.easeui.interfaces.OnEventResultListener
-import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.easeui.model.ChatUIKitEvent
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.stateIn
@@ -62,7 +62,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         ViewModelProvider(this)[ProfileInfoViewModel::class.java]
     }
 
-    private val chatMessageListener = object : EaseMessageListener() {
+    private val chatMessageListener = object : ChatUIKitMessageListener() {
         override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
             mainViewModel.getUnreadMessageCount()
         }
@@ -89,50 +89,50 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     override fun initListener() {
         super.initListener()
         binding.navView.setOnItemSelectedListener(this)
-        EaseIM.addEventResultListener(this)
-        EaseIM.addChatMessageListener(chatMessageListener)
-        EaseIM.addContactListener(contactListener)
+        ChatUIKitClient.addEventResultListener(this)
+        ChatUIKitClient.addChatMessageListener(chatMessageListener)
+        ChatUIKitClient.addContactListener(contactListener)
     }
 
     override fun initData() {
         super.initData()
         mainViewModel.attachView(this)
         synchronizeProfile()
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name).register(this){
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name).register(this){
             // check unread message count
             mainViewModel.getUnreadMessageCount()
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE.name).register(this){
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.REMOVE.name).register(this){
             // check unread message count
             mainViewModel.getUnreadMessageCount()
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.DESTROY.name).register(this){
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.DESTROY.name).register(this){
             // check unread message count
             mainViewModel.getUnreadMessageCount()
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.LEAVE.name).register(this){
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.LEAVE.name).register(this){
             // check unread message count
             mainViewModel.getUnreadMessageCount()
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this){
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this){
             // check unread message count
             mainViewModel.getUnreadMessageCount()
         }
-        EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this){
+        ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this){
             // check unread message count
             mainViewModel.getUnreadMessageCount()
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this) {
             if (it.isNotifyChange) {
                 mainViewModel.getRequestUnreadCount()
             }
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name).register(this) {
             if (it.isNotifyChange) {
                 mainViewModel.getRequestUnreadCount()
             }
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION).register(this) {
+        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD + ChatUIKitEvent.TYPE.CONVERSATION).register(this) {
             if (it.isConversationChange) {
                 mainViewModel.getUnreadMessageCount()
             }
@@ -141,7 +141,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     private fun switchToHome() {
         if (mConversationListFragment == null) {
-            mConversationListFragment = EaseConversationListFragment.Builder()
+            mConversationListFragment = ChatUIKitConversationListFragment.Builder()
                 .useTitleBar(true)
                 .enableTitleBarPressBack(false)
                 .useSearchBar(true)
@@ -177,9 +177,9 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     }
 
     override fun onDestroy() {
-        EaseIM.removeEventResultListener(this)
-        EaseIM.removeContactListener(contactListener)
-        EaseIM.removeChatMessageListener(chatMessageListener)
+        ChatUIKitClient.removeEventResultListener(this)
+        ChatUIKitClient.removeContactListener(contactListener)
+        ChatUIKitClient.removeChatMessageListener(chatMessageListener)
         super.onDestroy()
     }
 
@@ -258,7 +258,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     override fun onEventResult(function: String, errorCode: Int, errorMessage: String?) {
         when(function){
-            EaseConstant.API_ASYNC_ADD_CONTACT -> {
+            ChatUIKitConstant.API_ASYNC_ADD_CONTACT -> {
                 if (errorCode == ChatError.EM_NO_ERROR){
                     runOnUiThread{
                         showToast(R.string.em_main_add_contact_success)
@@ -293,7 +293,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         }
     }
 
-    private val contactListener = object : EaseContactListener() {
+    private val contactListener = object : ChatUIKitContactListener() {
         override fun onContactInvited(username: String?, reason: String?) {
             mainViewModel.getRequestUnreadCount()
         }
@@ -310,8 +310,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
                 .collect {
                     ChatLog.e("MainActivity","synchronizeProfile result $it")
                     it?.let {
-                        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.CONTACT)
-                            .post(lifecycleScope, EaseEvent(DemoConstant.EVENT_UPDATE_SELF, EaseEvent.TYPE.CONTACT))
+                        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE + ChatUIKitEvent.TYPE.CONTACT)
+                            .post(lifecycleScope, ChatUIKitEvent(DemoConstant.EVENT_UPDATE_SELF, ChatUIKitEvent.TYPE.CONTACT))
                     }
                 }
         }

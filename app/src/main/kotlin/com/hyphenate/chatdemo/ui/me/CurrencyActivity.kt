@@ -19,11 +19,11 @@ import com.hyphenate.chatdemo.common.LanguageUtil
 import com.hyphenate.chatdemo.common.PreferenceManager
 import com.hyphenate.chatdemo.common.extensions.internal.setSwitchDefaultStyle
 import com.hyphenate.chatdemo.databinding.DemoActivityCurrencyBinding
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 import java.util.Locale
 
-class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),View.OnClickListener {
+class CurrencyActivity:ChatUIKitBaseActivity<DemoActivityCurrencyBinding>(),View.OnClickListener {
     private var targetLanguage:String? = ""
     private var appLanguage:String? = ""
     private var messageStyle:String? = ""
@@ -151,7 +151,7 @@ class CurrencyActivity:EaseBaseActivity<DemoActivityCurrencyBinding>(),View.OnCl
                             targetLanguage = tag
                             code?.let { languageCode->
                                 PreferenceManager.putValue(DemoConstant.TARGET_LANGUAGE, languageCode)
-                                EaseIM.getConfig()?.chatConfig?.targetTranslationLanguage = languageCode
+                                ChatUIKitClient.getConfig()?.chatConfig?.targetTranslationLanguage = languageCode
                             }
                         }
                         else -> {}
