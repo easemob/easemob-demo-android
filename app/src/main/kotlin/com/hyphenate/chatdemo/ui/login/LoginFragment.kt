@@ -402,7 +402,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                 etLoginCode.clearEditTextListener()
                 DemoHelper.getInstance().getDataModel().enableCustomSet(false)
                 DemoHelper.getInstance().getDataModel().setDeveloperMode(false)
-                ChatClient.getInstance().options.enableDNSConfig(true)
+//                ChatClient.getInstance().options.enableDNSConfig(true)
             }
         }
     }
