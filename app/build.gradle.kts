@@ -26,8 +26,8 @@ android {
         applicationId = "com.hyphenate.chatdemo"
         minSdk = 21
         targetSdk = 35
-        versionCode = 136
-        versionName = "4.12.0"
+        versionCode = 137
+        versionName = "4.12.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
