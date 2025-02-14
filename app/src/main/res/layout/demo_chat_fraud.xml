@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="9dp"
+    android:background="@drawable/demo_chat_fraud_bg"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/iv_fraud_icon"
+        android:layout_marginTop="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/demo_fraud_icon"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_fraud"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_fraud"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="11dp"
+        android:textColor="@color/demo_chat_fraud_text_prefix_color"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@id/iv_fraud_icon"
+        app:layout_constraintRight_toLeftOf="@id/iv_fraud_exit"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/demo_chat_fraud_prefix" />
+
+    <ImageView
+        android:layout_marginTop="2dp"
+        android:id="@+id/iv_fraud_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/demo_fraud_exit"
+        app:layout_constraintLeft_toRightOf="@id/tv_fraud"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

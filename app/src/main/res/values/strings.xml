@@ -201,4 +201,8 @@
     <string name="uikit_conv_dialog_add_contact">Search contacts by phone number or ID.</string>
     <string name="uikit_dialog_edit_input_id_hint">User ID</string>
 
+    <string name="demo_chat_fraud_prefix">Don\'t trust remittance or prize info. Stay alert for calls from unknown numbers and report anything suspicious.</string>
+    <string name="demo_chat_fraud_report">Report</string>
+    <string name="demo_chat_fraud_report_toast">Thank you for your report and we will deal with it as soon as possible.</string>
+
 </resources>
