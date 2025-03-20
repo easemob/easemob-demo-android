@@ -5,7 +5,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     // Add the Google services Gradle plugin
-    id("com.google.gms.google-services")
+    // need enable this when config google-services.json
+//    id("com.google.gms.google-services")
     // Add the Huawei services Gradle plugin
     id("com.huawei.agconnect")
     // Add honor services Gradle plugin
@@ -126,16 +127,16 @@ android {
         viewBinding = true
         buildConfig = true
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
+//    }
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
     // Set toolchain version
     kotlin {
-        jvmToolchain(8)
+        jvmToolchain(17)
     }
 
     //打开注释后，可以直接在studio里查看和编辑emclient-linux里的代码
