@@ -104,8 +104,8 @@ object PushManager {
             getHMSToken(context)
         }
 
-        // Get FCM push token.
-        getFCMTokenAndSend(context)
+        // Get FCM push token. you  need to enable this when you want to use fcm after you config google-services.json
+//		getFCMTokenAndSend(context)
     }
 
 
