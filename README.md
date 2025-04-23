@@ -22,7 +22,7 @@
 
 2. 将Appkey填入工程根目录下的`local.properties`文件中 格式如下：`APPKEY = 你申请的AppKey`
 
-3. 需要将服务端[Appserver](https://github.com/easemob/easemob-demo-appserver/tree/dev-demo)源码部署后填入`local.properties`文件中 格式如下 `APP_SERVER_DOMAIN = 服务器域名或ip地址`，手机号验证码暂时可以跳过，可以使用手机号后六位当验证码，服务端中的Appkey 要跟客户端的Appkey保持一致。Appserver主要提供了手机号验证码登录接口以及上传用户头像的接口，此接口主要的职能是根据用户的信息注册并生成ChatUIKit登录所需的token或者使用已注册的用户信息生成ChatUIKit登录所需的token，上传头像是一个普通的通用功能在此不过多赘述。
+3. 需要将[服务端源码](https://github.com/easemob/easemob-im-app-server/tree/dev-demo)部署后填入`local.properties`文件中 格式如下 `APP_SERVER_DOMAIN = xxx服务器域名或ip地址xx`，手机号验证码暂时可以跳过，可以使用手机号后六位当验证码，服务端中的Appkey 要跟客户端的Appkey保持一致。Appserver主要提供了手机号验证码登录接口以及上传用户头像的接口，此接口主要的职能是根据用户的信息注册并生成ChatUIKit登录所需的token或者使用已注册的用户信息生成ChatUIKit登录所需的token，上传头像是一个普通的通用功能在此不过多赘述。
 
 # ChatUIKit在Demo中的使用
 
