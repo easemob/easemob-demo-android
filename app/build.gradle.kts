@@ -64,6 +64,9 @@ android {
         // Set RTC appId from local.properties
         buildConfigField("String", "RTC_APPID", "\"${properties.getProperty("RTC_APPID")}\"")
 
+        // The non-developer mode also needs to configure the following switch to true to take effect
+        buildConfigField("Boolean", "LOGIN_WITH_APPSERVER",properties.getProperty("LOGIN_WITH_APPSERVER")?: "false")
+
         addManifestPlaceholders(mapOf(
             "VIVO_PUSH_APPKEY" to properties.getProperty("VIVO_PUSH_APPKEY", "******"),
             "VIVO_PUSH_APPID" to properties.getProperty("VIVO_PUSH_APPID", "******"),
