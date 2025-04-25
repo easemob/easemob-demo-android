@@ -1,6 +1,7 @@
 package com.hyphenate.chatdemo.common
 
 import android.content.Context
+import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.common.room.AppDatabase
 import com.hyphenate.chatdemo.common.room.dao.DemoUserDao
 import com.hyphenate.chatdemo.common.room.entity.DemoUser
@@ -181,7 +182,7 @@ class DemoDataModel(private val context: Context) {
      * @return The developer mode.
      */
     fun isDeveloperMode(): Boolean {
-        return PreferenceManager.getValue(KEY_DEVELOPER_MODE, false)
+        return PreferenceManager.getValue(KEY_DEVELOPER_MODE, false) || !BuildConfig.LOGIN_WITH_APPSERVER
     }
 
     /**
