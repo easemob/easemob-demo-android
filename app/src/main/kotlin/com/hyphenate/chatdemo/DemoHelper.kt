@@ -122,6 +122,7 @@ class DemoHelper private constructor(){
                 }
 
                 if (dataModel.isCustomServerEnable()) {
+                    isEnableTLSConnection = dataModel.isCustomServerTlsEnable()
                     // Turn off DNS configuration
                     enableDNSConfig(false)
                     restServer = dataModel.getRestServer()?.ifEmpty { null }
