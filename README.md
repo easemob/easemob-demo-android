@@ -22,7 +22,6 @@
 
 2. 将Appkey填入工程根目录下的`local.properties`文件中 格式如下：`APPKEY = 你申请的AppKey`
 
-3. 需要将[服务端源码](https://github.com/easemob/easemob-im-app-server/tree/dev-demo)部署后填入`local.properties`文件中 格式如下 `APP_SERVER_DOMAIN = xxx服务器域名或ip地址xx`，手机号验证码暂时可以跳过，可以使用手机号后六位当验证码，服务端中的Appkey 要跟客户端的Appkey保持一致。Appserver主要提供了手机号验证码登录接口以及上传用户头像的接口，此接口主要的职能是根据用户的信息注册并生成ChatUIKit登录所需的token或者使用已注册的用户信息生成ChatUIKit登录所需的token，上传头像是一个普通的通用功能在此不过多赘述。
 
 # ChatUIKit在Demo中的使用
 
@@ -152,9 +151,21 @@ https://www.figma.com/community/file/1327193019424263350/chat-uikit-for-mobile
 
 
 # 已知问题
-1. UserProvider以及GroupProvider需要用户自己实现，用于获取用户的展示信息以及群组的简要展示信息，如果不实现默认用id以及默认头像。
-2. 换设备或者多设备登录，漫游的会话列表，环信SDK中没有本地存储的群头像名称等显示信息，需要用户使用Provider提供给UIKit才能正常显示。
-3. 由于Provider的机制是停止滚动或者第一页不满10条数据时触发，所以更新会话列表以及联系人列表UI显示的昵称头像需要滑动后Provider提供给UIKit数据后，UIKit会刷新UI。
+1. 为方便开发者快速体验IM功能，本工程Demo默认使用开发者注册的用户名和密码直接登录。但此模式下手机验证码、用户图像和Callkit相关功能不可用。用户可直接使用[官网下载](https://www.easemob.com/download/demo)的apk,或者通过以下配置跑通工程Demo体验完整功能:
+
+- 将[服务端源码](https://github.com/easemob/easemob-im-app-server/tree/dev-demo)部署后填入`local.properties`文件中 格式如下 `APP_SERVER_DOMAIN = xxx服务器域名或ip地址xx`，手机号验证码暂时可以跳过，可以使用手机号后六位当验证码，服务端中的Appkey 要跟客户端的Appkey保持一致。
+
+    :::tip
+    Appserver主要提供了手机号验证码登录接口以及上传用户头像的接口，此接口主要的职能是根据用户的信息注册并生成ChatUIKit登录所需的token或者使用已注册的用户信息生成ChatUIKit登录所需的token。
+    :::
+
+- 在`local.properties`文件中，填入`LOGIN_WITH_APPSERVER=true`
+
+
+
+2. UserProvider以及GroupProvider需要用户自己实现，用于获取用户的展示信息以及群组的简要展示信息，如果不实现默认用id以及默认头像。
+3. 换设备或者多设备登录，漫游的会话列表，环信SDK中没有本地存储的群头像名称等显示信息，需要用户使用Provider提供给UIKit才能正常显示。
+4. 由于Provider的机制是停止滚动或者第一页不满10条数据时触发，所以更新会话列表以及联系人列表UI显示的昵称头像需要滑动后Provider提供给UIKit数据后，UIKit会刷新UI。
 
 # Q&A
 
