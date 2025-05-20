@@ -18,6 +18,7 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
 
     private val changeArray = BooleanArray(4)
     private var isEnableCustomServer = false
+    private var isEnableCustomServerTls = false
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -75,6 +76,11 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
         binding?.switchSpecifyServer?.setOnCheckedChangeListener { _, isChecked ->
             isEnableCustomServer = isChecked
             makeCustomServerItemEnable(isChecked)
+        }
+
+        binding?.switchEnablePrivateTls?.setOnCheckedChangeListener { _, isChecked ->
+            isEnableCustomServerTls = isChecked
+            DemoHelper.getInstance().getDataModel().enableCustomServerTls(isEnableCustomServerTls)
         }
     }
 
@@ -171,6 +177,10 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
                     }
                 }
             }
+        }
+        DemoHelper.getInstance().getDataModel().isCustomServerTlsEnable().let { enable ->
+            isEnableCustomServerTls = enable
+            binding?.switchEnablePrivateTls?.isChecked = enable
         }
         makeCustomServerItemEnable(binding?.switchSpecifyServer?.isChecked ?: false)
     }
