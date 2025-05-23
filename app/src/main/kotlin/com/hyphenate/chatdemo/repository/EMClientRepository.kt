@@ -245,67 +245,6 @@ class EMClientRepository: BaseRepository() {
     }
 
     /**
-     * Get verification code from server.
-     */
-    suspend fun getVerificationCode(phoneNumber: String?): Int =
-        withContext(Dispatchers.IO) {
-            suspendCoroutine { continuation ->
-                getVerificationCodeFromServer(
-                    phoneNumber,
-                    onSuccess = {
-                        continuation.resume(ChatError.EM_NO_ERROR)
-                    },
-                    onError = { code, error ->
-                        continuation.resumeWithException(ChatException(code, error))
-                    }
-                )
-            }
-        }
-
-    private fun getVerificationCodeFromServer(phoneNumber: String?, onSuccess: OnSuccess, onError: OnError) {
-        if (phoneNumber.isNullOrEmpty()) {
-            onError(ChatError.INVALID_PARAM, getContext().getString(R.string.em_login_phone_empty))
-            return
-        }
-        try {
-            val headers: MutableMap<String, String> = java.util.HashMap()
-            headers["Content-Type"] = "application/json"
-            val url = "$SEND_SMS_URL/$phoneNumber/"
-            EMLog.d("getVerificationCodeFromServe url : ", url)
-            val response =
-                HttpClientManager.httpExecute(url, headers, null, HttpClientManager.Method_POST)
-            val code = response.code
-            val responseInfo = response.content
-            if (code == 200) {
-                onSuccess()
-            } else {
-                if (responseInfo != null && responseInfo.isNotEmpty()) {
-                    var errorInfo: String? = null
-                    try {
-                        val responseObject = JSONObject(responseInfo)
-                        errorInfo = responseObject.getString("errorInfo")
-                        if (errorInfo.contains("wait a moment while trying to send")) {
-                            errorInfo =
-                                getContext().getString(R.string.em_login_error_send_code_later)
-                        } else if (errorInfo.contains("exceed the limit of")) {
-                            errorInfo =
-                                getContext().getString(R.string.em_login_error_send_code_limit)
-                        }
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        errorInfo = responseInfo
-                    }
-                    onError(code, errorInfo)
-                } else {
-                    onError(code, responseInfo)
-                }
-            }
-        } catch (e: java.lang.Exception) {
-            onError(ChatError.NETWORK_ERROR, e.message)
-        }
-    }
-
-    /**
      * 注销账户
      * @return
      */
