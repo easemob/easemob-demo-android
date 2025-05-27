@@ -18,6 +18,8 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Base64
+import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -41,6 +43,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.clearSpans
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.MainActivity
 import com.hyphenate.chatdemo.R
@@ -52,6 +55,7 @@ import com.hyphenate.chatdemo.common.extensions.internal.changePwdDrawable
 import com.hyphenate.chatdemo.common.extensions.internal.clearEditTextListener
 import com.hyphenate.chatdemo.common.extensions.internal.showRightDrawable
 import com.hyphenate.chatdemo.databinding.DemoFragmentLoginBinding
+import com.hyphenate.chatdemo.utils.AESEncryptor
 import com.hyphenate.chatdemo.utils.PhoneNumberUtils
 import com.hyphenate.chatdemo.utils.ToastUtils.showToast
 import com.hyphenate.chatdemo.viewmodel.LoginFragmentViewModel
@@ -69,6 +73,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.Locale
+import javax.crypto.spec.SecretKeySpec
 
 class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener,
     TextWatcher,
@@ -519,6 +524,22 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
     }
 
     inner class CaptchaJsInterface {
+
+        @JavascriptInterface
+        fun encryptData(param: String) {
+            // 1. 准备密钥
+            val keyBytes = Base64.decode(BuildConfig.SECRET_KEY, Base64.DEFAULT)
+            val secretKey = SecretKeySpec(keyBytes, "AES")
+
+            val encryptedData = AESEncryptor.encrypt(param,secretKey)
+
+            // 2. 切换到主线程回调JS
+            binding?.webView?.post {
+                val jsCallback = "window.encryptCallback('${encryptedData}')"
+                binding?.webView?.evaluateJavascript(jsCallback, null)
+                Log.d(TAG, "encryptData: $jsCallback")
+            }
+        }
 
         @JavascriptInterface
         fun getVerifyResult(verifyResult: String) {
