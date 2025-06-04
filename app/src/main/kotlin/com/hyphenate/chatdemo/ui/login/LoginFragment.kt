@@ -485,7 +485,9 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
             override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 // 页面开始加载时显示进度条
-                binding?.progressBar?.visibility = VISIBLE
+                if (binding?.progressBar?.visibility == VISIBLE) {
+                    binding?.progressBar?.visibility = VISIBLE
+                }
             }
             
             override fun onPageFinished(view: WebView?, url: String?) {
