@@ -1,14 +1,14 @@
-# 产品介绍
+# 环信即时通讯 IM Demo 
 
-环信IM产品展示了怎么使用环信SDK创建一个完整的聊天APP。展示的功能包括：用户登录注册，添加好友，单聊，群聊，发送文字，表情，语音，图片，文件，地理位置等消息，以及实时音视频通话等。
+环信即时通讯 IM Demo 提供用户登录、单聊、群组、子区、消息(文字、表情、语音、视频、图片、文件等)发送及管理、会话管理、好友管理、用户属性、用户在线状态（Presence）以及实时音视频通话等功能。
 
-其中音视频通话使用声网SDK实现。
+## Demo 体验  
 
-# 产品体验
+你可以进入 [环信官网](https://www.easemob.com/download/demo) 体验即时通讯 IM Demo。
 
-![](./image/demo.png)
+## 快速跑通 Demo 源码
 
-## 开发环境要求
+### 开发环境要求
 
 - Android Studio Flamingo | 2022.2.1 及以上
 - Gradle 8.0 及以上
@@ -16,157 +16,153 @@
 - Android SDK API 21 及以上
 - JDK 17 及以上
 
-# 跑通Demo
+### 跑通步骤
 
-1. [注册环信应用](https://doc.easemob.com/product/enable_and_configure_IM.html)
+1. [创建应用](https://doc.easemob.com/product/enable_and_configure_IM.html#%E5%88%9B%E5%BB%BA%E5%BA%94%E7%94%A8)。   
+2. [获取应用的 App Key](https://doc.easemob.com/product/enable_and_configure_IM.html#%E8%8E%B7%E5%8F%96%E7%8E%AF%E4%BF%A1%E5%8D%B3%E6%97%B6%E9%80%9A%E8%AE%AF-im-%E7%9A%84%E4%BF%A1%E6%81%AF)。
+3. [创建用户](https://doc.easemob.com/product/enable_and_configure_IM.html#%E5%88%9B%E5%BB%BA-im-%E7%94%A8%E6%88%B7)。
+4. [下载即时通讯 IM Demo 项目源码](https://github.com/easemob/easemob-demo-android)。
+5. 下载完毕，打开 Android Studio，点击 **File > Open**，打开已下载到本地的 Demo (`easemob-demo-android`) 工程根目录即可。
+6. 将你的应用的 App Key 填入 Demo 工程根目录下的 `local.properties` 文件，格式为 `APPKEY = 你申请的appkey`。
+7. 编译运行项目。
+8. 使用注册的用户 ID 和密码登录。
 
-2. 将Appkey填入工程根目录下的`local.properties`文件中 格式如下：`APPKEY = 你申请的AppKey`
+### App Server
 
+为方便开发者快速体验即时通讯 IM 功能，跑通本工程 Demo 源码默认使用开发者注册的用户 ID 和密码直接登录，不需要依赖部署服务端 App Server。但是在此模式下，手机验证码、用户头像和 EaseCallKit 实时音视频等相关功能不可用，你可以通过部署 App Server 完整体验这些功能。
 
-# ChatUIKit在Demo中的使用
+App Server 为 Demo 提供以下功能：
 
-## 1. 初始化
+- 通过手机号获取验证码。
+- 通过手机号和验证码返回环信用户 ID 和环信用户 Token。
+- 上传头像并返回地址。
+- 根据用户的信息生成 [EaseCallKit](https://doc.easemob.com/document/android/easecallkit.html) 登录所需的 Token。
+- 获取音视频通话时环信用户 ID 和 Agora UID 的映射关系。
 
-[详情参见](./app/src/main/kotlin/com/hyphenate/chatdemo/DemoApplication.kt) 中 `DemoHelper.getInstance().initSDK()`方法。
+你通过以下步骤部署 App Server：
 
-```Kotlin
+1. 部署 App Server。详见 [服务端源码](https://github.com/easemob/easemob-im-app-server/tree/dev-demo)。
+2. 在 Demo 工程根目录下 `local.properties` 文件中，填写 App Server 的域名或 IP 地址，格式为 `APP_SERVER_DOMAIN = 服务器域名或ip地址`。
+3. 在 Demo 工程根目录下 `local.properties` 文件中，填入 `LOGIN_WITH_APPSERVER = true`，即通知 Demo 工程需要启用 App Server，体验完整功能。
 
-DemoHelper.getInstance().initSDK()
+**服务端中的 App Key 要跟客户端的 App Key 保持一致。**
 
-```
+## Demo 项目结构
 
-## 2. 登录
+### Demo 架构
 
-[详情参见](./app/src/main/kotlin/com/hyphenate/chatdemo/viewmodel/EMClientRepository.kt) 中 `ChatUIKitClient.login`方法
+└── com
+    └── hyphenate
+        └── chatdemo
+            ├── DemoApplication.kt  //程序入口
+            ├── DemoHelper.kt   //app 帮助类
+            ├── MainActivity.kt //主页面
+            ├── base    //包含一些基类
+            │   ├── ActivityState.kt
+            │   ├── BaseDialogFragment.kt   //一些弹窗基类
+            │   ├── BaseInitActivity.kt //activity 基类
+            │   ├── ErrorCode.kt    //一些常用的错误码
+            │   └── UserActivityLifecycleCallbacks.kt
+            ├── bean    //一些序列化 bean 类
+            ├── callkit
+            │   ├── CallKitActivityLifecycleCallback.kt //callkit 中 activity 的生命周期监听回调类
+            │   ├── CallKitManager.kt   //callkit 管理类
+            │   ├── CallUserInfo.kt
+            │   ├── ConferenceInviteActivity.kt
+            │   ├── ConferenceInviteAdapter.kt
+            │   ├── ConferenceInviteFragment.kt
+            │   ├── ConferenceMemberSelectViewHolder.kt
+            │   ├── MultipleVideoActivity.kt    //多人音视频页面
+            │   ├── VideoCallActivity.kt    //单人音视频页面
+            │   ├── extensions  //callkit 一些扩展函数类
+            │   ├── viewholder  //单聊、群聊 call 消息提醒类型适配器，包含一些事件处理
+            │   └── views   //单聊、群聊 call 消息提醒类型布局
+            ├── common  //app 的一些的公共类
+            │  
+            ├── controller  
+            │   └── PresenceController.kt   //presence 相关的管理类
+            ├── interfaces  //包含一些接口标准类
+            ├── repository  // app 的数据仓库
+            ├── ui
+            │   ├── chat
+            │   │   ├── ChatActivity.kt //单群聊聊天页面 activity
+            │   │   ├── ChatFragment.kt //单群聊聊天页面 fragment
+            │   │   └── CustomMessagesAdapter.kt    //自定义消息适配器
+            │   ├── contact
+            │   │   ├── ChatContactCheckActivity.kt     //检查是否是联系人页面
+            │   │   ├── ChatContactDetailActivity.kt    //联系人详情页面
+            │   │   ├── ChatContactListFragment.kt      //联系人列表页面
+            │   │   ├── ChatContactRemarkActivity.kt    //联系人(好友)备注页面
+            │   │   └── ChatNewRequestActivity.kt       //联系人页面新请求 item
+            │   ├── conversation
+            │   │   └── ConversationListFragment.kt //会话列表页面
+            │   ├── group
+            │   │   ├── ChatCreateGroupActivity.kt  //创建群组页面
+            │   │   └── ChatGroupDetailActivity.kt  //群组详情页面
+            │   ├── login
+            │   │   ├── LoginActivity.kt    //登录页面 activity
+            │   │   ├── LoginFragment.kt    //登录页面 fragment
+            │   │   ├── ServerSetFragment.kt
+            │   │   └── SplashActivity.kt   //启动页
+            │   └── me //我的界面里相关按钮对应的页面
+            │       ├── AboutActivity.kt    
+            │       ├── AboutMeFragment.kt   //关于我页面
+            │       ├── CurrencyActivity.kt     //通用设置页面，设置暗黑模式、语言、样式等
+            │       ├── EditUserNicknameActivity.kt // 修改用户昵称页面
+            │       ├── FeaturesActivity.kt
+            │       ├── LanguageSettingActivity.kt
+            │       ├── NotifyActivity.kt
+            │       ├── StyleSettingActivity.kt
+            │       ├── UserInformationActivity.kt
+            │       ├── WebViewActivity.kt
+            │       └── controller
+            ├── uikit
+            │   └── UIKitManager.kt //UIKit 管理类
+            ├── utils   //工具类
+            └── viewmodel //包含一些 ViewModel 类
 
-```Kotlin
+### 核心类
 
-//使用id和密码登录
-ChatUIKitClient.login(userName, pwd, 
-    onSuccess = {}, 
-    onError = { code, error -> 
-        
-    }
-)
+| 模块               | 描述   | 
+| :------------------- | :----- |
+| DemoHelper               | 环信（Demo）全局帮助类，主要功能为初始化 IM SDK，初始化 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 、[EaseCallKit](https://doc.easemob.com/document/android/easecallkit.html) 相关及注册对话类型等。  | 
+| ConversationListFragment   | 继承自 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 中的 `ChatUIKitConversationListFragment`，展示当前用户的所有会话，包含单聊和群组聊天（不包括聊天室），并且提供会话搜索、删除、置顶和免打扰功能  | 
+| ChatActivity 及 ChatFragment  | `ChatActivity` 继承自 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 中的 `UIKitChatActivity`，主要进行了权限的请求，比如相机权限，语音权限等。`ChatFragment` 继承自 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 中的 `UIKitChatFragment`，该页面提供如下功能：1、发送和接收消息, 包括文本、表情、图片、语音、视频、文件和名片消息。2、对消息进行复制、引用、撤回、删除、编辑、重新发送和审核。3、清除本地消息。  | 
+| ChatContactListFragment                | 继承自 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 中的 `ChatUIKitContactsListFragment`，用于展示通讯录列表，包括联系人搜索，添加联系人，好友申请列表入口，群组列表入口，联系人列表。 |
+| ChatGroupDetailActivity  | 继承自 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 中的 `ChatUIKitGroupDetailActivity`，实现了如下功能：群成员管理，群属性管理，上传共享文件，设置消息免打扰,解散或者退出群组等。   | 
 
-//使用ChatUIKitProfile用户协议对象 和 token 登录，注意token需要通过服务端生成
-ChatUIKitClient.login(ChatUIKitProfile(userName), token, 
-    onSuccess = {}, 
-    onError = { code, error -> 
-        
-    }
-)
+### 核心模块
 
-```
+| 模块               | 描述   | 
+| :------------------- | :----- |
+| 聊天模块    | 展示如何依赖 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 实现聊天页面，如何发送消息、消息管理、扩展消息类型及如何增加扩展菜单等的逻辑。    | 
+| 会话列表模块 | 展示如何依赖 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 实现会话列表的逻辑及实现系统消息的具体逻辑。   | 
+| 联系人模块  | 展示如何依赖 [ChatUIKit](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html) 实现联系人列表的逻辑。   | 
+| 我的模块  | 账户管理、用户状态管理及APP的一些功能样式设置    | 
+| 开发者模块  | 展示 IM SDK 提供的一些常规的开发者可以设置的功能。   | 
 
-## 3. Provider使用及其最佳示例用法
+### 单群聊 ChatUIKit
 
-如果您的App中已经有完备的用户体系以及可供展示的用户信息（例如头像昵称等。）可以实现ChatUIKitUserProfileProvider协议来提供给UIKit要展示的数据。
+Demo 里会话列表、聊天界面、联系人列表及后续界面均继承或直接使用环信 ChatUIKit 里提供的模块。
 
-3.1 [Provider初始化详情参见](./app/src/main/kotlin/com/hyphenate/chatdemo/uikit/UIKitManager.kt) `UIKitManager#addProviders`方法中的
-设置 ChatUIKitClient.setUserProfileProvide 和 ChatUIKitClient.setGroupProfileProvider
+关于 ChatUIKit 详情，请参见 [环信官网 ChatUIKit 文档](https://doc.easemob.com/uikit/chatuikit/android/chatuikit_overview.html)。
 
-3.2 实现Provider协议提供的方法参见下述示例代码
+### 音视频通话 EaseCallKit 库
 
-```Kotlin
-ChatUIKitClient.setUserProfileProvider(object : ChatUIKitUserProfileProvider {
-    // 同步获取用户信息
-    override fun getUser(userId: String?): ChatUIKitProfile? {
-        return DemoHelper.getInstance().getDataModel().getAllContacts()[userId]?.toProfile()
-    }
+ Demo 里音视频页面继承自环信 EaseCallKit 提供的单人/多人音视频聊天模块。
 
-    override fun fetchUsers(
-        userIds: List<String>,
-        onValueSuccess: OnValueSuccess<List<ChatUIKitProfile>>
-    ) {
-        // 用户可以根据userIds从自己服务器获取多个id的Profile信息 通过onValueSuccess()进行数据返回
-        // 同时可以将获取到的信息更新本地
-        // 更新db DemoHelper.getInstance().getDataModel().insertUsers()
-        // 更新缓存 ChatUIKitClient.updateUsersInfo() 获取Profile时 UIKit会先从缓存中查询
-    }
-})
-.setGroupProfileProvider(object : ChatUIKitGroupProfileProvider {
-    // 同步获取群组信息
-    override fun getGroup(id: String?): ChatUIKitGroupProfile? {
-        ChatClient.getInstance().groupManager().getGroup(id)?.let {
-            return ChatUIKitGroupProfile(it.groupId, it.groupName, it.extension)
-        }
-        return null
-    }
+关于音视频通话 EaseCallKit 库，请参见 [环信官网 EaseCallKit 文档](https://doc.easemob.com/document/android/easecallkit.html)。
 
-    override fun fetchGroups(
-        groupIds: List<String>,
-        onValueSuccess: OnValueSuccess<List<ChatUIKitGroupProfile>>
-    ) {
-        // 用户可以根据groupIds从自己服务器获取多个id的ChatUIKitGroupProfile信息 通过onValueSuccess()进行数据返回
-        // 同时可以将获取到的信息更新本地
-        // 更新缓存 ChatUIKitClient.updateGroupInfo() 获取Profile时 UIKit会先从缓存中查询
-    }
-})
-```
+## Demo 设计
 
-## 4.继承ChatUIKit中的类进行二次开发
+关于 Demo 的设计，详见 [设计文档](https://www.figma.com/community/file/1327193019424263350/chat-uikit-for-mobile) 。
 
-4.1  举例：继承ChatUIKit中的UIKitChatActivity
+## 已知问题
 
-```Kotlin
+1. UserProvider 以及 GroupProvider 需要用户自己实现，用于获取用户的展示信息以及群组的简要展示信息，如果不实现默认用 ID 以及默认头像。
+2. 换设备或者多设备登录，漫游的会话列表，环信 SDK 中没有本地存储的群头像名称等显示信息，需要用户使用 Provider 提供给 UIKit 才能正常显示。
+3. 由于 Provider 的机制是停止滚动或者第一页不满 10 条数据时触发，所以更新会话列表以及联系人列表 UI 显示的昵称头像需要滑动后 Provider 提供给 UIKit 数据后，UIKit会刷新 UI。
 
-class ChatActivity: UIKitChatActivity() {
-    override fun setChildSettings(builder: UIKitChatFragment.Builder) {
-        super.setChildSettings(builder)
-        // builder 中提供了一系列的配置 如不满足还可以 ChatFragment 继承 UIKitChatFragment 进行扩展
-        builder.setCustomFragment(ChatFragment()).setCustomAdapter(CustomMessagesAdapter())
-    }
-}
+## Q&A
 
-```
-
-4.2 页面跳转重定向 setCustomActivityRoute的使用方法参见下述示例代码 
-
-[详情参见](./app/src/main/kotlin/com/hyphenate/chatdemo/uikit/UIKitManager.kt) `UIKitManager.addProviders`方法中的 `setCustomActivityRoute` 设置
-
-```Kotlin
-// 用于修改UIKit内部跳转进行重定向，跳转为自己的实现类
-ChatUIKitClient.setCustomActivityRoute(object : ChatUIKitCustomActivityRoute {
-    override fun getActivityRoute(intent: Intent): Intent? {
-        intent.component?.className?.let {
-            when(it) {
-                UIKitChatActivity::class.java.name -> {
-                    intent.setClass(context, ChatActivity::class.java)
-                }
-                else -> {
-                    return intent
-                }
-            }
-        }
-        return intent
-    }
-})
-
-```
-
-# Demo设计
-浏览器中打开如下链接
-https://www.figma.com/community/file/1327193019424263350/chat-uikit-for-mobile
-
-
-# 已知问题
-1. 为方便开发者快速体验IM功能，本工程Demo默认使用开发者注册的用户名和密码直接登录。但此模式下手机验证码、用户图像和Callkit相关功能不可用。用户可直接使用[官网下载](https://www.easemob.com/download/demo)的apk,或者通过以下配置跑通工程Demo体验完整功能:
-
-- 将[服务端源码](https://github.com/easemob/easemob-im-app-server/tree/dev-demo)部署后填入`local.properties`文件中 格式如下 `APP_SERVER_DOMAIN = xxx服务器域名或ip地址xx`，手机号验证码暂时可以跳过，可以使用手机号后六位当验证码，服务端中的Appkey 要跟客户端的Appkey保持一致。
-
-    :::tip
-    Appserver主要提供了手机号验证码登录接口以及上传用户头像的接口，此接口主要的职能是根据用户的信息注册并生成ChatUIKit登录所需的token或者使用已注册的用户信息生成ChatUIKit登录所需的token。
-    :::
-
-- 在`local.properties`文件中，填入`LOGIN_WITH_APPSERVER=true`
-
-
-
-2. UserProvider以及GroupProvider需要用户自己实现，用于获取用户的展示信息以及群组的简要展示信息，如果不实现默认用id以及默认头像。
-3. 换设备或者多设备登录，漫游的会话列表，环信SDK中没有本地存储的群头像名称等显示信息，需要用户使用Provider提供给UIKit才能正常显示。
-4. 由于Provider的机制是停止滚动或者第一页不满10条数据时触发，所以更新会话列表以及联系人列表UI显示的昵称头像需要滑动后Provider提供给UIKit数据后，UIKit会刷新UI。
-
-# Q&A
-
-如有问题请联系环信技术支持或者发邮件到issue@easemob.com
+如有问题请联系环信技术支持或者发邮件到 [issue@easemob.com](mailto:issue@easemob.com)。

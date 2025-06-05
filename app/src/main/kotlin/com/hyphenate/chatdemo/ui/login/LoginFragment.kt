@@ -2,8 +2,10 @@ package com.hyphenate.chatdemo.ui.login
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Outline
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.Editable
@@ -16,18 +18,32 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Base64
+import android.util.Log
+import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.EditorInfo
+import android.webkit.JavascriptInterface
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.CompoundButton
 import android.widget.TextView
+import android.widget.TextView.GONE
 import android.widget.TextView.OnEditorActionListener
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.text.clearSpans
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.MainActivity
 import com.hyphenate.chatdemo.R
@@ -39,6 +55,7 @@ import com.hyphenate.chatdemo.common.extensions.internal.changePwdDrawable
 import com.hyphenate.chatdemo.common.extensions.internal.clearEditTextListener
 import com.hyphenate.chatdemo.common.extensions.internal.showRightDrawable
 import com.hyphenate.chatdemo.databinding.DemoFragmentLoginBinding
+import com.hyphenate.chatdemo.utils.AESEncryptor
 import com.hyphenate.chatdemo.utils.PhoneNumberUtils
 import com.hyphenate.chatdemo.utils.ToastUtils.showToast
 import com.hyphenate.chatdemo.viewmodel.LoginFragmentViewModel
@@ -48,14 +65,18 @@ import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.hideSoftKeyboard
+import com.hyphenate.util.EMLog
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.Locale
+import javax.crypto.spec.SecretKeySpec
 
-class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener, TextWatcher,
+class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener,
+    TextWatcher,
     CompoundButton.OnCheckedChangeListener, OnEditorActionListener {
     private var mUserPhone: String? = null
     private var mCode: String? = null
@@ -67,6 +88,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
     private var isDeveloperMode = false
     private var isShowingDialog = false
     private var countDownTimer: CustomCountDownTimer? = null
+    private val VERIFY_CODE_URL = "https://downloadsdk.easemob.com/downloads/IMDemo/sms/index.html"
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -89,6 +111,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
             etLoginPhone.clearEditTextListener()
             root.setOnClickListener {
                 mContext.hideSoftKeyboard()
+                makeVerifyCodeWebViewVisible(false)
             }
         }
     }
@@ -97,6 +120,11 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         super.onCreate(savedInstanceState)
         retainInstance = true
         mFragmentViewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
+    }
+
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
+        setupWebView()
     }
 
     override fun initData() {
@@ -137,7 +165,8 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
             }
 
             R.id.tv_login_developer -> {
-                ChatUIKitFlowBus.with<String>(DemoConstant.SKIP_DEVELOPER_CONFIG).post(lifecycleScope, LoginFragment::class.java.simpleName)
+                ChatUIKitFlowBus.with<String>(DemoConstant.SKIP_DEVELOPER_CONFIG)
+                    .post(lifecycleScope, LoginFragment::class.java.simpleName)
             }
         }
     }
@@ -163,7 +192,11 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                             showToast(e.description)
                         }
                     }
-                    .stateIn(lifecycleScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+                    .stateIn(
+                        lifecycleScope,
+                        SharingStarted.WhileSubscribed(stopTimeoutMillis),
+                        null
+                    )
                     .collect {
                         if (it != null) {
                             DemoHelper.getInstance().getDataModel().initDb()
@@ -178,7 +211,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                 return
             }
             if (!PhoneNumberUtils.isPhoneNumber(mUserPhone)) {
-                showToast(mContext!!.getString(R.string.em_login_phone_illegal))
+                showToast(mContext.getString(R.string.em_login_phone_illegal))
                 return
             }
             if (mCode.isNullOrEmpty()) {
@@ -208,7 +241,11 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                             showToast(e.description)
                         }
                     }
-                    .stateIn(lifecycleScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+                    .stateIn(
+                        lifecycleScope,
+                        SharingStarted.WhileSubscribed(stopTimeoutMillis),
+                        null
+                    )
                     .collect {
                         if (it != null) {
                             DemoHelper.getInstance().getDataModel().initDb()
@@ -237,19 +274,8 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                 1000
             )
         }
-        lifecycleScope.launch {
-            mFragmentViewModel.getVerificationCode(mUserPhone!!)
-                .catchChatException { e ->
-                    showToast(e.description)
-                }
-                .stateIn(lifecycleScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
-                .collect {
-                    if (it != null) {
-                        countDownTimer?.start()
-                        showToast(R.string.em_login_post_code)
-                    }
-                }
-        }
+        mContext.hideSoftKeyboard()
+        showVerifyCodeWebView(mUserPhone)
     }
 
     private fun showOpenDeveloperDialog() {
@@ -259,7 +285,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                     R.string.server_open_develop_mode
                 )
             )
-            .setPositiveButton{
+            .setPositiveButton {
                 isDeveloperMode = !isDeveloperMode
                 DemoHelper.getInstance().getDataModel()?.setDeveloperMode(isDeveloperMode)
                 binding?.etLoginPhone?.setText("")
@@ -282,6 +308,10 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
             etLoginPhone.showRightDrawable(clear)
             if (isDeveloperMode) {
                 etLoginCode.showRightDrawable(eyeClose)
+            } else {
+                if (!PhoneNumberUtils.isPhoneNumber(mUserPhone)) {
+                    makeVerifyCodeWebViewVisible(false)
+                }
             }
             setButtonEnable(!TextUtils.isEmpty(mUserPhone) && !TextUtils.isEmpty(mCode))
         }
@@ -301,6 +331,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         binding?.run {
             btnLogin.isEnabled = enable
             if (etLoginCode.hasFocus()) {
+                makeVerifyCodeWebViewVisible(false)
                 etLoginCode.imeOptions =
                     if (enable) EditorInfo.IME_ACTION_DONE else EditorInfo.IME_ACTION_PREVIOUS
             } else if (etLoginPhone.hasFocus()) {
@@ -319,7 +350,8 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         }
 
     private fun createSpannable(): SpannableString {
-        val language = PreferenceManager.getValue(DemoConstant.APP_LANGUAGE,Locale.getDefault().language)
+        val language =
+            PreferenceManager.getValue(DemoConstant.APP_LANGUAGE, Locale.getDefault().language)
         val isZh = language.startsWith("zh")
         val spanStr = SpannableString(getString(R.string.em_login_agreement))
         var start1 = 29
@@ -353,7 +385,12 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
             }
         }, start2, end2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spanStr.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(mContext, com.hyphenate.easeui.R.color.ease_color_primary)),
+            ForegroundColorSpan(
+                ContextCompat.getColor(
+                    mContext,
+                    com.hyphenate.easeui.R.color.ease_color_primary
+                )
+            ),
             start2,
             end2,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -419,6 +456,141 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         startActivity(it)
     }
 
+    private fun setupWebView() {
+        binding?.webView?.settings?.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            domStorageEnabled = true
+            cacheMode = WebSettings.LOAD_NO_CACHE
+        }
+
+        // Kotlin代码动态设置
+        binding?.webView?.apply {
+            addJavascriptInterface(CaptchaJsInterface(), "android")
+            isVerticalScrollBarEnabled = false
+            isHorizontalScrollBarEnabled = false
+            // 设置背景色，避免显示旧内容
+            setBackgroundColor(ContextCompat.getColor(context, android.R.color.white))
+            outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    outline.setRoundRect(0, 0, view.width, view.height, 4f.dp)
+                }
+            }
+            clipToOutline = true
+        }
+
+        binding?.webView?.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                // 页面开始加载时显示进度条
+                if (binding?.progressBar?.visibility == VISIBLE) {
+                    binding?.progressBar?.visibility = VISIBLE
+                }
+            }
+            
+            override fun onPageFinished(view: WebView?, url: String?) {
+                binding?.progressBar?.visibility = GONE
+            }
+
+            @RequiresApi(Build.VERSION_CODES.M)
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                handleError(errorInfo = "WEBVIEW_ERROR: ${error?.description}")
+            }
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                url?.let {
+                    view?.loadUrl(url)
+                    return true
+                }
+                return super.shouldOverrideUrlLoading(view, url)
+            }
+        }
+    }
+
+    private fun showVerifyCodeWebView(mUserPhone: String?) {
+        makeVerifyCodeWebViewVisible(true)
+        binding?.webView?.loadUrl("$VERIFY_CODE_URL?telephone=$mUserPhone")
+    }
+
+    private fun makeVerifyCodeWebViewVisible(visible: Boolean) {
+        binding?.run {
+            if (visible) {
+                progressBar.visibility = VISIBLE
+                webView.visibility = VISIBLE
+            } else {
+                progressBar.visibility = GONE
+                webView.visibility = GONE
+                // 隐藏时加载空白页面，清除视觉内容
+                webView.post {
+                    webView.loadUrl("about:blank")
+                }
+            }
+        }
+    }
+
+    inner class CaptchaJsInterface {
+
+        @JavascriptInterface
+        fun encryptData(param: String) {
+            // 1. 准备密钥
+            val keyBytes = Base64.decode(BuildConfig.SECRET_KEY, Base64.DEFAULT)
+            val secretKey = SecretKeySpec(keyBytes, "AES")
+
+            val encryptedData = AESEncryptor.encrypt(param,secretKey)
+
+            // 2. 切换到主线程回调JS
+            binding?.webView?.post {
+                val jsCallback = "window.encryptCallback('${encryptedData}')"
+                binding?.webView?.evaluateJavascript(jsCallback, null)
+                Log.d(TAG, "encryptData: $jsCallback")
+            }
+        }
+
+        @JavascriptInterface
+        fun getVerifyResult(verifyResult: String) {
+            binding?.progressBar?.post {
+                makeVerifyCodeWebViewVisible(false)
+            }
+            EMLog.d(TAG, "verifyResult = " + verifyResult)
+            var code = -1;
+            try {
+                val json = JSONObject(verifyResult)
+                code = json.getInt("code")
+                if (code == 200) {
+                    handleSuccess()
+                } else {
+                    val errorInfo = json.getString("errorInfo")
+                    handleError(code, errorInfo)
+                }
+
+            } catch (e: Exception) {
+                handleError(code, "PARSE_ERROR: ${e.message}")
+            }
+        }
+    }
+
+    private fun handleSuccess() {
+        binding?.webView?.post {
+            countDownTimer?.start()
+            showToast(R.string.em_login_post_code)
+        }
+    }
+
+
+    private fun handleError(code: Int = -1, errorInfo: String = "") {
+        EMLog.e(TAG, "code = $code" + ",errorInfo = " + errorInfo)
+        binding?.webView?.post {
+            showToast(errorInfo)
+        }
+    }
+
+
     private abstract inner class MyClickableSpan : ClickableSpan() {
         override fun updateDrawState(ds: TextPaint) {
             super.updateDrawState(ds)
@@ -430,8 +602,19 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
     override fun onDestroyView() {
         spannable?.clearSpans()
         spannable = null
+        binding?.webView?.apply {
+            stopLoading()
+            destroy()
+        }
         super.onDestroyView()
     }
+
+    val Float.dp: Float
+        get() = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this,
+            resources.displayMetrics
+        )
 
     companion object {
         private const val TAG = "LoginFragment"

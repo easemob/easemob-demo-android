@@ -65,6 +65,9 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginEnd="40dp"/>
 
+
+
+
             <EditText
                 android:id="@+id/et_server_address"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -94,6 +97,31 @@
                 android:layout_marginTop="@dimen/ease_size_12"
                 android:hint="@string/server_set_rest_server_address"
                 style="@style/em_login_et_input"/>
+
+            <TextView
+                android:id="@+id/tv_enable_private_tls"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_server_rest"
+                android:layout_marginTop="@dimen/ease_size_12"
+                android:text="@string/server_set_enable_tls"
+                style="@style/em_login_et_input"
+                android:paddingStart="@dimen/ease_size_0"
+                android:background="@null"/>
+
+            <Switch
+                android:id="@+id/switch_enable_private_tls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:track="@drawable/demo_switch_track_selector"
+                android:thumb="@drawable/demo_switch_thumb_selector"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_server_rest"
+                app:layout_constraintHorizontal_bias="1"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginEnd="40dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
