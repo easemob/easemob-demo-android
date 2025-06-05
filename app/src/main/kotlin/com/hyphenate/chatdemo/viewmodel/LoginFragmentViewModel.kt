@@ -33,12 +33,4 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
                 flow { emit(mRepository.loginToServer(result?.username!!, result.token!!, true)) }
             }
 
-    /**
-     * Get verification code.
-     */
-    fun getVerificationCode(phoneNumber: String?) =
-        flow {
-            emit(mRepository.getVerificationCode(phoneNumber))
-        }
-
 }
