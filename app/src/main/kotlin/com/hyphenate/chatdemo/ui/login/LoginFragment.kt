@@ -471,6 +471,8 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
             addJavascriptInterface(CaptchaJsInterface(), "android")
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
+            // 设置背景色，避免显示旧内容
+            setBackgroundColor(ContextCompat.getColor(context, android.R.color.white))
             outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: Outline) {
                     outline.setRoundRect(0, 0, view.width, view.height, 4f.dp)
@@ -480,6 +482,14 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         }
 
         binding?.webView?.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                // 页面开始加载时显示进度条
+                if (binding?.progressBar?.visibility == VISIBLE) {
+                    binding?.progressBar?.visibility = VISIBLE
+                }
+            }
+            
             override fun onPageFinished(view: WebView?, url: String?) {
                 binding?.progressBar?.visibility = GONE
             }
@@ -500,7 +510,6 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
                 }
                 return super.shouldOverrideUrlLoading(view, url)
             }
-
         }
     }
 
@@ -511,14 +520,16 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
 
     private fun makeVerifyCodeWebViewVisible(visible: Boolean) {
         binding?.run {
-            webView.clearHistory()
-            webView.removeAllViews()
-            if (visible){
+            if (visible) {
                 progressBar.visibility = VISIBLE
                 webView.visibility = VISIBLE
-            }else{
+            } else {
                 progressBar.visibility = GONE
                 webView.visibility = GONE
+                // 隐藏时加载空白页面，清除视觉内容
+                webView.post {
+                    webView.loadUrl("about:blank")
+                }
             }
         }
     }
