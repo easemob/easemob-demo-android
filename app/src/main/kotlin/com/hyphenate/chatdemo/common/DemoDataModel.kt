@@ -252,6 +252,13 @@ class DemoDataModel(private val context: Context) {
     fun isCustomServerEnable(): Boolean {
         return PreferenceManager.getValue(KEY_ENABLE_CUSTOM_SERVER, false)
     }
+    /**
+     * Get whether the custom server tls is enabled.
+     * @return
+     */
+    fun isCustomServerTlsEnable(): Boolean {
+        return PreferenceManager.getValue(KEY_ENABLE_CUSTOM_SERVER_TLS, false)
+    }
 
     /**
      * Set whether the custom server is enabled.
@@ -259,6 +266,14 @@ class DemoDataModel(private val context: Context) {
      */
     fun enableCustomServer(enable: Boolean) {
         PreferenceManager.putValue(KEY_ENABLE_CUSTOM_SERVER, enable)
+    }
+
+    /**
+     * Set whether the custom server tls is enabled.
+     * @param enable
+     */
+    fun enableCustomServerTls(enable: Boolean) {
+        PreferenceManager.putValue(KEY_ENABLE_CUSTOM_SERVER_TLS, enable)
     }
 
     /**
@@ -343,6 +358,7 @@ class DemoDataModel(private val context: Context) {
         private const val KEY_IM_SERVER = "SHARED_KEY_IM_SERVER"
         private const val KEY_IM_SERVER_PORT = "SHARED_KEY_IM_SERVER_PORT"
         private const val KEY_ENABLE_CUSTOM_SERVER = "SHARED_KEY_ENABLE_CUSTOM_SERVER"
+        private const val KEY_ENABLE_CUSTOM_SERVER_TLS = "SHARED_KEY_ENABLE_CUSTOM_SERVER_TLS"
         private const val KEY_ENABLE_CUSTOM_SET = "SHARED_KEY_ENABLE_CUSTOM_SET"
         private const val KEY_PUSH_USE_FCM = "shared_key_push_use_fcm"
         private const val KEY_PUSH_APP_SILENT_MODEL = "key_push_app_silent_model"
