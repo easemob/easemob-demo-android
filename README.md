@@ -50,7 +50,7 @@ App Server 为 Demo 提供以下功能：
 ## Demo 项目结构
 
 ### Demo 架构
-
+```
 └── com
     └── hyphenate
         └── chatdemo
@@ -120,6 +120,7 @@ App Server 为 Demo 提供以下功能：
             │   └── UIKitManager.kt //UIKit 管理类
             ├── utils   //工具类
             └── viewmodel //包含一些 ViewModel 类
+```
 
 ### 核心类
 
