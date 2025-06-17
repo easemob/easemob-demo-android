@@ -74,7 +74,7 @@ object CallKitManager {
     var currentCallGroupId: String? = null
 
     private val callKitListener by lazy { object :EaseCallKitListener {
-        override fun onInviteUsers(context: Context?, users: Array<out String>?, ext: JSONObject?) {
+        override fun onInviteUsers(context: Context?, groupId: String,users: Array<out String>?, ext: JSONObject?) {
             currentCallGroupId = ext?.getStringOrNull(KEY_GROUPID)
             Intent(context, ConferenceInviteActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

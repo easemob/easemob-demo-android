@@ -93,7 +93,7 @@ class ConferenceInviteActivity: BaseInitActivity<DemoActivityConferenceInviteBin
                     }
                     val members = selectedMembers.toTypedArray()
                     val params: Map<String, Any> = mutableMapOf(CallKitManager.KEY_GROUPID to groupId!!)
-                    EaseCallKit.getInstance().startInviteMultipleCall(members, params)
+                    EaseCallKit.getInstance().startInviteMultipleCall(members,groupId, params)
                     finish()
                     true
                 }
@@ -108,12 +108,12 @@ class ConferenceInviteActivity: BaseInitActivity<DemoActivityConferenceInviteBin
     override fun onBackPressed() {
         setResult(RESULT_CANCELED)
         super.onBackPressed()
-        EaseCallKit.getInstance().startInviteMultipleCall(null, null)
+        EaseCallKit.getInstance().startInviteMultipleCall(null,"", null)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            EaseCallKit.getInstance().startInviteMultipleCall(null, null)
+            EaseCallKit.getInstance().startInviteMultipleCall(null,"", null)
         }
         return super.onKeyDown(keyCode, event)
     }
