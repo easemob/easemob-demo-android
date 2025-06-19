@@ -5,6 +5,7 @@
 ## Demo 体验  
 
 你可以进入 [环信官网](https://www.easemob.com/download/demo) 体验即时通讯 IM Demo。
+注意：Demo里登录时获取验证码功能在模拟器上不支持，请使用真机。
 
 ## 快速跑通 Demo 源码
 
