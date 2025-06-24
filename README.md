@@ -11,8 +11,8 @@
 
 ### 开发环境要求
 
-- Android Studio Flamingo | 2022.2.1 及以上
-- Gradle 8.0 及以上
+- 推荐 Android Studio Meerkat | 2024.3.1 Patch 2及以上
+- 推荐 Gradle 8.0 及以上
 - targetVersion 33 及以上
 - Android SDK API 21 及以上
 - JDK 17 及以上
@@ -43,8 +43,53 @@ App Server 为 Demo 提供以下功能：
 你通过以下步骤部署 App Server：
 
 1. 部署 App Server。详见 [服务端源码](https://github.com/easemob/easemob-im-app-server/tree/dev-demo)。
-2. 在 Demo 工程根目录下 `local.properties` 文件中，填写 App Server 的域名或 IP 地址，格式为 `APP_SERVER_DOMAIN = 服务器域名或ip地址`。
+2. 在 Demo 工程根目录下 `local.properties` 文件中，开发者在这里应该根据自己部署的 App Server 替换填写以下配置属性：
+```gradle
+# AppServer服务器域名或IP地址
+APP_SERVER_DOMAIN=xxx.xxx.com
+
+# AppServer用户管理URL路径
+APP_BASE_USER=/inside/app/user
+
+# AppServer群组管理URL路径
+APP_BASE_GROUP=/inside/app/group
+
+# AppServer登录管理URL路径
+APP_SERVER_LOGIN=/login/V2
+
+# AppServer上传用户图像URL路径
+APP_UPLOAD_AVATAR=/avatar/upload
+
+# AppServer群图像URL路径
+APP_GROUP_AVATAR=/avatarurl
+
+# 从服务端拉取Callkit登录使用的RTC Token URL路径
+APP_RTC_TOKEN_URL=/inside/token/rtc/channel
+
+# RTC APP ID（https://doc.easemob.com/document/android/easecallkit.html）
+RTC_APPID=xxxxxxxxxxxxxxxxxxxxxxx
+
+# 获取 RTC uid 和环信用户名映射关系的URL路径
+APP_RTC_CHANNEL_MAPPER_URL=/inside/agora/channel/mapper
+
+# 获取验证码时与APPServer加密参数所用的AES秘钥
+SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxx
+```
 3. 在 Demo 工程根目录下 `local.properties` 文件中，填入 `LOGIN_WITH_APPSERVER = true`，即通知 Demo 工程需要启用 App Server，体验完整功能。
+4. 离线推送相关配置(可选)
+从各厂商申请对应推送相关Appkey/AppSecret/AppID后，填入 Demo 工程根目录下 `local.properties` 文件中，可使用各厂商推送功能。
+```gradle
+MEIZU_PUSH_APPKEY=xxxxxxxxxxxxxxxxxxxxxxx
+MEIZU_PUSH_APPID=xxxxxxxxxxxxxxxxxxxxxxx
+OPPO_PUSH_APPKEY=xxxxxxxxxxxxxxxxxxxxxxx
+OPPO_PUSH_APPSECRET=xxxxxxxxxxxxxxxxxxxxxxx
+VIVO_PUSH_APPID=xxxxxxxxxxxxxxxxxxxxxxx
+VIVO_PUSH_APPKEY=xxxxxxxxxxxxxxxxxxxxxxx
+MI_PUSH_APPKEY=xxxxxxxxxxxxxxxxxxxxxxx
+MI_PUSH_APPID=xxxxxxxxxxxxxxxxxxxxxxx
+FCM_SENDERID=xxxxxxxxxxxxxxxxxxxxxxx
+HONOR_PUSH_APPID=xxxxxxxxxxxxxxxxxxxxxxx
+```
 
 **服务端中的 App Key 要跟客户端的 App Key 保持一致。**
 
