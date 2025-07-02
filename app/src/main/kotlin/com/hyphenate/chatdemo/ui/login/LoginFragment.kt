@@ -398,7 +398,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         return spanStr
     }
 
-    override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean {
+    override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             if (!TextUtils.isEmpty(mUserPhone) && !TextUtils.isEmpty(mCode)) {
                 mContext.hideSoftKeyboard()
