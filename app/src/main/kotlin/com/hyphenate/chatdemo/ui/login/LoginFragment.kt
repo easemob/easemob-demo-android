@@ -88,7 +88,7 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
     private var isDeveloperMode = false
     private var isShowingDialog = false
     private var countDownTimer: CustomCountDownTimer? = null
-    private val VERIFY_CODE_URL = "https://downloadsdk.easemob.com/downloads/IMDemo/sms/index.html"
+    private val VERIFY_CODE_URL = "https://downloadsdk.easesdk.com/downloads/IMDemo/sms/index.html"
 
     override fun getViewBinding(
         inflater: LayoutInflater,
