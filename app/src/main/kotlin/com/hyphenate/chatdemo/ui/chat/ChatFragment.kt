@@ -93,9 +93,14 @@ class ChatFragment: UIKitChatFragment() , IPresenceResultView {
 
     private fun showVideoCall() {
         if (chatType == ChatUIKitType.SINGLE_CHAT) {
-            CallKitManager.showSelectDialog(mContext, conversationId)
+            conversationId?.let {
+                CallKitManager.showSelectDialog(mContext, it)
+            }
         } else {
-            CallKitManager.startConferenceCall(mContext, conversationId)
+            conversationId?.let {
+                CallKitManager.startConferenceCall(mContext, it)
+            }
+
         }
     }
 

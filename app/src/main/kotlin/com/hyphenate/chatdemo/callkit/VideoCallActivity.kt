@@ -1,21 +1,22 @@
 package com.hyphenate.chatdemo.callkit
 
 import android.graphics.Color
-import com.hyphenate.chatdemo.callkit.extensions.setFitSystemForTheme
-import com.hyphenate.easecallkit.base.EaseCallType
-import com.hyphenate.easecallkit.ui.EaseVideoCallActivity
+import android.os.Bundle
+import com.hyphenate.easecallkit.CallKitClient
+import com.hyphenate.easecallkit.bean.CallType
+import com.hyphenate.easecallkit.ui.SingleCallActivity
 import com.hyphenate.easeui.common.utils.StatusBarCompat
 
-class VideoCallActivity: EaseVideoCallActivity() {
+class VideoCallActivity: SingleCallActivity() {
 
-    override fun initView() {
-        setFitSystemForTheme(true)
-        if (callType == EaseCallType.SINGLE_VIDEO_CALL) {
-            StatusBarCompat.compat(this, Color.parseColor("#000000"))
-        } else {
-            StatusBarCompat.compat(this, Color.parseColor("#bbbbbb"))
-        }
-        super.initView()
-    }
+//    override fun initView(savedInstanceState: Bundle?) {
+//        setFitSystemForTheme(true)
+//        if (CallKitClient.callType.value == CallType.SINGLE_VIDEO_CALL) {
+//            StatusBarCompat.compat(this, Color.parseColor("#000000"))
+//        } else {
+//            StatusBarCompat.compat(this, Color.parseColor("#bbbbbb"))
+//        }
+//        super.initView(savedInstanceState)
+//    }
 
 }

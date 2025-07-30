@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import com.hyphenate.chatdemo.R
-import com.hyphenate.easecallkit.base.EaseCallType
-import com.hyphenate.easecallkit.utils.EaseMsgUtils
+import com.hyphenate.easecallkit.bean.CallType
+import com.hyphenate.easecallkit.bean.Constant
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.widget.chatrow.ChatUIKitRow
 
@@ -32,11 +32,11 @@ class ChatRowVoiceCall @JvmOverloads constructor(
             contentView?.text = it.message
         }
         message?.let {
-            val type = it.getIntAttribute(EaseMsgUtils.CALL_TYPE, 0)
-            if (type == EaseCallType.SINGLE_VIDEO_CALL.ordinal) {
-                ivCallIcon.setImageResource(com.hyphenate.easecallkit.R.drawable.d_chat_video_call_self)
+            val type = it.getIntAttribute(Constant.CALL_TYPE, 0)
+            if (type == CallType.SINGLE_VIDEO_CALL.ordinal) {
+                ivCallIcon.setImageResource(R.drawable.d_chat_video_call_self)
             } else {
-                ivCallIcon.setImageResource(com.hyphenate.easecallkit.R.drawable.d_chat_voice_call)
+                ivCallIcon.setImageResource(R.drawable.d_chat_voice_call)
             }
         }
     }

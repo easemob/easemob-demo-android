@@ -3,8 +3,11 @@ package com.hyphenate.chatdemo.callkit.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageView
 import android.widget.TextView
 import com.hyphenate.chatdemo.R
+import com.hyphenate.easecallkit.bean.CallType
+import com.hyphenate.easecallkit.bean.Constant
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.widget.chatrow.ChatUIKitRow
 
@@ -16,6 +19,7 @@ class ChatRowConferenceInvite @JvmOverloads constructor(
     isSender: Boolean
 ) : ChatUIKitRow(context, attrs, defStyleAttr, isSender) {
     protected val contentView: TextView? by lazy { findViewById(R.id.tv_chatcontent) }
+    private val ivCallIcon: ImageView by lazy { findViewById(R.id.iv_call_icon) }
     override fun onInflateView() {
         inflater.inflate(
             if (!isSender) R.layout.demo_row_received_conference_invite else R.layout.demo_row_sent_conference_invite,
@@ -33,6 +37,9 @@ class ChatRowConferenceInvite @JvmOverloads constructor(
                 """.trimIndent()
             }
             contentView?.text = message
+        }
+        message?.let {
+            ivCallIcon.setImageResource(R.drawable.d_chat_video_call_self)
         }
     }
 

@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.databinding.DemoActivityConferenceInviteBinding
-import com.hyphenate.easecallkit.EaseCallKit
+import com.hyphenate.easecallkit.CallKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.extensions.showToast
@@ -93,7 +93,7 @@ class ConferenceInviteActivity: BaseInitActivity<DemoActivityConferenceInviteBin
                     }
                     val members = selectedMembers.toTypedArray()
                     val params: Map<String, Any> = mutableMapOf(CallKitManager.KEY_GROUPID to groupId!!)
-                    EaseCallKit.getInstance().startInviteMultipleCall(members, params)
+//                    CallKitClient.startInviteMultipleCall(members, params)
                     finish()
                     true
                 }
@@ -108,12 +108,12 @@ class ConferenceInviteActivity: BaseInitActivity<DemoActivityConferenceInviteBin
     override fun onBackPressed() {
         setResult(RESULT_CANCELED)
         super.onBackPressed()
-        EaseCallKit.getInstance().startInviteMultipleCall(null, null)
+//        EaseCallKit.getInstance().startInviteMultipleCall(null, null)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            EaseCallKit.getInstance().startInviteMultipleCall(null, null)
+//            EaseCallKit.getInstance().startInviteMultipleCall(null, null)
         }
         return super.onKeyDown(keyCode, event)
     }

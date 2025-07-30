@@ -10,7 +10,7 @@ import com.hyphenate.chatdemo.base.ActivityState
 import com.hyphenate.chatdemo.callkit.extensions.isTargetActivity
 import com.hyphenate.chatdemo.common.extensions.internal.makeTaskToFront
 import com.hyphenate.chatdemo.ui.login.SplashActivity
-import com.hyphenate.easecallkit.base.EaseCallFloatWindow
+import com.hyphenate.easecallkit.manager.FloatWindow
 
 class CallKitActivityLifecycleCallback: Application.ActivityLifecycleCallbacks, ActivityState {
     private val resumeActivity = mutableListOf<Activity>()
@@ -40,9 +40,9 @@ class CallKitActivityLifecycleCallback: Application.ActivityLifecycleCallbacks, 
         resumeActivity.remove(activity)
         if (resumeActivity.isEmpty()) {
             val a = getOtherTaskSingleInstanceActivity(activity.taskId)
-            if (a != null && a.isTargetActivity() && !EaseCallFloatWindow.getInstance().isShowing) {
-                a.makeTaskToFront()
-            }
+//            if (a != null && a.isTargetActivity() && !FloatWindow.i) {
+//                a.makeTaskToFront()
+//            }
             Log.e("ActivityLifecycle", "在后台了")
         }
     }
@@ -100,7 +100,7 @@ class CallKitActivityLifecycleCallback: Application.ActivityLifecycleCallbacks, 
         if (resumeActivity.size >= 1 && activityList.size > 1) {
             val a = getOtherTaskSingleInstanceActivity(resumeActivity[0].taskId)
             if (//当前activity和列表中首个activity不相同
-                a != null && !a.isFinishing && a !== activity && a.taskId != activity.taskId && !EaseCallFloatWindow.getInstance().isShowing) {
+                a != null && !a.isFinishing && a !== activity && a.taskId != activity.taskId ) {
                 Log.e("ActivityLifecycle", "启动了activity = " + a.javaClass.name)
                 activity.startActivity(Intent(activity, a.javaClass))
             }
