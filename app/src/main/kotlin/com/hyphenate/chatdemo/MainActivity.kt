@@ -150,9 +150,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         }
         // 请求必要权限
         requestPermissions()
-//        // 启动后台服务
-//        startService(Intent(this, IncomingCallService::class.java))
-//        startService(Intent(this, VoipConnectionService::class.java))
         checkPhoneAccount()
     }
 

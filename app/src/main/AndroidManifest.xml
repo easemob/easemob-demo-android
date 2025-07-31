@@ -321,6 +321,8 @@
         </activity>
         <activity android:name=".ui.chat.ChatActivity"
             android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:exported="false"/>
         <activity android:name=".ui.contact.ChatContactDetailActivity"
             android:exported="false"/>

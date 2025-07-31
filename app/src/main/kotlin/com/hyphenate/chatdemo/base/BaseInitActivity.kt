@@ -80,21 +80,28 @@ abstract class BaseInitActivity<B : ViewBinding> : ChatUIKitBaseActivity<B>() {
                 )
             }
         }
-        
-        // 请求解锁键盘锁
+
+        // 请求解锁键盘锁 - 但不要强制解锁，否则会造成显示在锁屏上方失败
         val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            keyguardManager.requestDismissKeyguard(this, object :KeyguardManager.KeyguardDismissCallback(){
-                override fun onDismissSucceeded() {
-                    super.onDismissSucceeded()
-                    ChatLog.d(TAG, "Keyguard dismissed successfully")
-                }
+            // 对于锁屏通话，我们不强制解锁，而是在锁屏上显示
+            if (!keyguardManager.isKeyguardSecure) {
+                // 只有在没有安全锁屏时才请求解锁
+                keyguardManager.requestDismissKeyguard(this, object : KeyguardManager.KeyguardDismissCallback() {
+                    override fun onDismissSucceeded() {
+                        super.onDismissSucceeded()
+                        com.hyphenate.easecallkit.utils.ChatLog.d(TAG, "Keyguard dismissed successfully")
+                    }
 
-                override fun onDismissError() {
-                    super.onDismissError()
-                    ChatLog.w(TAG, "Failed to dismiss keyguard")
-                }
-            })
+                    override fun onDismissError() {
+                        super.onDismissError()
+                        com.hyphenate.easecallkit.utils.ChatLog.w(TAG, "Failed to dismiss keyguard - showing on lockscreen")
+                    }
+                })
+            } else {
+                com.hyphenate.easecallkit.utils.ChatLog.d(TAG, "Secure keyguard detected - showing on lockscreen without unlock")
+            }
+
         }
 
         
