@@ -3,11 +3,17 @@ package com.hyphenate.chatdemo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +29,11 @@ import com.hyphenate.chatdemo.ui.me.AboutMeFragment
 import com.hyphenate.chatdemo.ui.contact.ChatContactListFragment
 import com.hyphenate.chatdemo.viewmodel.MainViewModel
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
+import com.hyphenate.easecallkit.telecom.IncomingCallService
+import com.hyphenate.easecallkit.telecom.PhoneAccountHelper
+import com.hyphenate.easecallkit.telecom.PhoneAccountHelper.registerPhoneAccount
+import com.hyphenate.easecallkit.telecom.PhoneAccountHelper.showPhoneAccountEnableGuide
+import com.hyphenate.easecallkit.telecom.VoipConnectionService
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
@@ -47,6 +58,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     override fun getViewBinding(inflater: LayoutInflater): ActivityMainBinding? {
         return ActivityMainBinding.inflate(inflater)
     }
+    private val TAG= "MainActivity"
     /**
      * The clipboard manager.
      */
@@ -70,9 +82,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     companion object {
         fun actionStart(context: Context) {
-            Intent(context, MainActivity::class.java).apply {
-                context.startActivity(this)
-            }
+            val intent = BaseInitActivity.createLockScreenIntent(context, MainActivity::class.java)
+            context.startActivity(intent)
         }
     }
 
@@ -135,6 +146,99 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD + ChatUIKitEvent.TYPE.CONVERSATION).register(this) {
             if (it.isConversationChange) {
                 mainViewModel.getUnreadMessageCount()
+            }
+        }
+        // 请求必要权限
+        requestPermissions()
+//        // 启动后台服务
+//        startService(Intent(this, IncomingCallService::class.java))
+//        startService(Intent(this, VoipConnectionService::class.java))
+        checkPhoneAccount()
+    }
+
+    fun checkPhoneAccount() {
+        val status = PhoneAccountHelper.getPhoneAccountStatus(this)
+        when {
+            !status.isSupported -> {
+                ChatLog.e(TAG, "Telecom not supported on this device")
+            }
+            !status.isRegistered -> {
+                ChatLog.e(TAG, "PhoneAccount not registered, registering now")
+                registerPhoneAccount(this)
+                binding.root.postDelayed({
+                    checkPhoneAccount()
+                }, 2000)
+            }
+            !status.isEnabled -> {
+                ChatLog.e(TAG, "PhoneAccount registered but not enabled, showing enable button")
+                // 自动显示引导（可选，根据需要启用）
+                showPhoneAccountEnableGuide()
+            }
+            else -> {
+                ChatLog.e(TAG, "PhoneAccount is ready")
+                Toast.makeText(this, "通话功能已就绪", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /**
+     * 显示PhoneAccount启用引导
+     */
+    private fun showPhoneAccountEnableGuide() {
+        showPhoneAccountEnableGuide(this) { enabled ->
+            if (enabled) {
+                ChatLog.d(TAG, "PhoneAccount enabled successfully")
+                Toast.makeText(this, "通话功能已启用，可以正常使用了！", Toast.LENGTH_LONG).show()
+            } else {
+                ChatLog.d(TAG, "PhoneAccount still not enabled")
+            }
+        }
+    }
+
+    private  val PERMISSION_REQUEST_CODE = 1001
+
+    private fun requestPermissions() {
+        val requiredPermissions = arrayOf(
+            android.Manifest.permission.MANAGE_OWN_CALLS,
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.READ_PHONE_NUMBERS,
+            android.Manifest.permission.CALL_PHONE,
+            android.Manifest.permission.MODIFY_PHONE_STATE,
+            android.Manifest.permission.POST_NOTIFICATIONS
+        )
+
+        val permissionsToRequest = mutableListOf<String>()
+        for (permission in requiredPermissions) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsToRequest.add(permission)
+                ChatLog.d(TAG, "Permission not granted: $permission")
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ChatLog.d(TAG, "Requesting permissions: ${permissionsToRequest.joinToString()}")
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        } else {
+            ChatLog.d(TAG, "All permissions already granted")
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for (i in permissions.indices) {
+                val permission = permissions[i]
+                val granted = grantResults[i] == PackageManager.PERMISSION_GRANTED
+                ChatLog.d(TAG, "Permission $permission granted: $granted")
             }
         }
     }

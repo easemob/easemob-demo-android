@@ -16,9 +16,6 @@ class CallKitActivityLifecycleCallback: Application.ActivityLifecycleCallbacks, 
     private val resumeActivity = mutableListOf<Activity>()
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         activityList.add(0, activity)
-        if (activity is MainActivity) {
-            CallKitManager.receiveCallPush(activity)
-        }
     }
 
     override fun onActivityStarted(activity: Activity) {

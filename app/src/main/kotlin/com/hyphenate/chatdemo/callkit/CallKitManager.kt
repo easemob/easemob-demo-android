@@ -26,6 +26,7 @@ import com.hyphenate.easeui.model.ChatUIKitMenuItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.jvm.java
 
 object CallKitManager {
 
@@ -227,8 +228,6 @@ object CallKitManager {
             CallKitActivityLifecycleCallback()
         )
         // Register the activities which you have registered in manifest
-        CallKitClient.registerVideoCallClass(VideoCallActivity::class.java)
-        CallKitClient.registerMultipleVideoClass(MultipleVideoActivity::class.java)
         CallKitClient.callKitListener=callKitListener
     }
 
@@ -295,7 +294,6 @@ object CallKitManager {
     fun startSingleAudioCall(conversationId: String) {
         CallKitClient.startSingleCall(
             CallType.SINGLE_VOICE_CALL, conversationId, null,
-            VideoCallActivity::class.java
         )
     }
 
@@ -313,33 +311,7 @@ object CallKitManager {
         CallKitClient.startInviteMultipleCall(groupId, null)
     }
 
-    /**
-     * Receive call push.
-     */
-    fun receiveCallPush(context: Context) {
-        if (isRtcCall) {
-            if (CallType.getfrom(rtcType) != CallType.CONFERENCE_CALL) {
-                startVideoCallActivity(context)
-            } else {
-                startMultipleVideoActivity(context)
-            }
-            isRtcCall = false
-        }
-    }
 
-    private fun startVideoCallActivity(context: Context) {
-        Intent(context, VideoCallActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(this)
-        }
-    }
-
-    private fun startMultipleVideoActivity(context: Context) {
-        Intent(context, MultipleVideoActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(this)
-        }
-    }
 
     /**
      * Base get request.

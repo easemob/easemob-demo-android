@@ -21,12 +21,12 @@ properties.load( inputStream )
 
 android {
     namespace = "com.hyphenate.chatdemo"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hyphenate.chatdemo"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 141
         versionName = "4.15.1"
 
