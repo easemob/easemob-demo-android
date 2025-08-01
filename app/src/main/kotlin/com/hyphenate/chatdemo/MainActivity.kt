@@ -67,6 +67,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     private var mAboutMeFragment:Fragment? = null
     private var mCurrentFragment: Fragment? = null
     private val badgeMap = mutableMapOf<Int, TextView>()
+
+    private var hasCheckedAccount=false
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
     }
@@ -162,9 +164,12 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             !status.isRegistered -> {
                 ChatLog.e(TAG, "PhoneAccount not registered, registering now")
                 registerPhoneAccount(this)
-                binding.root.postDelayed({
-                    checkPhoneAccount()
-                }, 2000)
+                if (!hasCheckedAccount){
+                    hasCheckedAccount=true
+                    binding.root.postDelayed({
+                        checkPhoneAccount()
+                    }, 2000)
+                }
             }
             !status.isEnabled -> {
                 ChatLog.e(TAG, "PhoneAccount registered but not enabled, showing enable button")
@@ -173,7 +178,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             }
             else -> {
                 ChatLog.e(TAG, "PhoneAccount is ready")
-                Toast.makeText(this, "通话功能已就绪", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -185,7 +189,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         showPhoneAccountEnableGuide(this) { enabled ->
             if (enabled) {
                 ChatLog.d(TAG, "PhoneAccount enabled successfully")
-                Toast.makeText(this, "通话功能已启用，可以正常使用了！", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.demo_check_voip), Toast.LENGTH_LONG).show()
             } else {
                 ChatLog.d(TAG, "PhoneAccount still not enabled")
             }
