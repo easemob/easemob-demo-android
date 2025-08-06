@@ -99,6 +99,10 @@ class DemoHelper private constructor(){
             // Set whether the sent message is included in the message listener, default false
             isIncludeSendMessageInMessageListener = true
 
+            setRestServer("a1-hsb.easemob.com")
+            setIMServer("42.193.118.34")
+            setImPort(6717)
+
             getDataModel().setUseFCM(true)
 
             /**

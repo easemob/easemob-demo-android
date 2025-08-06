@@ -146,12 +146,12 @@ android {
     }
 
     //打开注释后，可以直接在studio里查看和编辑emclient-linux里的代码
-//    externalNativeBuild {
-//        ndkBuild {
-//            path = File("jni/Android.mk")
-//        }
-//    }
-//    ndkVersion = "19.2.5345600"
+    externalNativeBuild {
+        ndkBuild {
+            path = File("jni/Android.mk")
+        }
+    }
+    ndkVersion = "19.2.5345600"
 }
 
 dependencies {
@@ -221,6 +221,6 @@ dependencies {
 //    implementation("io.hyphenate:ease-call-kit:4.15.1")
     implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.15.1")
-//    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
+//    implementation("io.hyphenate:hyphenate-chat:4.15.1")
+    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }

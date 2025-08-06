@@ -2,7 +2,6 @@ package com.hyphenate.chatdemo.callkit
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.hyphenate.chatdemo.DemoHelper
@@ -26,7 +25,6 @@ import com.hyphenate.easeui.model.ChatUIKitMenuItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.jvm.java
 
 object CallKitManager {
 
@@ -214,10 +212,12 @@ object CallKitManager {
 
             // 铃声文件配置示例：
             // 使用assets文件夹中的文件：
-            // ringFile = "assets://music.mp3"
+            outgoingRingFile = "assets://outgoing_ring.mp3"
+            incomingRingFile = "assets://incoming_ring.mp3"
+            dingRingFile = "assets://ding.mp3"
 
             // 使用res/raw文件夹中的文件：
-            ringFile = "raw://music.mp3" // 使用res/raw文件夹中的music.mp3作为铃声
+//            ringFile = "raw://music.mp3" // 使用res/raw文件夹中的music.mp3作为铃声
 
             // 使用绝对路径：
             // ringFile = "/path/to/your/ringtone.mp3"
