@@ -70,7 +70,7 @@ object CallKitManager {
                 reason: CallEndReason,
                 callTime: Long,
                 conversationId: String?,
-                error: CallKitClient.CallError?
+                error: CallKitClient.CallErrorType?
             ) {
 
                 ChatLog.d(
@@ -81,9 +81,9 @@ object CallKitManager {
             }
 
             override fun onCallError(
+                errorType: CallKitClient.CallErrorType?,
                 errorCode: Int?,
                 description: String?,
-                errorType: CallKitClient.CallError?,
                 conversationId: String?
             ) {
                 ChatLog.e(
