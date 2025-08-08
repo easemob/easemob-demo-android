@@ -221,6 +221,6 @@ dependencies {
     implementation("io.hyphenate:ease-call-kit:4.15.1")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.15.1")
+    implementation("io.hyphenate:hyphenate-chat:4.15.2")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }

@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.navigation.NavigationBarView
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.common.DemoConstant
+import com.hyphenate.chatdemo.common.extensions.internal.insertSwindleMsg
 import com.hyphenate.chatdemo.databinding.ActivityMainBinding
 import com.hyphenate.chatdemo.ui.conversation.ConversationListFragment
 import com.hyphenate.chatdemo.interfaces.IMainResultView
@@ -65,6 +66,9 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     private val chatMessageListener = object : ChatUIKitMessageListener() {
         override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
             mainViewModel.getUnreadMessageCount()
+            messages?.forEach {
+                insertSwindleMsg(it)
+            }
         }
     }
 
