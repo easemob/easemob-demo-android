@@ -10,7 +10,7 @@ import com.hyphenate.chatdemo.base.ActivityState
 import com.hyphenate.chatdemo.callkit.extensions.isTargetActivity
 import com.hyphenate.chatdemo.common.extensions.internal.makeTaskToFront
 import com.hyphenate.chatdemo.ui.login.SplashActivity
-import com.hyphenate.easecallkit.manager.FloatWindow
+import com.hyphenate.callkit.manager.FloatWindow
 
 class CallKitActivityLifecycleCallback: Application.ActivityLifecycleCallbacks, ActivityState {
     private val resumeActivity = mutableListOf<Activity>()

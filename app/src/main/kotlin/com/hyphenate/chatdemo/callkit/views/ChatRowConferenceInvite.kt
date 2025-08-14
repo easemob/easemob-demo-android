@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import com.hyphenate.chatdemo.R
-import com.hyphenate.easecallkit.bean.CallType
-import com.hyphenate.easecallkit.bean.Constant
+import com.hyphenate.callkit.bean.CallType
+import com.hyphenate.callkit.bean.Constant
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.widget.chatrow.ChatUIKitRow
 

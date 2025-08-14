@@ -1,9 +1,9 @@
 package com.hyphenate.chatdemo.callkit.viewholder
 
 import android.view.View
-import com.hyphenate.easecallkit.CallKitClient
-import com.hyphenate.easecallkit.bean.CallType
-import com.hyphenate.easecallkit.bean.Constant
+import com.hyphenate.callkit.CallKitClient
+import com.hyphenate.callkit.bean.CallType
+import com.hyphenate.callkit.bean.Constant
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageDirection
 import com.hyphenate.easeui.feature.chat.viewholders.ChatUIKitRowViewHolder

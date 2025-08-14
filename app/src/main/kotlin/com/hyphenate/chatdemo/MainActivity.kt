@@ -29,11 +29,11 @@ import com.hyphenate.chatdemo.ui.me.AboutMeFragment
 import com.hyphenate.chatdemo.ui.contact.ChatContactListFragment
 import com.hyphenate.chatdemo.viewmodel.MainViewModel
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
-import com.hyphenate.easecallkit.telecom.IncomingCallService
-import com.hyphenate.easecallkit.telecom.PhoneAccountHelper
-import com.hyphenate.easecallkit.telecom.PhoneAccountHelper.registerPhoneAccount
-import com.hyphenate.easecallkit.telecom.PhoneAccountHelper.showPhoneAccountEnableGuide
-import com.hyphenate.easecallkit.telecom.VoipConnectionService
+import com.hyphenate.callkit.telecom.IncomingCallService
+import com.hyphenate.callkit.telecom.PhoneAccountHelper
+import com.hyphenate.callkit.telecom.PhoneAccountHelper.registerPhoneAccount
+import com.hyphenate.callkit.telecom.PhoneAccountHelper.showPhoneAccountEnableGuide
+import com.hyphenate.callkit.telecom.VoipConnectionService
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog

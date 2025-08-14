@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.databinding.DemoActivityConferenceInviteBinding
-import com.hyphenate.easecallkit.CallKitClient
+import com.hyphenate.callkit.CallKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.extensions.showToast

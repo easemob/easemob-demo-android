@@ -90,16 +90,16 @@ abstract class BaseInitActivity<B : ViewBinding> : ChatUIKitBaseActivity<B>() {
                 keyguardManager.requestDismissKeyguard(this, object : KeyguardManager.KeyguardDismissCallback() {
                     override fun onDismissSucceeded() {
                         super.onDismissSucceeded()
-                        com.hyphenate.easecallkit.utils.ChatLog.d(TAG, "Keyguard dismissed successfully")
+                        com.hyphenate.callkit.utils.ChatLog.d(TAG, "Keyguard dismissed successfully")
                     }
 
                     override fun onDismissError() {
                         super.onDismissError()
-                        com.hyphenate.easecallkit.utils.ChatLog.w(TAG, "Failed to dismiss keyguard - showing on lockscreen")
+                        com.hyphenate.callkit.utils.ChatLog.w(TAG, "Failed to dismiss keyguard - showing on lockscreen")
                     }
                 })
             } else {
-                com.hyphenate.easecallkit.utils.ChatLog.d(TAG, "Secure keyguard detected - showing on lockscreen without unlock")
+                com.hyphenate.callkit.utils.ChatLog.d(TAG, "Secure keyguard detected - showing on lockscreen without unlock")
             }
 
         }

@@ -1,7 +1,7 @@
 package com.hyphenate.chatdemo.common
 
 import android.text.TextUtils
-import com.hyphenate.easecallkit.bean.Constant
+import com.hyphenate.callkit.bean.Constant
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageType

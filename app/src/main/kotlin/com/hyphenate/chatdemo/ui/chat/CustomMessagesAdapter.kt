@@ -6,8 +6,8 @@ import com.hyphenate.chatdemo.callkit.viewholder.ChatConferenceInviteViewHolder
 import com.hyphenate.chatdemo.callkit.viewholder.ChatVoiceCallViewHolder
 import com.hyphenate.chatdemo.callkit.views.ChatRowConferenceInvite
 import com.hyphenate.chatdemo.callkit.views.ChatRowVoiceCall
-import com.hyphenate.easecallkit.bean.CallType
-import com.hyphenate.easecallkit.bean.Constant
+import com.hyphenate.callkit.bean.CallType
+import com.hyphenate.callkit.bean.Constant
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageDirection
 import com.hyphenate.easeui.feature.chat.adapter.ChatUIKitMessagesAdapter
@@ -27,7 +27,7 @@ class CustomMessagesAdapter: ChatUIKitMessagesAdapter() {
             val msgType = it.getStringAttribute(Constant.CALL_MSG_TYPE,"")
             val callType = it.getIntAttribute(Constant.CALL_TYPE, 0)
             if (TextUtils.equals(msgType, Constant.CALL_MSG_INFO)) {
-                if (callType == CallType.CONFERENCE_CALL.ordinal) {
+                if (callType == CallType.GROUP_CALL.ordinal) {
                     return if (it.direct() == ChatMessageDirection.SEND) VIEW_TYPE_MESSAGE_INVITE_SEND else VIEW_TYPE_MESSAGE_INVITE_RECEIVE
                 }
                 return if (it.direct() == ChatMessageDirection.SEND) VIEW_TYPE_MESSAGE_CALL_SEND else VIEW_TYPE_MESSAGE_CALL_RECEIVE
