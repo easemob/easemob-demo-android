@@ -5,6 +5,7 @@ import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.common.LocalNotifyHelper
 import com.hyphenate.chatdemo.common.room.entity.parse
 import com.hyphenate.chatdemo.repository.ChatContactRepository
+import com.hyphenate.chatdemo.utils.PhoneNumberUtils
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatContact
@@ -109,7 +110,11 @@ class ChatContactViewModel: ChatUIKitContactListViewModel() {
         viewModelScope.launch {
             flow {
                 try {
-                    emit(contactRepository.checkPhoneNumOrIdFromServer(userName))
+                    if (PhoneNumberUtils.isPhoneNumber(userName)){
+                        emit(contactRepository.checkPhoneNumOrIdFromServer(userName))
+                    }else{
+                        emit(contactRepository.addContact(userName,reason))
+                    }
                 }catch (e:ChatException){
                     inMainScope {
                         view?.addContactFail(e.errorCode,e.description)
