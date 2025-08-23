@@ -11,11 +11,18 @@ import com.hyphenate.callkit.CallKitClient
 import com.hyphenate.callkit.CallKitConfig
 import com.hyphenate.callkit.bean.CallEndReason
 import com.hyphenate.callkit.bean.CallInfo
+import com.hyphenate.callkit.bean.CallKitGroupInfo
+import com.hyphenate.callkit.bean.CallKitUserInfo
 import com.hyphenate.callkit.bean.CallType
+import com.hyphenate.callkit.interfaces.CallInfoProvider
 import com.hyphenate.callkit.interfaces.CallKitListener
-import com.hyphenate.easeui.common.ChatHttpClientManagerBuilder
-import com.hyphenate.easeui.common.ChatHttpResponse
+import com.hyphenate.callkit.interfaces.OnValueSuccess
+import com.hyphenate.chatdemo.common.extensions.internal.toCallKitUserInfo
+import com.hyphenate.chatdemo.repository.ProfileInfoRepository
+import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.ChatUserInfoType
 import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
 import com.hyphenate.easeui.common.dialog.SimpleSheetType
@@ -74,6 +81,42 @@ object CallKitManager {
         }
     }
 
+    private val callInfoProvider by lazy { object : CallInfoProvider{
+        override fun asyncFetchUsers(
+            userIds: List<String>,
+            onValueSuccess: OnValueSuccess<List<CallKitUserInfo>>
+        ) {
+            // fetch users from server and call call onValueSuccess.onSuccess(users) after successfully getting users
+            CoroutineScope(Dispatchers.IO).launch {
+                if (userIds.isEmpty()) {
+                    onValueSuccess(mutableListOf())
+                    return@launch
+                }
+                try {
+                    val users = ProfileInfoRepository().getUserInfoAttribute(userIds, mutableListOf(ChatUserInfoType.NICKNAME, ChatUserInfoType.AVATAR_URL))
+                    val callbackList = users.values.map { it.toCallKitUserInfo() }
+                    if (callbackList.isNotEmpty()) {
+                        DemoHelper.getInstance().getDataModel().insertCallUsers(callbackList)
+                        DemoHelper.getInstance().getDataModel().updateCallUsersTimes(callbackList)
+                    }
+                    onValueSuccess(callbackList)
+                }catch (e:ChatException){
+                    ChatLog.e("fetchUsers", "fetchUsers error: ${e.description}")
+                }
+            }
+        }
+
+        override fun asyncFetchGroupInfo(
+            groupId: String,
+            onValueSuccess: OnValueSuccess<CallKitGroupInfo>
+        ) {
+            ChatClient.getInstance().groupManager().getGroup(groupId)?.let {
+                onValueSuccess(CallKitGroupInfo(it.groupId, it.groupName, it.groupAvatar))
+            }
+        }
+
+    } }
+
     fun init(context: Context) {
         // 初始化CallKit
         val config = CallKitConfig().apply {
@@ -95,8 +138,10 @@ object CallKitManager {
         (context.applicationContext as Application).registerActivityLifecycleCallbacks(
             CallKitActivityLifecycleCallback()
         )
-        // Register the activities which you have registered in manifest
         CallKitClient.callKitListener=callKitListener
+        CallKitClient.callInfoProvider=callInfoProvider
+
+
     }
 
     /**
@@ -175,8 +220,8 @@ object CallKitManager {
     /**
      * Start conference call.
      */
-    fun startConferenceCall(context: Context, groupId: String) {
-        CallKitClient.startInviteMultipleCall(groupId, null)
+    fun startGroupCall( groupId: String) {
+        CallKitClient.startGroupCall(groupId, null)
     }
 
 

@@ -1,6 +1,5 @@
 package com.hyphenate.chatdemo.ui.chat
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -98,7 +97,7 @@ class ChatFragment: UIKitChatFragment() , IPresenceResultView {
             }
         } else {
             conversationId?.let {
-                CallKitManager.startConferenceCall(mContext, it)
+                CallKitManager.startGroupCall(it)
             }
 
         }

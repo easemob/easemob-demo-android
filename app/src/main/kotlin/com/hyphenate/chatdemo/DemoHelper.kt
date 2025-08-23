@@ -98,7 +98,7 @@ class DemoHelper private constructor(){
             requireAck = true
             // Set whether the sent message is included in the message listener, default false
             isIncludeSendMessageInMessageListener = true
-
+            autoLogin=true
             getDataModel().setUseFCM(true)
 
             /**

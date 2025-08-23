@@ -31,7 +31,7 @@ class ChatGroupDetailActivity :ChatUIKitGroupDetailActivity(){
             return when(menu.menuId){
                 R.id.group_item_video_call -> {
                     groupId?.let {
-                        CallKitManager.startConferenceCall(this, it)
+                        CallKitManager.startGroupCall( it)
                     }
                     true
                 }
