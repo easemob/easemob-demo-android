@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -153,7 +154,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         }
         // 请求必要权限
         requestPermissions()
-        checkPhoneAccount()
     }
 
     fun checkPhoneAccount() {
@@ -199,8 +199,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     private  val PERMISSION_REQUEST_CODE = 1001
 
-    private fun requestPermissions() {
-        val requiredPermissions = arrayOf(
+    private fun getRequiredPermissions() = arrayOf(
             android.Manifest.permission.MANAGE_OWN_CALLS,
             android.Manifest.permission.READ_PHONE_STATE,
             android.Manifest.permission.READ_PHONE_NUMBERS,
@@ -209,8 +208,10 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             android.Manifest.permission.POST_NOTIFICATIONS
         )
 
+    private fun requestPermissions() {
+
         val permissionsToRequest = mutableListOf<String>()
-        for (permission in requiredPermissions) {
+        for (permission in getRequiredPermissions()) {
             if (ContextCompat.checkSelfPermission(this, permission)
                 != PackageManager.PERMISSION_GRANTED
             ) {
@@ -228,8 +229,20 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             )
         } else {
             ChatLog.d(TAG, "All permissions already granted")
+            checkPhoneAccount()
         }
     }
+
+    private fun checkPermissions(): Boolean {
+        for (permission in getRequiredPermissions()) {
+            val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -237,11 +250,10 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            for (i in permissions.indices) {
-                val permission = permissions[i]
-                val granted = grantResults[i] == PackageManager.PERMISSION_GRANTED
-                ChatLog.d(TAG, "Permission $permission granted: $granted")
+            if (!checkPermissions()){
+                ChatLog.e(TAG, "Required permissions not granted")
             }
+            checkPhoneAccount()
         }
     }
 
@@ -286,6 +298,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         ChatUIKitClient.removeEventResultListener(this)
         ChatUIKitClient.removeContactListener(contactListener)
         ChatUIKitClient.removeChatMessageListener(chatMessageListener)
+        CallKitClient.cleanUp()
         super.onDestroy()
     }
 

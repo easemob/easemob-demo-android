@@ -164,9 +164,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
-    implementation("io.github.scwang90:refresh-header-material:2.1.0")
-    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
+    implementation("io.github.scwang90:refresh-layout-kernel:3.0.0-alpha")
+    implementation("io.github.scwang90:refresh-header-classics:3.0.0-alpha")
+    implementation("io.github.scwang90:refresh-footer-classics:3.0.0-alpha")
     implementation("pub.devrel:easypermissions:3.0.0")
     // lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -215,10 +215,11 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-//    implementation("io.hyphenate:ease-chat-kit:4.16.0")
-    implementation(project(mapOf("path" to ":ease-im-kit")))
+    implementation("io.hyphenate:ease-chat-kit:4.16.0")
+//    implementation(project(mapOf("path" to ":ease-im-kit")))
 
 //    implementation("io.hyphenate:ease-call-kit:4.15.1")
+//    implementation("io.hyphenate:chat-call-kit:1.0.0")
     implementation(project(mapOf("path" to ":ease-call-kit")))
 
     implementation("io.hyphenate:hyphenate-chat:4.16.0")

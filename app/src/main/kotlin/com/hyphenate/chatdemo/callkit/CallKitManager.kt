@@ -37,9 +37,6 @@ import kotlinx.coroutines.launch
 object CallKitManager {
 
     private const val TAG = "callkitManager"
-    const val KEY_GROUPID = "groupId"
-    const val EXTRA_CONFERENCE_GROUP_ID = "group_id"
-    const val EXTRA_CONFERENCE_GROUP_EXIT_MEMBERS = "exist_members"
 
     /**
      * Whether it is a rtc call.
@@ -56,7 +53,6 @@ object CallKitManager {
         object : CallKitListener {
             override fun onEndCallWithReason(reason: CallEndReason, callInfo: CallInfo?) {
                 ChatLog.d(TAG, "onEndCallWithReason:  reason: $reason, callInfo: $callInfo")
-                ToastUtils.showToast(reason.getStringByCallEndReason(DemoHelper.getInstance().context, callInfo?.callTime?:0))
                 // 刷新邀请消息UI展示
                 ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name)
                     .post(
@@ -74,9 +70,6 @@ object CallKitManager {
                     TAG,
                     "onCallError: errorCode: $errorCode, description: $description, errorType: $errorType "
                 )
-                description?.let {
-                    ToastUtils.showToast(it)
-                }
             }
         }
     }

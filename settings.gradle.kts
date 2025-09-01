@@ -24,12 +24,11 @@ dependencyResolutionManagement {
 rootProject.name = "chat-android-kotlin"
 include(":app")
 
-include(":ease-im-kit")
-project(":ease-im-kit").projectDir = File("../chatuikit-android/ease-im-kit")
+//include(":ease-im-kit")
+//project(":ease-im-kit").projectDir = File("../chatuikit-android/ease-im-kit")
 
 include(":ease-call-kit")
-//project(":ease-call-kit").projectDir = File("../chatcallkit-android/ease-call-kit")
-project(":ease-call-kit").projectDir = File("/Users/xuchengpu/Desktop/Project/huanxin/department/2025-7/callkit/chatcallkit-android/ease-call-kit")
+project(":ease-call-kit").projectDir = File("../chatcallkit-android/ease-call-kit")
 
 //include(":hyphenatechatsdk")
 //project(":hyphenatechatsdk").projectDir = File("../emclient-android/hyphenatechatsdk")

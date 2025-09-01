@@ -47,8 +47,6 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/ease_size_24</item>
-        <item name="android:layout_marginLeft">@dimen/ease_size_30</item>
-        <item name="android:layout_marginRight">@dimen/ease_size_30</item>
         <item name="android:background">@drawable/demo_login_btn_bg</item>
         <item name="android:textColor">@color/ease_neutral_98</item>
         <item name="android:enabled">false</item>
