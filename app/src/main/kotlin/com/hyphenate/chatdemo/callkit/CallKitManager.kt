@@ -127,10 +127,7 @@ object CallKitManager {
             // ringFile = "/path/to/your/ringtone.mp3"
         }
         CallKitClient.init(context, config)
-        // Register the activityLifecycleCallbacks to monitor the activity lifecycle.
-        (context.applicationContext as Application).registerActivityLifecycleCallbacks(
-            CallKitActivityLifecycleCallback()
-        )
+
         CallKitClient.callKitListener=callKitListener
         CallKitClient.callInfoProvider=callInfoProvider
 

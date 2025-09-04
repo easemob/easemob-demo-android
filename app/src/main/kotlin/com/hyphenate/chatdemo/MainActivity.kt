@@ -157,6 +157,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     }
 
     fun checkPhoneAccount() {
+        ChatLog.d(TAG, "Checking PhoneAccount status begin ...")
         val status = PhoneAccountHelper.getPhoneAccountStatus(this)
         when {
             !status.isSupported -> {
@@ -298,7 +299,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         ChatUIKitClient.removeEventResultListener(this)
         ChatUIKitClient.removeContactListener(contactListener)
         ChatUIKitClient.removeChatMessageListener(chatMessageListener)
-        CallKitClient.cleanUp()
         super.onDestroy()
     }
 
