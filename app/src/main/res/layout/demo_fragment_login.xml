@@ -81,8 +81,8 @@
         android:id="@+id/btn_login"
         style="@style/em_login_btn"
         android:text="@string/em_login_btn"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/et_login_phone"
+        app:layout_constraintRight_toRightOf="@id/et_login_phone"
         app:layout_constraintTop_toBottomOf="@id/ll_login_code" />
 
     <CheckBox

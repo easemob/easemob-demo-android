@@ -26,10 +26,10 @@ include(":app")
 
 //include(":ease-im-kit")
 //project(":ease-im-kit").projectDir = File("../chatuikit-android/ease-im-kit")
-//
+
 //include(":ease-call-kit")
-//project(":ease-call-kit").projectDir = File("../easecallkitui-android/ease-call-kit")
-//
+//project(":ease-call-kit").projectDir = File("../chatcallkit-android/ease-call-kit")
+
 //include(":hyphenatechatsdk")
 //project(":hyphenatechatsdk").projectDir = File("../emclient-android/hyphenatechatsdk")
 //

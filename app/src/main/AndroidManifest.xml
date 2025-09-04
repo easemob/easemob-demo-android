@@ -14,6 +14,9 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone" 
+        android:required="false" />
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -22,6 +25,11 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    
+    <!-- 锁屏显示所需权限 -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    
     <!--Need to add after Android 12, apply for alarm clock timing permission -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- IM SDK required end -->
@@ -294,11 +302,16 @@
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true">
 
         </activity>
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.login.SplashActivity"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -308,24 +321,14 @@
         </activity>
         <activity android:name=".ui.chat.ChatActivity"
             android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:exported="false"/>
         <activity android:name=".ui.contact.ChatContactDetailActivity"
             android:exported="false"/>
         <activity android:name=".ui.group.ChatGroupDetailActivity"
             android:exported="false"/>
         <activity android:name=".callkit.ConferenceInviteActivity"
-            android:exported="false"/>
-        <activity android:name=".callkit.VideoCallActivity"
-            android:label="@string/demo_activity_label_video_call"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:excludeFromRecents="false"
-            android:launchMode="singleInstance"
-            android:exported="false"/>
-        <activity android:name="com.hyphenate.chatdemo.callkit.MultipleVideoActivity"
-            android:label="@string/demo_activity_label_multi_call"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:excludeFromRecents="false"
-            android:launchMode="singleInstance"
             android:exported="false"/>
         <activity android:name=".ui.me.UserInformationActivity"
             android:exported="false"/>

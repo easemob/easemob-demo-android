@@ -26,12 +26,24 @@
                 android:id="@+id/tv_chatcontent"
                 style="@style/ease_chat_row_send_text_content_style"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_call_icon"
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginBottom="@dimen/ease_size_7"
                 tools:text="Hello, Agora Chat!" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_call_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/ease_size_9"
+                app:layout_constraintStart_toEndOf="@id/tv_chatcontent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="@color/ease_color_text_on_container"
+                android:src="@drawable/d_chat_video_call_self" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

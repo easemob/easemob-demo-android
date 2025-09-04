@@ -25,13 +25,25 @@
             <TextView
                 android:id="@+id/tv_chatcontent"
                 style="@style/ease_chat_row_receive_text_content_style"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_call_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 android:layout_marginBottom="@dimen/ease_size_7"
                 tools:text="Agora Chat" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_call_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_chatcontent"
+                android:layout_marginStart="@dimen/ease_size_9"
+                app:tint="@color/ease_color_on_background"
+                android:src="@drawable/d_chat_video_call_self" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

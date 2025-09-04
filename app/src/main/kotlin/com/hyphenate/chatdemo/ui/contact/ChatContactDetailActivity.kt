@@ -139,11 +139,16 @@ class ChatContactDetailActivity:ChatUIKitContactDetailsActivity(), IPresenceResu
         item?.let {
             when(item.menuId){
                 R.id.contact_item_audio_call -> {
-                    CallKitManager.startSingleAudioCall(user?.userId)
+                    user?.userId?.let {
+                        CallKitManager.startSingleAudioCall(it)
+                    }
+
                     return true
                 }
                 R.id.contact_item_video_call -> {
-                    CallKitManager.startSingleVideoCall(user?.userId)
+                    user?.userId?.let {
+                        CallKitManager.startSingleVideoCall(it)
+                    }
                     return true
                 }
                 else -> {

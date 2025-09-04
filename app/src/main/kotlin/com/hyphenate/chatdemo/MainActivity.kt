@@ -3,17 +3,25 @@ package com.hyphenate.chatdemo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.navigation.NavigationBarView
+import com.hyphenate.callkit.CallKitClient
 import com.hyphenate.chatdemo.base.BaseInitActivity
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.extensions.internal.insertSwindleMsg
@@ -24,6 +32,11 @@ import com.hyphenate.chatdemo.ui.me.AboutMeFragment
 import com.hyphenate.chatdemo.ui.contact.ChatContactListFragment
 import com.hyphenate.chatdemo.viewmodel.MainViewModel
 import com.hyphenate.chatdemo.viewmodel.ProfileInfoViewModel
+import com.hyphenate.callkit.telecom.IncomingCallService
+import com.hyphenate.callkit.telecom.PhoneAccountHelper
+import com.hyphenate.callkit.telecom.PhoneAccountHelper.registerPhoneAccount
+import com.hyphenate.callkit.telecom.PhoneAccountHelper.showPhoneAccountEnableGuide
+import com.hyphenate.callkit.telecom.VoipConnectionService
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
@@ -48,6 +61,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     override fun getViewBinding(inflater: LayoutInflater): ActivityMainBinding? {
         return ActivityMainBinding.inflate(inflater)
     }
+    private val TAG= "MainActivity"
     /**
      * The clipboard manager.
      */
@@ -56,6 +70,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     private var mAboutMeFragment:Fragment? = null
     private var mCurrentFragment: Fragment? = null
     private val badgeMap = mutableMapOf<Int, TextView>()
+
+    private var hasCheckedAccount=false
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
     }
@@ -74,9 +90,8 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     companion object {
         fun actionStart(context: Context) {
-            Intent(context, MainActivity::class.java).apply {
-                context.startActivity(this)
-            }
+            val intent = BaseInitActivity.createLockScreenIntent(context, MainActivity::class.java)
+            context.startActivity(intent)
         }
     }
 
@@ -140,6 +155,110 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
             if (it.isConversationChange) {
                 mainViewModel.getUnreadMessageCount()
             }
+        }
+        // 请求必要权限
+        requestPermissions()
+    }
+
+    fun checkPhoneAccount() {
+        ChatLog.d(TAG, "Checking PhoneAccount status begin ...")
+        val status = PhoneAccountHelper.getPhoneAccountStatus(this)
+        when {
+            !status.isSupported -> {
+                ChatLog.e(TAG, "Telecom not supported on this device")
+            }
+            !status.isRegistered -> {
+                ChatLog.e(TAG, "PhoneAccount not registered, registering now")
+                registerPhoneAccount(this)
+                if (!hasCheckedAccount){
+                    hasCheckedAccount=true
+                    binding.root.postDelayed({
+                        checkPhoneAccount()
+                    }, 2000)
+                }
+            }
+            !status.isEnabled -> {
+                ChatLog.e(TAG, "PhoneAccount registered but not enabled, showing enable button")
+                // 自动显示引导（可选，根据需要启用）
+                showPhoneAccountEnableGuide()
+            }
+            else -> {
+                ChatLog.e(TAG, "PhoneAccount is ready")
+            }
+        }
+    }
+
+    /**
+     * 显示PhoneAccount启用引导
+     */
+    private fun showPhoneAccountEnableGuide() {
+        showPhoneAccountEnableGuide(this) { enabled ->
+            if (enabled) {
+                ChatLog.d(TAG, "PhoneAccount enabled successfully")
+                Toast.makeText(this, getString(R.string.demo_check_voip), Toast.LENGTH_LONG).show()
+            } else {
+                ChatLog.d(TAG, "PhoneAccount still not enabled")
+            }
+        }
+    }
+
+    private  val PERMISSION_REQUEST_CODE = 1001
+
+    private fun getRequiredPermissions() = arrayOf(
+            android.Manifest.permission.MANAGE_OWN_CALLS,
+            android.Manifest.permission.READ_PHONE_STATE,
+            android.Manifest.permission.READ_PHONE_NUMBERS,
+            android.Manifest.permission.CALL_PHONE,
+            android.Manifest.permission.MODIFY_PHONE_STATE,
+            android.Manifest.permission.POST_NOTIFICATIONS
+        )
+
+    private fun requestPermissions() {
+
+        val permissionsToRequest = mutableListOf<String>()
+        for (permission in getRequiredPermissions()) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsToRequest.add(permission)
+                ChatLog.d(TAG, "Permission not granted: $permission")
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ChatLog.d(TAG, "Requesting permissions: ${permissionsToRequest.joinToString()}")
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
+        } else {
+            ChatLog.d(TAG, "All permissions already granted")
+            checkPhoneAccount()
+        }
+    }
+
+    private fun checkPermissions(): Boolean {
+        for (permission in getRequiredPermissions()) {
+            val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (!checkPermissions()){
+                ChatLog.e(TAG, "Required permissions not granted")
+            }
+            checkPhoneAccount()
         }
     }
 

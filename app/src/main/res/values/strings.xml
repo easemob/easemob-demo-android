@@ -207,4 +207,6 @@
     <string name="demo_chat_fraud_report_toast">Thank you for your report and we will deal with it as soon as possible.</string>
     <string name="demo_swindle_message_content">Demo function, no real data, only for experience</string>
 
+    <string name="demo_check_voip">The VoIP call function has been enabled!</string>
+
 </resources>

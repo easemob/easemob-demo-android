@@ -41,7 +41,7 @@ class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
         model = ViewModelProvider(this)[SplashViewModel::class.java]
         binding.ivSplash.animate()
             .alpha(1f)
-            .setDuration(500)
+            .setDuration(200)
             .setListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}
                 override fun onAnimationEnd(animation: Animator) {
@@ -54,7 +54,7 @@ class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
             .start()
         binding.tvProduct.animate()
             .alpha(1f)
-            .setDuration(500)
+            .setDuration(200)
             .start()
     }
 

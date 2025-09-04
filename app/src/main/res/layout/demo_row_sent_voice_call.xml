@@ -31,6 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginBottom="@dimen/ease_size_7"
+                android:layout_marginStart="@dimen/ease_size_12"
                 android:layout_marginEnd="@dimen/ease_size_0"
                 tools:text="Hello, Agora Chat!" />
 
@@ -38,8 +39,8 @@
                 android:id="@+id/iv_call_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/ease_size_9"
-                android:layout_marginStart="@dimen/ease_size_6"
+                android:layout_marginEnd="@dimen/ease_size_12"
+                android:layout_marginStart="@dimen/ease_size_4"
                 app:layout_constraintStart_toEndOf="@id/tv_chatcontent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
