@@ -1,6 +1,7 @@
 package com.hyphenate.chatdemo.common
 
 import android.content.Context
+import com.hyphenate.callkit.bean.CallKitUserInfo
 import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.common.room.AppDatabase
 import com.hyphenate.chatdemo.common.room.dao.DemoUserDao
@@ -119,11 +120,32 @@ class DemoDataModel(private val context: Context) {
     }
 
     /**
+     * Insert users to local db.
+     */
+    fun insertCallUsers(users: List<CallKitUserInfo>) {
+        getUserDao().insertUsers(users.map { it.parseToDbBean() })
+        users.forEach {
+            contactList[it.userId] = it.parseToDbBean()
+        }
+    }
+
+    /**
      * Update user update times.
      */
     fun updateUsersTimes(userIds: List<ChatUIKitProfile>) {
         if (userIds.isNotEmpty()) {
             userIds.map { it.id }.let { ids ->
+                getUserDao().updateUsersTimes(ids)
+                loadContactFromDb()
+            }
+        }
+    }
+    /**
+     * Update user update times.
+     */
+    fun updateCallUsersTimes(userIds: List<CallKitUserInfo>) {
+        if (userIds.isNotEmpty()) {
+            userIds.map { it.userId }.let { ids ->
                 getUserDao().updateUsersTimes(ids)
                 loadContactFromDb()
             }

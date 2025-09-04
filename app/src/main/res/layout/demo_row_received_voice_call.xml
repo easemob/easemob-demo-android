@@ -32,6 +32,7 @@
                 app:layout_constraintHorizontal_bias="0"
                 android:layout_marginBottom="@dimen/ease_size_7"
                 android:layout_marginStart="@dimen/ease_size_0"
+                android:layout_marginEnd="@dimen/ease_size_12"
                 tools:text="Agora Chat" />
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -42,9 +43,9 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tv_chatcontent"
-                android:layout_marginStart="@dimen/ease_size_9"
+                android:layout_marginStart="@dimen/ease_size_12"
                 android:layout_marginEnd="@dimen/ease_size_4"
-                app:tint="@color/ease_color_on_background"
+                app:tint="@color/callkit_color_text_secondary"
                 android:src="@drawable/d_chat_voice_call" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

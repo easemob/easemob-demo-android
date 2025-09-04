@@ -15,6 +15,7 @@ import com.hyphenate.chatdemo.utils.EasePresenceUtil
 import com.hyphenate.chatdemo.viewmodel.ChatContactViewModel
 import com.hyphenate.chatdemo.viewmodel.PresenceViewModel
 import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.dpToPx
@@ -59,6 +60,14 @@ class ConversationListFragment: ChatUIKitConversationListFragment() {
         ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(this) {
             if (it.isPresenceChange && it.message.equals(ChatUIKitClient.getCurrentUser()?.id) ) {
                 updateProfile()
+            }
+        }
+        ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name).register(viewLifecycleOwner) {
+            if (it.isMessageChange) {
+                if (it.message.isNullOrEmpty()) return@register
+                ChatClient.getInstance().chatManager().getMessage(it.message)?.let { message ->
+                    refreshData()
+                }
             }
         }
 

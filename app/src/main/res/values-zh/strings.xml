@@ -207,4 +207,6 @@
     <string name="demo_chat_fraud_report_toast">感谢您的举报，我们将尽快处理。</string>
     <string name="demo_swindle_message_content">演示功能，无真实数据，仅限体验</string>
 
+    <string name="demo_check_voip">VoIP通话功能已启用！</string>
+
 </resources>
