@@ -207,8 +207,6 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     private fun getRequiredPermissions() = arrayOf(
             android.Manifest.permission.MANAGE_OWN_CALLS,
             android.Manifest.permission.READ_PHONE_STATE,
-            android.Manifest.permission.READ_PHONE_NUMBERS,
-            android.Manifest.permission.CALL_PHONE,
             android.Manifest.permission.MODIFY_PHONE_STATE,
             android.Manifest.permission.POST_NOTIFICATIONS
         )

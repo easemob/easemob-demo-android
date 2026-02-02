@@ -64,15 +64,6 @@ APP_UPLOAD_AVATAR=/avatar/upload
 # App Server 群图像 URL 路径
 APP_GROUP_AVATAR=/avatarurl
 
-# 从服务端拉取 Callkit 登录使用的 RTC Token URL 路径
-APP_RTC_TOKEN_URL=/inside/token/rtc/channel
-
-# RTC APP ID（https://doc.easemob.com/document/android/easecallkit.html）
-RTC_APPID=xxxxxxxxxxxxxxxxxxxxxxx
-
-# 获取 RTC UID 和环信用户名映射关系的 URL 路径
-APP_RTC_CHANNEL_MAPPER_URL=/inside/agora/channel/mapper
-
 # 获取验证码时与 App Server 加密参数所用的 AES 密钥
 SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxx
 ```

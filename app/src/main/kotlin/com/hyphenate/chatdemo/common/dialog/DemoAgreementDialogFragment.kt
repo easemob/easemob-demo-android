@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.common.PreferenceManager
+import com.hyphenate.chatdemo.ui.me.WebViewActivity
+import com.hyphenate.chatdemo.ui.me.WebViewLoadType
 import java.util.Locale
 
 class DemoAgreementDialogFragment : DemoDialogFragment() {
@@ -50,9 +52,9 @@ class DemoAgreementDialogFragment : DemoDialogFragment() {
             var end2 = 44
             if (isZh) {
                 start1 = 5
-                end1 = 13
-                start2 = 14
-                end2 = 22
+                end1 = 11
+                start2 = 12
+                end2 = 20
             }
             //设置下划线
             //spanStr.setSpan(new UnderlineSpan(), 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -84,15 +86,11 @@ class DemoAgreementDialogFragment : DemoDialogFragment() {
         }
 
     private fun jumpToAgreement() {
-        val uri = Uri.parse("http://www.easemob.com/agreement")
-        val it = Intent(Intent.ACTION_VIEW, uri)
-        startActivity(it)
+        WebViewActivity.actionStart(requireContext(), WebViewLoadType.TermsOfService)
     }
 
     private fun jumpToProtocol() {
-        val uri = Uri.parse("http://www.easemob.com/protocol")
-        val it = Intent(Intent.ACTION_VIEW, uri)
-        startActivity(it)
+        WebViewActivity.actionStart(requireContext(), WebViewLoadType.PrivacyPolicy)
     }
 
     private abstract inner class MyClickableSpan : ClickableSpan() {

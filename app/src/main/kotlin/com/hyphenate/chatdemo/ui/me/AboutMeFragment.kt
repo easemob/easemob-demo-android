@@ -4,13 +4,18 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.hyphenate.chat.EMClient
+import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
@@ -37,7 +42,11 @@ import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.feature.contact.ChatUIKitBlockListActivity
 import com.hyphenate.easeui.model.ChatUIKitEvent
 import com.hyphenate.easeui.widget.ChatUIKitCustomAvatarView
+import com.hyphenate.util.EMLog
 import kotlinx.coroutines.launch
+import java.io.File
+import kotlin.math.log
+
 
 class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View.OnClickListener,
     ChatUIKitCustomAvatarView.OnPresenceClickListener, IPresenceResultView {
@@ -52,8 +61,14 @@ class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View
     private val presenceViewModel by lazy { ViewModelProvider(this)[PresenceViewModel::class.java] }
     private val presenceController by lazy { PresenceController(mContext,presenceViewModel) }
 
+    // 连续点击计数器
+    private var registrationClickCount = 0
+    private var lastRegistrationClickTime = 0L
+
     companion object{
         private val TAG = AboutMeFragment::class.java.simpleName
+        private const val CLICK_INTERVAL = 2000L // 2秒
+        private const val CLICK_COUNT_THRESHOLD = 3 // 点击3次
     }
 
     override fun getViewBinding(
@@ -84,6 +99,12 @@ class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View
             itemCurrency.setOnClickListener(this@AboutMeFragment)
             itemNotify.setOnClickListener(this@AboutMeFragment)
             itemPrivacy.setOnClickListener(this@AboutMeFragment)
+            itemPrivacyPolicy.setOnClickListener(this@AboutMeFragment)
+            itemTermsOfService.setOnClickListener(this@AboutMeFragment)
+            itemThirdPartyData.setOnClickListener(this@AboutMeFragment)
+            itemPersonalDataCollection.setOnClickListener(this@AboutMeFragment)
+            itemRegistrationNumber.setOnClickListener(this@AboutMeFragment)
+            itemUploadlog.setOnClickListener(this@AboutMeFragment)
             itemAbout.setOnClickListener(this@AboutMeFragment)
             aboutMeLogout.setOnClickListener(this@AboutMeFragment)
             aboutMeAccountCancellation.setOnClickListener(this@AboutMeFragment)
@@ -198,8 +219,77 @@ class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View
         presenceViewModel.fetchPresenceStatus(mutableListOf(ChatClient.getInstance().currentUser))
     }
 
+    /**
+     * 处理备案号的连续点击
+     * 2秒内连续点击3次进入EMActivity
+     */
+    private fun handleRegistrationNumberClick() {
+        val currentTime = System.currentTimeMillis()
+        
+        // 如果距离上次点击超过2秒，重置计数
+        if (currentTime - lastRegistrationClickTime > CLICK_INTERVAL) {
+            registrationClickCount = 0
+        }
+        
+        // 更新最后点击时间
+        lastRegistrationClickTime = currentTime
+        registrationClickCount++
+        
+        ChatLog.d(TAG, "Registration number clicked: $registrationClickCount times")
+        
+        // 如果点击次数达到3次，尝试进入EMActivity
+        if (registrationClickCount >= CLICK_COUNT_THRESHOLD) {
+            registrationClickCount = 0 // 重置计数
+            try {
+                val clazz = Class.forName("com.hyphenate.chatdemo.EMActivity")
+                startActivity(Intent(mContext, clazz))
+            } catch (e: Exception) {
+                ChatLog.e(TAG, "Failed to open EMActivity: ${e.message}")
+            }
+        }
+    }
+
     override fun onPresenceClick(v: View?) {
 
+    }
+
+    private fun shareFile(fileUri: Uri?) {
+        if (fileUri != null) {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.setType("text/plain") // Change as per file type
+            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri)
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            EMLog.d("share:", shareIntent.toString())
+            // Start the share Intent
+            startActivity(Intent.createChooser(shareIntent, "Share file via"))
+        }
+    }
+
+    private fun getLogFile():Uri? {
+        var fileUri: Uri
+        // May null if storage is not currently available.
+        // Can use Environment.getExternalStorageState() to check.
+        val extDir = mContext.getExternalFilesDir(null)
+        val appkey = EMClient.getInstance().options.appKey
+        if (extDir != null) {
+            val logPath = extDir.getAbsolutePath()
+            val pos = logPath.indexOf("/files");
+            var basePath = logPath
+            if (pos == -1) {
+                basePath = logPath;
+            } else {
+                basePath = logPath.substring(0, pos);
+            }
+            val logFilePath = basePath + "/" + appkey + "/core_log/easemob.log";
+            EMLog.d("share:", logFilePath)
+            val file: File = File(logFilePath)
+            return FileProvider.getUriForFile(
+                mContext,
+                BuildConfig.APPLICATION_ID + ".fileProvider",
+                file
+            )
+        }
+        return null
     }
 
     override fun onClick(v: View?) {
@@ -221,13 +311,39 @@ class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View
             R.id.item_privacy -> {
                 startActivity(Intent(mContext, ChatUIKitBlockListActivity::class.java))
             }
+            R.id.item_privacy_policy -> {
+                WebViewActivity.actionStart(mContext, WebViewLoadType.PrivacyPolicy)
+            }
+            R.id.item_terms_of_service -> {
+                WebViewActivity.actionStart(mContext, WebViewLoadType.TermsOfService)
+            }
+            R.id.item_third_party_data -> {
+                WebViewActivity.actionStart(mContext, WebViewLoadType.ThirdPartyDataSharing)
+            }
+            R.id.item_personal_data_collection -> {
+                val username = ChatClient.getInstance().currentUser ?: ""
+                val phone = DemoHelper.getInstance().getDataModel().getPhoneNumber()
+                val device = Build.MANUFACTURER + " " + Build.MODEL
+                val avatar = ChatUIKitClient.getCurrentUser()?.avatar ?: ""
+                
+                // Start WebView with parameters
+                WebViewActivity.actionStartWithParams(
+                    mContext, 
+                    WebViewLoadType.PersonalDataCollection,
+                    username = username,
+                    phone = phone,
+                    device = device,
+                    avatar = avatar
+                )
+            }
+            R.id.item_registration_number -> {
+                handleRegistrationNumberClick()
+            }
+            R.id.item_uploadlog-> {
+                    shareFile(getLogFile())
+            }
             R.id.item_about -> {
-                var clazz:Class<*>?
-                try {
-                    clazz  = Class.forName("com.hyphenate.chatdemo.EMActivity")
-                }catch (e:Exception){
-                    clazz = Class.forName("com.hyphenate.chatdemo.ui.me.AboutActivity")
-                }
+                val clazz = Class.forName("com.hyphenate.chatdemo.ui.me.AboutActivity")
                 startActivity(Intent(mContext, clazz))
             }
             R.id.about_me_logout -> {

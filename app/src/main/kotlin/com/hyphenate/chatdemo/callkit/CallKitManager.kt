@@ -18,6 +18,8 @@ import com.hyphenate.callkit.bean.CallType
 import com.hyphenate.callkit.interfaces.CallInfoProvider
 import com.hyphenate.callkit.interfaces.CallKitListener
 import com.hyphenate.callkit.interfaces.OnValueSuccess
+import com.hyphenate.callkit.interfaces.RTCConfigProvider
+import com.hyphenate.chat.EMRTCTokenInfo
 import com.hyphenate.chatdemo.common.DemoConstant.DEMO_STOP_RECORD
 import com.hyphenate.chatdemo.common.extensions.internal.toCallKitUserInfo
 import com.hyphenate.chatdemo.repository.ProfileInfoRepository
@@ -32,6 +34,10 @@ import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
 import com.hyphenate.easeui.model.ChatUIKitEvent
 import com.hyphenate.easeui.model.ChatUIKitMenuItem
+import com.hyphenate.util.EMLog
+import io.agora.rtc2.Constants.LOCAL_RPOXY_LOCAL_ONLY
+import io.agora.rtc2.RtcEngine
+import io.agora.rtc2.proxy.LocalAccessPointConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,6 +91,25 @@ object CallKitManager {
                 )
 
             }
+
+            override fun onRtcEngineCreated(engine: RtcEngine) {
+                val rtcIp = DemoHelper.getInstance().getDataModel().getRtcIpAddress()
+                val rtcDomain = DemoHelper.getInstance().getDataModel().getRtcVerifyDomain()
+                
+                // Only set local access point if both IP and domain are configured
+                if (!rtcIp.isNullOrEmpty() && !rtcDomain.isNullOrEmpty()) {
+                    val configuration = LocalAccessPointConfiguration().apply {
+                        // Set your private address
+                        ipList = arrayListOf<String>().apply { add(rtcIp) }
+                        verifyDomainName = rtcDomain
+                        mode = LOCAL_RPOXY_LOCAL_ONLY
+                    }
+                    engine.setLocalAccessPoint(configuration)
+                    EMLog.d(TAG, "RTC LocalAccessPoint set: IP=$rtcIp, Domain=$rtcDomain")
+                } else {
+                    EMLog.d(TAG, "RTC LocalAccessPoint not set: IP or Domain is empty")
+                }
+            }
         }
     }
 
@@ -124,6 +149,22 @@ object CallKitManager {
 
     } }
 
+    private val rtcConfigProvider by lazy { object : RTCConfigProvider {
+        override fun onSyncGetAppId(): String? {
+            var appID=DemoHelper.getInstance().getDataModel().getRtcAppId()
+            EMLog.d(TAG, "Demohelper rtcConfigProvider: onSyncGetAppId appID=$appID")
+            return appID
+        }
+
+        override fun onAsyncFetchRtcToken(
+            channelName: String?,
+            callback: OnValueSuccess<EMRTCTokenInfo?>
+        ) {
+            EMLog.d(TAG, "Demohelper rtcConfigProvider: onAsyncFetchRtcToken channelName: $channelName")
+            callback(null)
+        }
+    } }
+
     fun init(context: Context) {
         // 初始化CallKit
         val config = CallKitConfig().apply {
@@ -139,11 +180,14 @@ object CallKitManager {
 
             // 使用绝对路径：
             // ringFile = "/path/to/your/ringtone.mp3"
+
+            disableRTCTokenValidation= !DemoHelper.getInstance().getDataModel().isRtcTokenVerifyEnable()
         }
         CallKitClient.init(context, config)
 
         CallKitClient.callKitListener=callKitListener
         CallKitClient.callInfoProvider=callInfoProvider
+        CallKitClient.rtcConfigProvider=rtcConfigProvider
 
 
     }

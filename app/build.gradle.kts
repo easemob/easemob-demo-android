@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.Ndk
-import com.android.build.api.dsl.Packaging
 import java.util.*
 
 plugins {
@@ -29,7 +27,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 145
-        versionName = "4.18.0"
+        versionName = "4.19.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -42,8 +40,6 @@ android {
         buildConfigField ("String", "APP_SEND_SMS_FROM_SERVER", "\"${properties.getProperty("APP_SEND_SMS_FROM_SERVER")}\"")
         buildConfigField ("String", "APP_UPLOAD_AVATAR", "\"${properties.getProperty("APP_UPLOAD_AVATAR")}\"")
         buildConfigField ("String", "APP_GROUP_AVATAR", "\"${properties.getProperty("APP_GROUP_AVATAR")}\"")
-        buildConfigField ("String", "APP_RTC_TOKEN_URL", "\"${properties.getProperty("APP_RTC_TOKEN_URL")}\"")
-        buildConfigField ("String", "APP_RTC_CHANNEL_MAPPER_URL", "\"${properties.getProperty("APP_RTC_CHANNEL_MAPPER_URL")}\"")
 
         // Set appkey from local.properties
         buildConfigField("String", "APPKEY", "\"${properties.getProperty("APPKEY")}\"")
@@ -64,9 +60,6 @@ android {
         buildConfigField("String", "HONOR_PUSH_APPID", "\"${properties.getProperty("HONOR_PUSH_APPID")}\"")
         buildConfigField("String", "BUGLY_APPID", "\"${properties.getProperty("BUGLY_APPID")}\"")
         buildConfigField("String", "BUGLY_ENABLE_DEBUG", "\"${properties.getProperty("BUGLY_ENABLE_DEBUG")}\"")
-
-        // Set RTC appId from local.properties
-        buildConfigField("String", "RTC_APPID", "\"${properties.getProperty("RTC_APPID")}\"")
 
         // The non-developer mode also needs to configure the following switch to true to take effect
         buildConfigField("Boolean", "LOGIN_WITH_APPSERVER",properties.getProperty("LOGIN_WITH_APPSERVER")?: "false")
@@ -217,12 +210,12 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-    implementation("io.hyphenate:ease-chat-kit:4.18.0")
+    implementation("io.hyphenate:ease-chat-kit:4.19.0")
 //    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    implementation("io.hyphenate:chat-call-kit:4.18.0")
+    implementation("io.hyphenate:chat-call-kit:4.19.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.18.0")
+    implementation("io.hyphenate:hyphenate-chat:4.19.0")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }

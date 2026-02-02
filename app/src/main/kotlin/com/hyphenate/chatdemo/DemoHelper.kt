@@ -2,6 +2,7 @@ package com.hyphenate.chatdemo
 
 import android.content.Context
 import android.util.Log
+import com.hyphenate.callkit.utils.ChatLog
 import com.hyphenate.chatdemo.callkit.CallKitManager
 import com.hyphenate.chatdemo.common.DemoDataModel
 import com.hyphenate.chatdemo.common.ListenersWrapper
@@ -12,6 +13,7 @@ import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatOptions
 import com.hyphenate.easeui.common.PushConfigBuilder
+import com.hyphenate.util.EMLog
 
 class DemoHelper private constructor(){
 
@@ -125,18 +127,32 @@ class DemoHelper private constructor(){
                     isEnableTLSConnection = dataModel.isCustomServerTlsEnable()
                     // Turn off DNS configuration
                     enableDNSConfig(false)
-                    restServer = dataModel.getRestServer()?.ifEmpty { null }
-                    setIMServer(dataModel.getIMServer()?.let {
-                        if (it.contains(":")) {
-                            imPort = it.split(":")[1].toInt()
-                            it.split(":")[0]
-                        } else {
-                            it.ifEmpty { null }
+                    try {
+                        restServer = dataModel.getRestServer()?.ifEmpty { null }
+                        setIMServer(dataModel.getIMServer()?.let {
+                            if (it.contains(":")) {
+                                imPort = it.split(":")[1].toInt()
+                                it.split(":")[0]
+                            } else {
+                                it.ifEmpty { null }
+                            }
+                        })
+                        val port = dataModel.getIMServerPort()
+                        if (port != 0) {
+                            imPort = port
                         }
-                    })
-                    val port = dataModel.getIMServerPort()
-                    if (port != 0) {
-                        imPort = port
+                        // Set WebSocket server and port
+                        dataModel.getWebSocketServer()?.let { wsServer ->
+                            if (wsServer.isNotEmpty()) {
+                                setWebSocketServer(wsServer)
+                            }
+                        }
+                        val wsPort = dataModel.getWebSocketPort()
+                        if (wsPort != 0) {
+                            setWebSocketPort(wsPort)
+                        }
+                    }catch (e: Exception){
+                        ChatLog.d(TAG, "initChatOptions error: ${e.message}")
                     }
                 }
             }

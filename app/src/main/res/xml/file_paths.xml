@@ -15,6 +15,8 @@
         name="external-files-path"
         path="CameraDemo" />
 
+    <external-path name="external_files" path="."/>
+
     <!-- 表示应用程序外部缓存区根目录中的文件 物理路径相当于 Context.getExternalCacheDir() + /CameraDemo/  -->
     <!--    <external-cache-path-->
     <!--        name="external-cache-path"-->

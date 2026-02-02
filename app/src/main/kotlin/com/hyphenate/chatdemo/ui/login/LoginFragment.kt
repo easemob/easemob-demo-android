@@ -57,6 +57,8 @@ import com.hyphenate.chatdemo.common.extensions.internal.changePwdDrawable
 import com.hyphenate.chatdemo.common.extensions.internal.clearEditTextListener
 import com.hyphenate.chatdemo.common.extensions.internal.showRightDrawable
 import com.hyphenate.chatdemo.databinding.DemoFragmentLoginBinding
+import com.hyphenate.chatdemo.ui.me.WebViewActivity
+import com.hyphenate.chatdemo.ui.me.WebViewLoadType
 import com.hyphenate.chatdemo.utils.AESEncryptor
 import com.hyphenate.chatdemo.utils.PhoneNumberUtils
 import com.hyphenate.chatdemo.utils.ToastUtils.showToast
@@ -363,8 +365,8 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
         var end2 = spanStr.length
         if (isZh) {
             start1 = 5
-            end1 = 13
-            start2 = 14
+            end1 = 11
+            start2 = 12
             end2 = spanStr.length
         }
         //设置下划线
@@ -448,15 +450,11 @@ class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.On
     }
 
     private fun jumpToAgreement() {
-        val uri = Uri.parse("http://www.easemob.com/agreement")
-        val it = Intent(Intent.ACTION_VIEW, uri)
-        startActivity(it)
+        WebViewActivity.actionStart(mContext, WebViewLoadType.TermsOfService)
     }
 
     private fun jumpToProtocol() {
-        val uri = Uri.parse("http://www.easemob.com/protocol")
-        val it = Intent(Intent.ACTION_VIEW, uri)
-        startActivity(it)
+        WebViewActivity.actionStart(mContext, WebViewLoadType.PrivacyPolicy)
     }
 
     private fun setupWebView() {

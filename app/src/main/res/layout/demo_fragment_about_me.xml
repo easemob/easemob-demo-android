@@ -115,8 +115,64 @@
             android:layout_height="54dp"/>
 
         <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
-            android:id="@+id/item_about"
+            android:id="@+id/item_privacy_policy"
+            app:layout_constraintTop_toBottomOf="@+id/item_privacy"
+            app:arrowItemTitle="@string/main_about_me_privacy_policy"
+            app:arrowItemAvatarSrc="@drawable/icon_privacy_policy"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
+            android:id="@+id/item_terms_of_service"
+            app:layout_constraintTop_toBottomOf="@+id/item_privacy_policy"
+            app:arrowItemTitle="@string/main_about_me_terms_of_service"
+            app:arrowItemAvatarSrc="@drawable/icon_server_rules"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
+            android:id="@+id/item_third_party_data"
+            app:layout_constraintTop_toBottomOf="@+id/item_privacy_policy"
+            app:arrowItemTitle="@string/main_about_me_third_party_data"
+            app:arrowItemAvatarSrc="@drawable/icon_third_data"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
+            android:id="@+id/item_personal_data_collection"
+            app:layout_constraintTop_toBottomOf="@+id/item_third_party_data"
+            app:arrowItemTitle="@string/main_about_me_personal_data_collection"
+            app:arrowItemAvatarSrc="@drawable/icon_personal_data"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
+            android:id="@+id/item_registration_number"
+            app:layout_constraintTop_toBottomOf="@+id/item_personal_data_collection"
+            app:arrowItemTitle="@string/main_about_me_registration_number"
+            app:arrowItemAvatarSrc="@drawable/icon_registration_number"
+            app:arrowItemShowArrow="false"
+            app:arrowItemContent="@string/main_about_me_registration_number_content"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
+            android:id="@+id/item_uploadlog"
             app:layout_constraintTop_toBottomOf="@+id/sw_item_black"
+            app:arrowItemTitle="@string/main_about_upload_log"
+            app:arrowItemAvatarSrc="@drawable/icon_about"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
+            android:id="@+id/item_about"
+            app:layout_constraintTop_toBottomOf="@+id/item_registration_number"
             app:arrowItemTitle="@string/main_about_me_about"
             app:arrowItemAvatarSrc="@drawable/icon_about"
             style="@style/main_about_me_arrow_item"

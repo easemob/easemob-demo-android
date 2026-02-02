@@ -127,14 +127,5 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"/>
 
-    <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
-        android:id="@+id/arrow_item_privacy_policy"
-        app:layout_constraintTop_toBottomOf="@+id/arrow_item_complaint_suggestions"
-        app:arrowItemTitle="@string/about_privacy_policy"
-        app:arrowItemShowSubTitle="false"
-        style="@style/ease_group_detail_arrow_item"
-        app:arrowItemShowArrow="true"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout >

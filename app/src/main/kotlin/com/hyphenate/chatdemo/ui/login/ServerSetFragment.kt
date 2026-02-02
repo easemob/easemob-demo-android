@@ -16,9 +16,12 @@ import kotlin.system.exitProcess
 
 class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
 
-    private val changeArray = BooleanArray(4)
+    private val changeArray = BooleanArray(9)
     private var isEnableCustomServer = false
     private var isEnableCustomServerTls = false
+
+    private var isEnableRtcTokenVerify = false
+
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -73,6 +76,36 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
                 changeSaveMenu(s)
             }
         }
+        binding?.etRtcAppid?.addDefaultTextChangedListener {
+            it?.let { s ->
+                changeArray[4] = s.isNotEmpty()
+                changeSaveMenu(s)
+            }
+        }
+        binding?.etRtcIp?.addDefaultTextChangedListener {
+            it?.let { s ->
+                changeArray[5] = s.isNotEmpty()
+                changeSaveMenu(s)
+            }
+        }
+        binding?.etRtcDomain?.addDefaultTextChangedListener {
+            it?.let { s ->
+                changeArray[6] = s.isNotEmpty()
+                changeSaveMenu(s)
+            }
+        }
+        binding?.etWebsocketServer?.addDefaultTextChangedListener {
+            it?.let { s ->
+                changeArray[7] = s.isNotEmpty()
+                changeSaveMenu(s)
+            }
+        }
+        binding?.etWebsocketPort?.addDefaultTextChangedListener {
+            it?.let { s ->
+                changeArray[8] = s.isNotEmpty()
+                changeSaveMenu(s)
+            }
+        }
         binding?.switchSpecifyServer?.setOnCheckedChangeListener { _, isChecked ->
             isEnableCustomServer = isChecked
             makeCustomServerItemEnable(isChecked)
@@ -81,6 +114,10 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
         binding?.switchEnablePrivateTls?.setOnCheckedChangeListener { _, isChecked ->
             isEnableCustomServerTls = isChecked
             DemoHelper.getInstance().getDataModel().enableCustomServerTls(isEnableCustomServerTls)
+        }
+        binding?.switchEnableRtcTokenVerify?.setOnCheckedChangeListener { _, isChecked ->
+            isEnableRtcTokenVerify = isChecked
+            DemoHelper.getInstance().getDataModel().enableRtcTokenVerify(isEnableRtcTokenVerify)
         }
     }
 
@@ -98,21 +135,64 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
                         return
                     }
 
+                }else{
+                    DemoHelper.getInstance().getDataModel().setCustomAppKey("")
                 }
             }
             binding?.etServerAddress?.text?.let {
                 if (it.isNotEmpty()) {
                     DemoHelper.getInstance().getDataModel().setIMServer(it.toString().trim())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setIMServer("")
                 }
             }
             binding?.etServerPort?.text?.let {
                 if (it.isNotEmpty()) {
                     DemoHelper.getInstance().getDataModel().setIMServerPort(it.toString().trim().toInt())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setIMServerPort(0)
                 }
             }
             binding?.etServerRest?.text?.let {
                 if (it.isNotEmpty()) {
                     DemoHelper.getInstance().getDataModel().setRestServer(it.toString().trim())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setRestServer("")
+                }
+            }
+            binding?.etRtcAppid?.text?.let {
+                if (it.isNotEmpty()) {
+                    DemoHelper.getInstance().getDataModel().setRtcAppId(it.toString().trim())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setRtcAppId("")
+                }
+            }
+            binding?.etRtcIp?.text?.let {
+                if (it.isNotEmpty()) {
+                    DemoHelper.getInstance().getDataModel().setRtcIpAddress(it.toString().trim())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setRtcIpAddress("")
+                }
+            }
+            binding?.etRtcDomain?.text?.let {
+                if (it.isNotEmpty()) {
+                    DemoHelper.getInstance().getDataModel().setRtcVerifyDomain(it.toString().trim())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setRtcVerifyDomain("")
+                }
+            }
+            binding?.etWebsocketServer?.text?.let {
+                if (it.isNotEmpty()) {
+                    DemoHelper.getInstance().getDataModel().setWebSocketServer(it.toString().trim())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setWebSocketServer("")
+                }
+            }
+            binding?.etWebsocketPort?.text?.let {
+                if (it.isNotEmpty()) {
+                    DemoHelper.getInstance().getDataModel().setWebSocketPort(it.toString().trim().toInt())
+                }else{
+                    DemoHelper.getInstance().getDataModel().setWebSocketPort(0)
                 }
             }
             if (isEnableCustomServer && checkServerSettingChange()) {
@@ -176,11 +256,40 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
                         binding?.etServerRest?.setText(rest)
                     }
                 }
+                DemoHelper.getInstance().getDataModel().getWebSocketServer()?.let { wsServer ->
+                    if (wsServer.isEmpty().not()) {
+                        binding?.etWebsocketServer?.setText(wsServer)
+                    }
+                }
+                DemoHelper.getInstance().getDataModel().getWebSocketPort().let { wsPort ->
+                    if (wsPort != 0) {
+                        binding?.etWebsocketPort?.setText(wsPort.toString())
+                    }
+                }
+                DemoHelper.getInstance().getDataModel().getRtcAppId()?.let { appId ->
+                    if (appId.isEmpty().not()) {
+                        binding?.etRtcAppid?.setText(appId)
+                    }
+                }
+                DemoHelper.getInstance().getDataModel().getRtcIpAddress()?.let { ip ->
+                    if (ip.isEmpty().not()) {
+                        binding?.etRtcIp?.setText(ip)
+                    }
+                }
+                DemoHelper.getInstance().getDataModel().getRtcVerifyDomain()?.let { domain ->
+                    if (domain.isEmpty().not()) {
+                        binding?.etRtcDomain?.setText(domain)
+                    }
+                }
             }
         }
         DemoHelper.getInstance().getDataModel().isCustomServerTlsEnable().let { enable ->
             isEnableCustomServerTls = enable
             binding?.switchEnablePrivateTls?.isChecked = enable
+        }
+        DemoHelper.getInstance().getDataModel().isRtcTokenVerifyEnable().let { enable ->
+            isEnableRtcTokenVerify = enable
+            binding?.switchEnableRtcTokenVerify?.isChecked = enable
         }
         makeCustomServerItemEnable(binding?.switchSpecifyServer?.isChecked ?: false)
     }
@@ -189,6 +298,11 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
         binding?.etServerAddress?.isEnabled = enable
         binding?.etServerPort?.isEnabled = enable
         binding?.etServerRest?.isEnabled = enable
+        binding?.etWebsocketServer?.isEnabled = enable
+        binding?.etWebsocketPort?.isEnabled = enable
+        binding?.etRtcAppid?.isEnabled = enable
+        binding?.etRtcIp?.isEnabled = enable
+        binding?.etRtcDomain?.isEnabled = enable
     }
 
     private fun changeSaveMenu(s: Editable) {

@@ -283,6 +283,14 @@ class DemoDataModel(private val context: Context) {
     }
 
     /**
+     * Get whether the RTC token verify is enabled.
+     * @return
+     */
+    fun isRtcTokenVerifyEnable(): Boolean {
+        return PreferenceManager.getValue(KEY_ENABLE_RTC_TOKEN_VERIFY, true)
+    }
+
+    /**
      * Set whether the custom server is enabled.
      * @param enable
      */
@@ -296,6 +304,14 @@ class DemoDataModel(private val context: Context) {
      */
     fun enableCustomServerTls(enable: Boolean) {
         PreferenceManager.putValue(KEY_ENABLE_CUSTOM_SERVER_TLS, enable)
+    }
+
+    /**
+     * Set whether the RTC token verify is enabled.
+     * @param enable
+     */
+    fun enableRtcTokenVerify(enable: Boolean) {
+        PreferenceManager.putValue(KEY_ENABLE_RTC_TOKEN_VERIFY, enable)
     }
 
     /**
@@ -346,6 +362,85 @@ class DemoDataModel(private val context: Context) {
     }
 
     /**
+     * Set the RTC App ID.
+     * @param appId
+     */
+    fun setRtcAppId(appId: String?) {
+        PreferenceManager.putValue(KEY_RTC_APPID, appId)
+    }
+
+    /**
+     * Get the RTC App ID.
+     * @return
+     */
+    fun getRtcAppId(): String? {
+        return PreferenceManager.getValue(KEY_RTC_APPID, "")
+    }
+
+    /**
+     * Set the RTC IP Address.
+     * @param ip
+     */
+    fun setRtcIpAddress(ip: String?) {
+        PreferenceManager.putValue(KEY_RTC_IP_ADDRESS, ip)
+    }
+
+    /**
+     * Get the RTC IP Address.
+     * @return
+     */
+    fun getRtcIpAddress(): String? {
+        return PreferenceManager.getValue(KEY_RTC_IP_ADDRESS, "")
+    }
+
+    /**
+     * Set the RTC Verify Domain.
+     * @param domain
+     */
+    fun setRtcVerifyDomain(domain: String?) {
+        PreferenceManager.putValue(KEY_RTC_VERIFY_DOMAIN, domain)
+    }
+
+    /**
+     * Get the RTC Verify Domain.
+     * @return
+     */
+    fun getRtcVerifyDomain(): String? {
+        return PreferenceManager.getValue(KEY_RTC_VERIFY_DOMAIN, "")
+    }
+
+    /**
+     * Set the WebSocket server.
+     * @param wsServer
+     */
+    fun setWebSocketServer(wsServer: String?) {
+        PreferenceManager.putValue(KEY_WEBSOCKET_SERVER, wsServer)
+    }
+
+    /**
+     * Get the WebSocket server.
+     * @return
+     */
+    fun getWebSocketServer(): String? {
+        return PreferenceManager.getValue(KEY_WEBSOCKET_SERVER, "")
+    }
+
+    /**
+     * Set the port of the WebSocket server.
+     * @param port
+     */
+    fun setWebSocketPort(port: Int) {
+        PreferenceManager.putValue(KEY_WEBSOCKET_PORT, port)
+    }
+
+    /**
+     * Get the port of the WebSocket server.
+     */
+    fun getWebSocketPort(): Int {
+        return PreferenceManager.getValue(KEY_WEBSOCKET_PORT, 0)
+    }
+
+    /**
      * Set the silent mode for the App.
      */
     fun setAppPushSilent(isSilent: Boolean) {
@@ -379,8 +474,14 @@ class DemoDataModel(private val context: Context) {
         private const val KEY_REST_SERVER = "SHARED_KEY_REST_SERVER"
         private const val KEY_IM_SERVER = "SHARED_KEY_IM_SERVER"
         private const val KEY_IM_SERVER_PORT = "SHARED_KEY_IM_SERVER_PORT"
+        private const val KEY_WEBSOCKET_SERVER = "SHARED_KEY_WEBSOCKET_SERVER"
+        private const val KEY_WEBSOCKET_PORT = "SHARED_KEY_WEBSOCKET_PORT"
+        private const val KEY_RTC_APPID = "SHARED_KEY_RTC_APPID"
+        private const val KEY_RTC_IP_ADDRESS = "SHARED_KEY_RTC_IP_ADDRESS"
+        private const val KEY_RTC_VERIFY_DOMAIN = "SHARED_KEY_RTC_VERIFY_DOMAIN"
         private const val KEY_ENABLE_CUSTOM_SERVER = "SHARED_KEY_ENABLE_CUSTOM_SERVER"
         private const val KEY_ENABLE_CUSTOM_SERVER_TLS = "SHARED_KEY_ENABLE_CUSTOM_SERVER_TLS"
+        private const val KEY_ENABLE_RTC_TOKEN_VERIFY = "SHARED_KEY_ENABLE_RTC_TOKEN_VERIFY"
         private const val KEY_ENABLE_CUSTOM_SET = "SHARED_KEY_ENABLE_CUSTOM_SET"
         private const val KEY_PUSH_USE_FCM = "shared_key_push_use_fcm"
         private const val KEY_PUSH_APP_SILENT_MODEL = "key_push_app_silent_model"

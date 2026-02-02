@@ -58,7 +58,6 @@ class AboutActivity:ChatUIKitBaseActivity<DemoActivityAboutBinding>(), View.OnCl
             it.arrowItemBusinessCooperation.setOnClickListener(this)
             it.arrowItemChannelCooperation.setOnClickListener(this)
             it.arrowItemComplaintSuggestions.setOnClickListener(this)
-            it.arrowItemPrivacyPolicy.setOnClickListener(this)
         }
     }
 
@@ -85,9 +84,6 @@ class AboutActivity:ChatUIKitBaseActivity<DemoActivityAboutBinding>(), View.OnCl
             }
             R.id.arrow_item_complaint_suggestions -> {
                 ReportHelper.openEmailClient(this)
-            }
-            R.id.arrow_item_privacy_policy -> {
-                WebViewActivity.actionStart(this@AboutActivity,WebViewLoadType.LocalHtml)
             }
             else -> {}
         }
