@@ -338,6 +338,7 @@ class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>(), View
             }
             R.id.item_registration_number -> {
                 handleRegistrationNumberClick()
+            }
             R.id.item_uploadlog-> {
                     shareFile(getLogFile())
             }

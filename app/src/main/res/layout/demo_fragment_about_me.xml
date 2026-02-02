@@ -157,6 +157,11 @@
             app:arrowItemAvatarSrc="@drawable/icon_registration_number"
             app:arrowItemShowArrow="false"
             app:arrowItemContent="@string/main_about_me_registration_number_content"
+            style="@style/main_about_me_arrow_item"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+        <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
             android:id="@+id/item_uploadlog"
             app:layout_constraintTop_toBottomOf="@+id/sw_item_black"
             app:arrowItemTitle="@string/main_about_upload_log"

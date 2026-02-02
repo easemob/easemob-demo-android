@@ -27,7 +27,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 145
-        versionName = "4.18.0"
+        versionName = "4.19.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -210,12 +210,12 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-    implementation("io.hyphenate:ease-chat-kit:4.18.0")
+    implementation("io.hyphenate:ease-chat-kit:4.19.0")
 //    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    implementation("io.hyphenate:chat-call-kit:4.18.2")
+    implementation("io.hyphenate:chat-call-kit:4.19.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.18.0")
+    implementation("io.hyphenate:hyphenate-chat:4.19.0")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
