@@ -3,6 +3,7 @@ package com.hyphenate.chatdemo.common
 import android.content.Intent
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
+import com.hyphenate.chatdemo.common.extensions.internal.insertSwindleMsg
 import com.hyphenate.chatdemo.ui.login.LoginActivity
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
@@ -84,12 +85,12 @@ object ListenersWrapper {
     private val messageListener by lazy { object : ChatUIKitMessageListener(){
         override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
             super.onMessageReceived(messages)
-            if (DemoHelper.getInstance().getDataModel().isAppPushSilent()) {
-                return
-            }
-            // do something
             messages?.forEach { message ->
+                DemoHelper.getInstance().context.insertSwindleMsg(message)
 
+                if (DemoHelper.getInstance().getDataModel().isAppPushSilent()) {
+                    return@forEach
+                }
                 if (ChatUIKitClient.checkMutedConversationList(message.conversationId())) {
                     return@forEach
                 }
