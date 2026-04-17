@@ -113,7 +113,8 @@
         style="@style/ease_group_detail_arrow_item"
         app:arrowItemShowArrow="true"
         android:layout_width="match_parent"
-        android:layout_height="54dp"/>
+        android:layout_height="54dp"
+        android:visibility="gone"/>
 
     <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
         android:id="@+id/arrow_item_complaint_suggestions"
