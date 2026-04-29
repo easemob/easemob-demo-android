@@ -26,6 +26,7 @@ class FeaturesActivity:ChatUIKitBaseActivity<DemoActivityFeaturesBinding>(),View
         val enableTranslation = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_TRANSLATION,true)
         val enableThread = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_THREAD,true)
         val enableReaction = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_REACTION,true)
+        val sendOriginalImage = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_SEND_ORIGINAL_IMAGE,false)
         val isTyping = DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.IS_TYPING_ON,true)
         binding.switchItemTranslation.setChecked(enableTranslation)
         binding.switchItemTranslation.setSwitchDefaultStyle()
@@ -33,6 +34,8 @@ class FeaturesActivity:ChatUIKitBaseActivity<DemoActivityFeaturesBinding>(),View
         binding.switchItemTopic.setSwitchDefaultStyle()
         binding.switchItemReaction.setChecked(enableReaction)
         binding.switchItemReaction.setSwitchDefaultStyle()
+        binding.switchItemSendOriginalImage.setChecked(sendOriginalImage)
+        binding.switchItemSendOriginalImage.setSwitchDefaultStyle()
         binding.switchItemTyping.setChecked(isTyping)
         binding.switchItemTyping.setSwitchDefaultStyle()
     }
@@ -45,6 +48,7 @@ class FeaturesActivity:ChatUIKitBaseActivity<DemoActivityFeaturesBinding>(),View
             it.switchItemTranslation.setOnClickListener(this)
             it.switchItemTopic.setOnClickListener(this)
             it.switchItemReaction.setOnClickListener(this)
+            it.switchItemSendOriginalImage.setOnClickListener(this)
             it.switchItemTyping.setOnClickListener(this)
         }
     }
@@ -73,6 +77,13 @@ class FeaturesActivity:ChatUIKitBaseActivity<DemoActivityFeaturesBinding>(),View
                     binding.switchItemReaction.setChecked(isChecked)
                     ChatUIKitClient.getConfig()?.chatConfig?.enableMessageReaction = isChecked
                     DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.FEATURES_REACTION,isChecked)
+                }
+            }
+            R.id.switch_item_send_original_image -> {
+                binding.switchItemSendOriginalImage.switch?.let { switch ->
+                    val isChecked = switch.isChecked.not()
+                    binding.switchItemSendOriginalImage.setChecked(isChecked)
+                    DemoHelper.getInstance().getDataModel().putBoolean(DemoConstant.FEATURES_SEND_ORIGINAL_IMAGE,isChecked)
                 }
             }
             R.id.switch_item_typing -> {

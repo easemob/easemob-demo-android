@@ -124,6 +124,8 @@
     <string name="currency_feature_topic_describe">通过群组内的一条消息创建一个话题</string>
     <string name="currency_feature_reaction">消息表情回应</string>
     <string name="currency_feature_reaction_describe">长按消息添加表情回应</string>
+    <string name="currency_feature_send_original_image">发送原图</string>
+    <string name="currency_feature_send_original_image_describe">开启后，选择图片将以原图方式发送</string>
 
     <string name="currency_feature_message_style">长按消息菜单</string>
     <string name="currency_feature_extend_style">发送附件菜单</string>
