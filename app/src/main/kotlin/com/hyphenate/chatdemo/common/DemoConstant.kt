@@ -16,6 +16,7 @@ object DemoConstant {
     const val FEATURES_TRANSLATION = "features_translation"
     const val FEATURES_THREAD = "features_thread"
     const val FEATURES_REACTION = "features_reaction"
+    const val FEATURES_SEND_ORIGINAL_IMAGE = "features_send_original_image"
 
     const val IS_TYPING_ON = "isTyping"
 

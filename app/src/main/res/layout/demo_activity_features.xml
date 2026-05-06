@@ -79,4 +79,19 @@
         android:text="@string/currency_feature_reaction_describe"
         />
 
+    <com.hyphenate.easeui.widget.ChatUIKitSwitchItemView
+        android:id="@+id/switch_item_send_original_image"
+        app:switchItemTitle="@string/currency_feature_send_original_image"
+        style="@style/ease_contact_detail_switch_item"
+        app:switchItemClickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="54dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/main_about_me_feature_text_describe"
+        android:text="@string/currency_feature_send_original_image_describe"
+        />
+
 </androidx.appcompat.widget.LinearLayoutCompat>
