@@ -335,6 +335,11 @@
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:exported="false"/>
+        <activity android:name=".ui.chat.ChatCreateThreadActivity"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:exported="false"/>
         <activity android:name=".ui.contact.ChatContactDetailActivity"
             android:exported="false"/>
         <activity android:name=".ui.group.ChatGroupDetailActivity"
