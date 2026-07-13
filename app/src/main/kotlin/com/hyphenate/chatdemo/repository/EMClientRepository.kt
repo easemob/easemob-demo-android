@@ -69,27 +69,10 @@ class EMClientRepository: BaseRepository() {
     }
 
     /**
-     * 注册
-     * @param userName
-     * @param pwd
-     * @return
-     */
-    suspend fun registerToHx(userName: String?, pwd: String?): String? =
-        withContext(Dispatchers.IO) {
-            suspendCoroutine { continuation ->
-                try {
-                    ChatClient.getInstance().createAccount(userName, pwd)
-                    continuation.resume(userName)
-                } catch (e: HyphenateException) {
-                    continuation.resumeWithException(ChatException(e.errorCode, e.message))
-                }
-            }
-        }
-
-    /**
      * 登录到服务器，可选择密码登录或者token登录
      * @param userName
-     * @param pwd
+     * @param pwd 登录凭证。[isTokenFlag] 为 `true` 时为 chat token；为 `false` 时为账号密码，
+     *            此时先用密码换取 token，再用 token 登录。
      * @param isTokenFlag
      * @return
      */
@@ -99,45 +82,110 @@ class EMClientRepository: BaseRepository() {
         isTokenFlag: Boolean
     ): ChatUIKitUser =
         withContext(Dispatchers.IO) {
-            suspendCoroutine { continuation ->
-                if (ChatClient.getInstance().isLoggedIn.not()) {
-                    if (DemoHelper.getInstance().getDataModel().isCustomSetEnable()) {
-                        DemoHelper.getInstance().getDataModel().getCustomAppKey()?.let {
-                            if (it.isNotEmpty()) {
-                                ChatClient.getInstance().changeAppkey(it)
-                            }else{
-                                ChatClient.getInstance().options.enableDNSConfig(true)
-                                ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
-                            }
-                        }
-                    } else {
-                        ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
-                    }
-                }
-                if (isTokenFlag) {
-                    ChatUIKitClient.login(ChatUIKitProfile(userName), pwd, onSuccess = {
-                        successForCallBack(continuation)
-                    }, onError = { code, error ->
-                        if(code == ChatError.USER_ALREADY_LOGIN){
-                            if (ChatUIKitClient.getCurrentUser()?.id == userName){
-                                successForCallBack(continuation)
-                            }else{
-                                ChatUIKitClient.logout(true)
-                                continuation.resumeWithException(ChatException(code, error))
-                            }
+            // 在换取 token / 登录前先确定 AppKey，保证 token 请求命中正确的 REST 服务器。
+            if (ChatClient.getInstance().isLoggedIn.not()) {
+                if (DemoHelper.getInstance().getDataModel().isCustomSetEnable()) {
+                    DemoHelper.getInstance().getDataModel().getCustomAppKey()?.let {
+                        if (it.isNotEmpty()) {
+                            ChatClient.getInstance().changeAppkey(it)
                         }else{
-                            continuation.resumeWithException(ChatException(code, error))
+                            ChatClient.getInstance().options.enableDNSConfig(true)
+                            ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
                         }
-                    })
+                    }
                 } else {
-                    ChatUIKitClient.login(userName, pwd, onSuccess = {
-                        successForCallBack(continuation)
-                    }, onError = { code, error ->
-                        continuation.resumeWithException(ChatException(code, error))
-                    })
+                    ChatClient.getInstance().changeAppkey(BuildConfig.APPKEY)
                 }
             }
+            // 密码登录场景：先通过 {restBaseUrl}/token 用密码换取 chat token，仅用于debug，生产环境应该从业务服务器获取token
+            // 不再把原始密码传给 SDK，登录统一走 token 通道。
+            val token = if (isTokenFlag) pwd else fetchTokenForUser(userName, pwd)
+            suspendCoroutine { continuation ->
+                ChatUIKitClient.login(ChatUIKitProfile(userName), token, onSuccess = {
+                    successForCallBack(continuation)
+                }, onError = { code, error ->
+                    if(code == ChatError.USER_ALREADY_LOGIN){
+                        if (ChatUIKitClient.getCurrentUser()?.id == userName){
+                            successForCallBack(continuation)
+                        }else{
+                            ChatUIKitClient.logout(true)
+                            continuation.resumeWithException(ChatException(code, error))
+                        }
+                    }else{
+                        continuation.resumeWithException(ChatException(code, error))
+                    }
+                })
+            }
         }
+
+    /**
+     * 使用用户名 + 密码换取 chat token。
+     *
+     * 该实现参考 emclient-linux 中 `EMConfigManager::fetchTokenForUser`：
+     * 向 `{restBaseUrl}/token` 发起 POST 请求，body 为 `grant_type=password`，
+     * 成功后从响应 JSON 中读取 `access_token`。
+     *
+     * `{protocol}://{CHAT_REST_SERVER_DOMAIN}/{org}/{app}`（APPKEY 的 '#' 替换为 '/'）。
+     *
+     * 注意：此方式需要客户端持有原始密码并直接访问 chat REST 服务，仅适用于示例/测试场景；
+     * 生产环境推荐由 app server 代理完成密码到 token 的换取（见 [loginFromServer]）。
+     */
+    private fun fetchTokenForUser(userName: String, password: String): String {
+        if (userName.isEmpty() || password.isEmpty()) {
+            throw ChatException(ChatError.INVALID_PARAM, "username or password is empty")
+        }
+        val appKey = BuildConfig.APPKEY
+        val restDomain = BuildConfig.CHAT_REST_SERVER_DOMAIN
+        if (appKey.isNullOrBlank()) {
+            throw ChatException(
+                ChatError.INVALID_PARAM,
+                "APPKEY is null or empty, please set APPKEY in local.properties"
+            )
+        }
+        if (restDomain.isNullOrBlank()) {
+            throw ChatException(
+                ChatError.INVALID_PARAM,
+                "CHAT_REST_SERVER_DOMAIN is null or empty, please set CHAT_REST_SERVER_DOMAIN in local.properties"
+            )
+        }
+        // 对齐 getAppKeyPath：easemob#easeim -> /easemob/easeim
+        val appKeyPath = appKey.replace('#', '/')
+        val baseUrl = "${BuildConfig.APP_SERVER_PROTOCOL}://$restDomain/$appKeyPath"
+        val url = "$baseUrl/token"
+        EMLog.d("fetchTokenForUser url : ", url)
+        try {
+            val headers: MutableMap<String, String> = HashMap()
+            headers["Content-Type"] = "application/json"
+            val request = JSONObject()
+            request.putOpt("grant_type", "password")
+            request.putOpt("username", userName)
+            request.putOpt("password", password)
+            val response = HttpClientManager.httpExecute(
+                url,
+                headers,
+                request.toString(),
+                HttpClientManager.Method_POST
+            )
+            val code = response.code
+            val responseInfo = response.content
+            when (code) {
+                200 -> {
+                    val token = JSONObject(responseInfo).optString("access_token")
+                    if (token.isNullOrEmpty()) {
+                        throw ChatException(ChatError.SERVER_UNKNOWN_ERROR, "access_token is empty")
+                    }
+                    return token
+                }
+                400 -> throw ChatException(ChatError.USER_AUTHENTICATION_FAILED, responseInfo)
+                404 -> throw ChatException(ChatError.USER_NOT_FOUND, responseInfo)
+                else -> throw ChatException(ChatError.SERVER_NOT_REACHABLE, responseInfo)
+            }
+        } catch (e: ChatException) {
+            throw e
+        } catch (e: Exception) {
+            throw ChatException(ChatError.NETWORK_ERROR, e.message)
+        }
+    }
 
     /**
      * 退出登录

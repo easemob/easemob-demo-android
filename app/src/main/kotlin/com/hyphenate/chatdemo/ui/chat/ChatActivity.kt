@@ -1,5 +1,7 @@
 package com.hyphenate.chatdemo.ui.chat
 
+import com.hyphenate.chatdemo.DemoHelper
+import com.hyphenate.chatdemo.common.DemoConstant
 import com.hyphenate.chatdemo.R
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.extensions.showToast
@@ -13,6 +15,9 @@ class ChatActivity: UIKitChatActivity() {
 
     override fun setChildSettings(builder: UIKitChatFragment.Builder) {
         super.setChildSettings(builder)
+        builder.sendMessageByOriginalImage(
+            DemoHelper.getInstance().getDataModel().getBoolean(DemoConstant.FEATURES_SEND_ORIGINAL_IMAGE, false)
+        )
         builder.setOnMessageForwardCallback(object : OnMessageForwardCallback {
             override fun onForwardSuccess(message: ChatMessage?) {
                 showToast(R.string.message_forward_success)
