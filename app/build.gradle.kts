@@ -27,7 +27,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 149
-        versionName = "4.23.0"
+        versionName = "4.24.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -42,7 +42,17 @@ android {
         buildConfigField ("String", "APP_GROUP_AVATAR", "\"${properties.getProperty("APP_GROUP_AVATAR")}\"")
 
         // Set appkey from local.properties
-        buildConfigField("String", "APPKEY", "\"${properties.getProperty("APPKEY")}\"")
+        buildConfigField("String", "APPKEY", "\"${properties.getProperty("APPKEY") ?: ""}\"")
+
+        // Chat REST API 服务器域名（不含协议、不含 AppKey 路径）。
+        // 获取方式：登录环信 Console (https://console.easemob.com) → 选择应用 →
+        // 在应用配置/基本信息中查看「REST API」服务器域名（注意：不要使用 IM 服务器域名）。
+        // 完整 baseUrl 在运行时拼为：https://{CHAT_REST_SERVER_DOMAIN}/{org}/{app}
+        buildConfigField(
+            "String",
+            "CHAT_REST_SERVER_DOMAIN",
+            "\"${properties.getProperty("CHAT_REST_SERVER_DOMAIN") ?: ""}\""
+        )
 
         //请求验证码秘钥,这里是环信公司的，开发者应该用自己的
         buildConfigField("String", "SECRET_KEY", "\"${properties.getProperty("SECRET_KEY")}\"")
@@ -210,12 +220,12 @@ dependencies {
     // To use Kotlin Flow and coroutines with Room, must include the room-ktx artifact in build.gradle file.
     implementation("androidx.room:room-ktx:2.5.1")
 
-    implementation("io.hyphenate:ease-chat-kit:4.23.0")
+    implementation("io.hyphenate:ease-chat-kit:4.24.0")
 //    implementation(project(mapOf("path" to ":ease-im-kit")))
 
-    implementation("io.hyphenate:chat-call-kit:4.23.0")
+    implementation("io.hyphenate:chat-call-kit:4.24.0")
 //    implementation(project(mapOf("path" to ":ease-call-kit")))
 
-    implementation("io.hyphenate:hyphenate-chat:4.23.0")
+    implementation("io.hyphenate:hyphenate-chat:4.24.0")
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
