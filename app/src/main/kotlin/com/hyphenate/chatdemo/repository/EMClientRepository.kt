@@ -125,6 +125,8 @@ class EMClientRepository: BaseRepository() {
      * 向 `{restBaseUrl}/token` 发起 POST 请求，body 为 `grant_type=password`，
      * 成功后从响应 JSON 中读取 `access_token`。
      *
+     * `{protocol}://{CHAT_REST_SERVER_DOMAIN}/{org}/{app}`（APPKEY 的 '#' 替换为 '/'）。
+     *
      * 注意：此方式需要客户端持有原始密码并直接访问 chat REST 服务，仅适用于示例/测试场景；
      * 生产环境推荐由 app server 代理完成密码到 token 的换取（见 [loginFromServer]）。
      */
@@ -132,10 +134,23 @@ class EMClientRepository: BaseRepository() {
         if (userName.isEmpty() || password.isEmpty()) {
             throw ChatException(ChatError.INVALID_PARAM, "username or password is empty")
         }
-        val baseUrl = ChatClient.getInstance().chatConfigPrivate?.getBaseUrl(true, false)
-        if (baseUrl.isNullOrEmpty()) {
-            throw ChatException(ChatError.SERVER_NOT_REACHABLE, "no matching rest base url")
+        val appKey = BuildConfig.APPKEY
+        val restDomain = BuildConfig.CHAT_REST_SERVER_DOMAIN
+        if (appKey.isNullOrBlank()) {
+            throw ChatException(
+                ChatError.INVALID_PARAM,
+                "APPKEY is null or empty, please set APPKEY in local.properties"
+            )
         }
+        if (restDomain.isNullOrBlank()) {
+            throw ChatException(
+                ChatError.INVALID_PARAM,
+                "CHAT_REST_SERVER_DOMAIN is null or empty, please set CHAT_REST_SERVER_DOMAIN in local.properties"
+            )
+        }
+        // 对齐 getAppKeyPath：easemob#easeim -> /easemob/easeim
+        val appKeyPath = appKey.replace('#', '/')
+        val baseUrl = "${BuildConfig.APP_SERVER_PROTOCOL}://$restDomain/$appKeyPath"
         val url = "$baseUrl/token"
         EMLog.d("fetchTokenForUser url : ", url)
         try {
