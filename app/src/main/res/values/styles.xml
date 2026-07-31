@@ -221,5 +221,19 @@
         <item name="arrowItemContentColor">@color/demo_subtitle</item>
     </style>
 
+    <style name="demo_select_item_tv">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="demo_select_item_checkbox">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/demo_checkbox_bg_selector</item>
+    </style>
+
 
 </resources>

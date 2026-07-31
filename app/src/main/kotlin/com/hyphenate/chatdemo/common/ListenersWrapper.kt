@@ -7,49 +7,22 @@ import com.hyphenate.chatdemo.common.extensions.internal.insertSwindleMsg
 import com.hyphenate.chatdemo.ui.login.LoginActivity
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
-import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatLoginExtensionInfo
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatPresenceListener
 import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
-import com.hyphenate.easeui.common.extensions.ioScope
 import com.hyphenate.easeui.common.extensions.mainScope
-import com.hyphenate.easeui.common.impl.ValueCallbackImpl
 import com.hyphenate.easeui.interfaces.ChatUIKitConnectionListener
 import com.hyphenate.easeui.interfaces.ChatUIKitContactListener
 import com.hyphenate.easeui.interfaces.ChatUIKitMessageListener
 import com.hyphenate.easeui.model.ChatUIKitEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 object ListenersWrapper {
-    private var isLoadGroupList = false
 
     private val connectListener by lazy {
         object : ChatUIKitConnectionListener() {
-            override fun onConnected() {
-                // do something
-                CoroutineScope(Dispatchers.IO).launch {
-                    val groups = ChatClient.getInstance().groupManager().allGroups
-                    if (isLoadGroupList.not() && groups.isEmpty()) {
-                        ChatClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(ValueCallbackImpl<List<ChatGroup>>(onSuccess = {
-                            isLoadGroupList = true
-                            if (it.isEmpty().not()) {
-                                ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.UPDATE.name)
-                                    .post(DemoHelper.getInstance().context.ioScope(),
-                                        ChatUIKitEvent(ChatUIKitEvent.EVENT.UPDATE.name, ChatUIKitEvent.TYPE.GROUP))
-                            }
-                        }, onError = {_,_ ->
-
-                        }))
-                    }
-                }
-
-            }
-
             override fun onTokenExpired() {
                 super.onTokenExpired()
                 logout(false)
@@ -64,6 +37,7 @@ object ListenersWrapper {
     }
 
     private fun logout(unbindPushToken:Boolean = true){
+        DemoHelper.getInstance().getDataModel().clearLoginToken()
         ChatUIKitClient.logout(unbindPushToken,
             onSuccess = {
                 ChatLog.e("ListenersWrapper","logout success")

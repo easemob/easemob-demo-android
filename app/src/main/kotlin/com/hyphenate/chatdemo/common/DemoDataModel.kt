@@ -236,6 +236,39 @@ class DemoDataModel(private val context: Context) {
     }
 
     /**
+     * Save the credentials required for token login.
+     */
+    fun saveLoginToken(userName: String, token: String) {
+        PreferenceManager.putStringValues(
+            mapOf(
+                KEY_LOGIN_USER_NAME to userName,
+                KEY_LOGIN_TOKEN to token
+            )
+        )
+    }
+
+    /**
+     * Get the user name associated with the saved login token.
+     */
+    fun getLoginUserName(): String {
+        return PreferenceManager.getValue(KEY_LOGIN_USER_NAME, "")
+    }
+
+    /**
+     * Get the saved login token.
+     */
+    fun getLoginToken(): String {
+        return PreferenceManager.getValue(KEY_LOGIN_TOKEN, "")
+    }
+
+    /**
+     * Clear the saved token login credentials.
+     */
+    fun clearLoginToken() {
+        PreferenceManager.removeValues(KEY_LOGIN_USER_NAME, KEY_LOGIN_TOKEN)
+    }
+
+    /**
      * Set the custom appKey.
      * @param appKey
      */
@@ -249,6 +282,20 @@ class DemoDataModel(private val context: Context) {
      */
     fun getCustomAppKey(): String {
         return PreferenceManager.getValue(KEY_CUSTOM_APPKEY, "")
+    }
+
+    /**
+     * Set the Chat REST server domain used with a custom appKey.
+     */
+    fun setChatRestServerDomain(domain: String?) {
+        PreferenceManager.putValue(KEY_CHAT_REST_SERVER_DOMAIN, domain)
+    }
+
+    /**
+     * Get the Chat REST server domain used with a custom appKey.
+     */
+    fun getChatRestServerDomain(): String {
+        return PreferenceManager.getValue(KEY_CHAT_REST_SERVER_DOMAIN, "")
     }
 
     /**
@@ -470,7 +517,10 @@ class DemoDataModel(private val context: Context) {
         private const val KEY_DEVELOPER_MODE = "shared_is_developer"
         private const val KEY_AGREE_AGREEMENT = "shared_key_agree_agreement"
         private const val KEY_CURRENT_PHONE_NUMBER = "shared_current_phone_number"
+        private const val KEY_LOGIN_USER_NAME = "shared_login_user_name"
+        private const val KEY_LOGIN_TOKEN = "shared_login_token"
         private const val KEY_CUSTOM_APPKEY = "SHARED_KEY_CUSTOM_APPKEY"
+        private const val KEY_CHAT_REST_SERVER_DOMAIN = "SHARED_KEY_CHAT_REST_SERVER_DOMAIN"
         private const val KEY_REST_SERVER = "SHARED_KEY_REST_SERVER"
         private const val KEY_IM_SERVER = "SHARED_KEY_IM_SERVER"
         private const val KEY_IM_SERVER_PORT = "SHARED_KEY_IM_SERVER_PORT"

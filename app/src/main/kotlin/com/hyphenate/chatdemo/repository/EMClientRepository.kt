@@ -4,14 +4,12 @@ import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
-import com.hyphenate.chatdemo.base.ErrorCode
 import com.hyphenate.chatdemo.bean.LoginResult
 import com.hyphenate.cloud.HttpClientManager
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
-import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.impl.OnError
 import com.hyphenate.easeui.common.impl.OnSuccess
@@ -40,32 +38,6 @@ class EMClientRepository: BaseRepository() {
                 BuildConfig.APP_SEND_SMS_FROM_SERVER
         private const val CANCEL_ACCOUNT = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN +
                 BuildConfig.APP_BASE_USER
-    }
-
-    /**
-     * 登录过后需要加载的数据
-     * @return
-     */
-    suspend fun loadAllInfoFromHX(): Boolean =
-        withContext(Dispatchers.IO) {
-            suspendCoroutine { continuation ->
-                ChatLog.e("login info","isLoggedInBefore ${ChatClient.getInstance().isLoggedInBefore} - autoLogin ${ChatClient.getInstance().options.autoLogin}")
-                if (ChatClient.getInstance().isLoggedInBefore && ChatClient.getInstance().options.autoLogin) {
-                    loadAllConversationsAndGroups()
-                    continuation.resume(true)
-                } else {
-                    continuation.resumeWithException(ChatException(ErrorCode.EM_NOT_LOGIN, ""))
-                }
-            }
-        }
-
-    /**
-     * 从本地数据库加载所有的对话及群组
-     */
-    private fun loadAllConversationsAndGroups() {
-        // 从本地数据库加载所有的对话及群组
-        ChatClient.getInstance().chatManager().loadAllConversations()
-        ChatClient.getInstance().groupManager().loadAllGroups()
     }
 
     /**
@@ -102,11 +74,11 @@ class EMClientRepository: BaseRepository() {
             val token = if (isTokenFlag) pwd else fetchTokenForUser(userName, pwd)
             suspendCoroutine { continuation ->
                 ChatUIKitClient.login(ChatUIKitProfile(userName), token, onSuccess = {
-                    successForCallBack(continuation)
+                    successForCallBack(continuation, userName, token)
                 }, onError = { code, error ->
                     if(code == ChatError.USER_ALREADY_LOGIN){
                         if (ChatUIKitClient.getCurrentUser()?.id == userName){
-                            successForCallBack(continuation)
+                            successForCallBack(continuation, userName, token)
                         }else{
                             ChatUIKitClient.logout(true)
                             continuation.resumeWithException(ChatException(code, error))
@@ -134,8 +106,17 @@ class EMClientRepository: BaseRepository() {
         if (userName.isEmpty() || password.isEmpty()) {
             throw ChatException(ChatError.INVALID_PARAM, "username or password is empty")
         }
-        val appKey = BuildConfig.APPKEY
-        val restDomain = BuildConfig.CHAT_REST_SERVER_DOMAIN
+        val dataModel = DemoHelper.getInstance().getDataModel()
+        val customAppKey = dataModel.getCustomAppKey().takeIf {
+            dataModel.isCustomSetEnable() && it.isNotBlank()
+        }
+        val appKey = customAppKey ?: BuildConfig.APPKEY
+        val restDomain = if (customAppKey != null) {
+            dataModel.getChatRestServerDomain()
+                .ifBlank { BuildConfig.CHAT_REST_SERVER_DOMAIN }
+        } else {
+            BuildConfig.CHAT_REST_SERVER_DOMAIN
+        }
         if (appKey.isNullOrBlank()) {
             throw ChatException(
                 ChatError.INVALID_PARAM,
@@ -197,6 +178,7 @@ class EMClientRepository: BaseRepository() {
             suspendCoroutine { continuation ->
                 ChatUIKitClient.logout(unbindDeviceToken, onSuccess = {
                     DemoHelper.getInstance().getDataModel().setCurrentPhoneNumber("")
+                    DemoHelper.getInstance().getDataModel().clearLoginToken()
                     continuation.resume(ChatError.EM_NO_ERROR)
                 }, onError = { code, error ->
                     continuation.resumeWithException(ChatException(code, error))
@@ -204,14 +186,16 @@ class EMClientRepository: BaseRepository() {
             }
         }
 
-    private fun successForCallBack(continuation: Continuation<ChatUIKitUser>) {
+    private fun successForCallBack(
+        continuation: Continuation<ChatUIKitUser>,
+        userName: String,
+        token: String
+    ) {
+        DemoHelper.getInstance().getDataModel().saveLoginToken(userName, token)
         // get current user id
         val currentUser = ChatClient.getInstance().currentUser
         val user = ChatUIKitUser(currentUser)
         continuation.resume(user)
-
-        // ** manually load all local groups and conversation
-        loadAllConversationsAndGroups()
     }
 
     /**
@@ -301,6 +285,7 @@ class EMClientRepository: BaseRepository() {
             suspendCoroutine { continuation ->
                 cancelAccountFromServer(
                     onSuccess = {
+                        DemoHelper.getInstance().getDataModel().clearLoginToken()
                         continuation.resume(ChatError.EM_NO_ERROR)
                     },
                     onError = {code, error ->

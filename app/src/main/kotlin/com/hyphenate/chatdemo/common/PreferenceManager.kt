@@ -34,6 +34,26 @@ internal object PreferenceManager {
     }
 
     /**
+     * Save multiple string values in one preferences transaction.
+     */
+    fun putStringValues(values: Map<String, String>) {
+        val editor = mSharedPreferences?.edit() ?: return
+        values.forEach { (key, value) ->
+            editor.putString(key, value)
+        }
+        editor.apply()
+    }
+
+    /**
+     * Remove multiple preference values in one preferences transaction.
+     */
+    fun removeValues(vararg keys: String) {
+        val editor = mSharedPreferences?.edit() ?: return
+        keys.forEach(editor::remove)
+        editor.apply()
+    }
+
+    /**
      * Get the value from the preference.
      * @param key The key of the preference.
      * @param defValue The default value of the preference.

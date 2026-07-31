@@ -6,7 +6,6 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatGroup
-import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.impl.OnError
 import com.hyphenate.easeui.common.impl.OnSuccess
 import com.hyphenate.util.EMLog
@@ -23,22 +22,6 @@ class GroupRepository: BaseRepository() {
 
     companion object{
         const val baseGroupUrl = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN + BuildConfig.APP_BASE_GROUP
-    }
-
-    /**
-     * Suspend method for [ChatGroupManager.asyncGetJoinedGroupsFromServer()]
-     */
-    suspend fun asyncGetJoinedGroupsFromServer(): List<ChatGroup> {
-        return suspendCoroutine { continuation->
-            groupManager.asyncGetJoinedGroupsFromServer(object : ChatValueCallback<MutableList<ChatGroup>> {
-                override fun onSuccess(value: MutableList<ChatGroup>) {
-                    continuation.resume(value)
-                }
-                override fun onError(error: Int, errorMsg: String?) {
-                    continuation.resumeWithException(ChatException(error, errorMsg))
-                }
-            })
-        }
     }
 
     suspend fun reportGroupIdToServer(

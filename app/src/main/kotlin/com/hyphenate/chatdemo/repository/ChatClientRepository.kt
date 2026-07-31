@@ -27,8 +27,8 @@ class ChatClientRepository: BaseRepository() {
      */
     suspend fun getRequestUnreadCount():Int =
         withContext(Dispatchers.IO) {
-            val systemConversation = ChatUIKitNotificationMsgManager.getInstance().getConversation()
-            systemConversation.unreadMsgCount
+            // 联系人 Tab 与 UIKit 联系人页共用 em_system 会话中的已读游标。
+            ChatUIKitNotificationMsgManager.getInstance().getRequestUnreadCount()
         }
 
 }

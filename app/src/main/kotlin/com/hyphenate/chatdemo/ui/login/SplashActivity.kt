@@ -17,16 +17,17 @@ import com.hyphenate.chatdemo.common.dialog.DemoAgreementDialogFragment
 import com.hyphenate.chatdemo.common.dialog.DemoDialogFragment
 import com.hyphenate.chatdemo.common.dialog.SimpleDialog
 import com.hyphenate.chatdemo.databinding.DemoSplashActivityBinding
-import com.hyphenate.chatdemo.viewmodel.SplashViewModel
-import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.extensions.catchChatException
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import com.hyphenate.chatdemo.viewmodel.LoginFragmentViewModel
+import com.hyphenate.easeui.common.ChatException
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
-    private lateinit var model: SplashViewModel
+
+    private val loginViewModel by lazy {
+        ViewModelProvider(this)[LoginFragmentViewModel::class.java]
+    }
 
     override fun getViewBinding(inflater: LayoutInflater): DemoSplashActivityBinding? {
         return DemoSplashActivityBinding.inflate(inflater)
@@ -38,7 +39,6 @@ class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
 
     override fun initData() {
         super.initData()
-        model = ViewModelProvider(this)[SplashViewModel::class.java]
         binding.ivSplash.animate()
             .alpha(1f)
             .setDuration(200)
@@ -111,21 +111,31 @@ class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
     }
 
     private fun loginSDK() {
-        lifecycleScope.launch {
-            model.loginData()
-                .catchChatException { e ->
-                    ChatLog.e("TAG", "error message = " + e.description)
-                    LoginActivity.startAction(mContext)
-                    finish()
-                }
-                .stateIn(lifecycleScope, SharingStarted.WhileSubscribed(5000), false)
-                .collect {
-                    if (it) {
-                        DemoHelper.getInstance().getDataModel().initDb()
-                        startActivity(Intent(mContext, MainActivity::class.java))
-                        finish()
-                    }
-                }
+        val dataModel = DemoHelper.getInstance().getDataModel()
+        val userName = dataModel.getLoginUserName()
+        val token = dataModel.getLoginToken()
+        if (userName.isBlank() || token.isBlank()) {
+            goToLoginPage()
+            return
         }
+
+        lifecycleScope.launch {
+            try {
+                loginViewModel.login(userName, token, true).first()
+            } catch (e: ChatException) {
+                dataModel.clearLoginToken()
+                goToLoginPage()
+                return@launch
+            }
+
+            dataModel.initDb()
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+        }
+    }
+
+    private fun goToLoginPage() {
+        LoginActivity.startAction(this)
+        finish()
     }
 }

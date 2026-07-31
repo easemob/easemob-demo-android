@@ -33,17 +33,27 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tv_server_specify"
+                app:layout_constraintBottom_toTopOf="@id/et_chat_rest_server_domain"
                 app:layout_constraintVertical_bias="0"
                 android:layout_marginTop="@dimen/ease_size_12"
                 android:hint="@string/server_set_appkey"
+                style="@style/em_login_et_input" />
+
+            <EditText
+                android:id="@+id/et_chat_rest_server_domain"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_appkey"
+                app:layout_constraintBottom_toTopOf="@id/tv_server_specify"
+                android:layout_marginTop="@dimen/ease_size_12"
+                android:hint="@string/server_set_chat_rest_server_domain"
                 style="@style/em_login_et_input" />
 
             <TextView
                 android:id="@+id/tv_server_specify"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_appkey"
+                app:layout_constraintTop_toBottomOf="@id/et_chat_rest_server_domain"
                 app:layout_constraintBottom_toTopOf="@id/et_server_address"
                 android:layout_marginTop="@dimen/ease_size_12"
                 android:text="@string/server_set_specify_server"

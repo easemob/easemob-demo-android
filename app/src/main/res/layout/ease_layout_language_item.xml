@@ -10,7 +10,7 @@
     <TextView
         android:padding="16dp"
         android:id="@+id/language_tag"
-        style="@style/ease_report_item_tv"
+        style="@style/demo_select_item_tv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/language_cb"
@@ -25,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/language_tag"
         app:layout_constraintStart_toEndOf="@id/language_tag"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/ease_report_item_checkbox"
+        style="@style/demo_select_item_checkbox"
         android:layout_width="20dp"
         android:layout_height="20dp"/>
 

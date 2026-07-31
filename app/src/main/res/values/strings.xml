@@ -47,6 +47,7 @@
 
     <string name="server_set_title">Server settings</string>
     <string name="server_set_appkey">Appkey</string>
+    <string name="server_set_chat_rest_server_domain" translatable="false">输入 CHAT_REST_SERVER_DOMAIN</string>
     <string name="server_set_apns_cert_name">APNs certificate name</string>
     <string name="server_set_specify_server">Use private server:</string>
     <string name="server_set_enable_tls">Enable tls in private server:</string>

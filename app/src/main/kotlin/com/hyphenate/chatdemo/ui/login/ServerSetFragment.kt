@@ -6,6 +6,7 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.common.dialog.SimpleDialog
@@ -16,11 +17,12 @@ import kotlin.system.exitProcess
 
 class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
 
-    private val changeArray = BooleanArray(9)
+    private val changeArray = BooleanArray(10)
     private var isEnableCustomServer = false
     private var isEnableCustomServerTls = false
 
     private var isEnableRtcTokenVerify = false
+    private var initialChatRestServerDomain = BuildConfig.CHAT_REST_SERVER_DOMAIN
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -36,6 +38,13 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
             enableSaveMenu(false)
         }
         binding?.etAppkey?.inputType = InputType.TYPE_CLASS_TEXT
+        binding?.etChatRestServerDomain?.apply {
+            inputType = InputType.TYPE_CLASS_TEXT
+            initialChatRestServerDomain = DemoHelper.getInstance().getDataModel()
+                .getChatRestServerDomain()
+                .ifBlank { BuildConfig.CHAT_REST_SERVER_DOMAIN }
+            setText(initialChatRestServerDomain)
+        }
     }
 
     override fun initListener() {
@@ -56,6 +65,12 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
             it?.let { s ->
                 changeArray[0] = s.isNotEmpty()
                 changeSaveMenu(s)
+            }
+        }
+        binding?.etChatRestServerDomain?.addDefaultTextChangedListener {
+            it?.let { s ->
+                changeArray[9] = s.toString().trim() != initialChatRestServerDomain
+                enableSaveMenu(checkChange())
             }
         }
         binding?.etServerAddress?.addDefaultTextChangedListener {
@@ -138,6 +153,10 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
                 }else{
                     DemoHelper.getInstance().getDataModel().setCustomAppKey("")
                 }
+            }
+            binding?.etChatRestServerDomain?.text?.let {
+                DemoHelper.getInstance().getDataModel()
+                    .setChatRestServerDomain(it.toString().trim())
             }
             binding?.etServerAddress?.text?.let {
                 if (it.isNotEmpty()) {
@@ -324,7 +343,7 @@ class ServerSetFragment: ChatUIKitBaseFragment<DemoFragmentServerSetBinding>() {
 
     private fun checkServerSettingChange(): Boolean {
         changeArray.forEachIndexed { index, b ->
-            if (index > 0 && b) {
+            if (index in 1..8 && b) {
                 return true
             }
         }

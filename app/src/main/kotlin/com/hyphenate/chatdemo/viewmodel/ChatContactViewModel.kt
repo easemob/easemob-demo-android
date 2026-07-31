@@ -20,10 +20,8 @@ import com.hyphenate.easeui.model.ChatUIKitUser
 import com.hyphenate.easeui.model.setUserInitialLetter
 import com.hyphenate.easeui.viewmodel.contacts.ChatUIKitContactListViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ChatContactViewModel: ChatUIKitContactListViewModel() {
@@ -56,38 +54,42 @@ class ChatContactViewModel: ChatUIKitContactListViewModel() {
                 .catchChatException { e ->
                     view?.loadContactListFail(e.errorCode, e.description)
                 }
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), mutableListOf())
                 .collect {
                     ChatClient.getInstance().contactManager().asyncFetchAllContactsFromLocal(object :
                         ChatValueCallback<MutableList<ChatContact>> {
                         override fun onSuccess(value: MutableList<ChatContact>?) {
-                            value?.forEach { contact->
-                               val data = it.map { user->
-                                    val profile = DemoHelper.getInstance().getDataModel().getUser(user.userId)?.parse()?: ChatUIKitProfile(user.userId)
-                                    if (contact.username == user.userId && contact.remark.isNotEmpty()){
-                                        profile.remark = contact.remark
-                                        DemoHelper.getInstance().getDataModel().insertUser(profile,false)
+                            val contacts = value.orEmpty().associateBy { contact -> contact.username }
+                            val data = it.map { user ->
+                                val profile = DemoHelper.getInstance().getDataModel()
+                                    .getUser(user.userId)?.parse()
+                                    ?: ChatUIKitProfile(user.userId)
+                                contacts[user.userId]?.remark
+                                    ?.takeIf(String::isNotEmpty)
+                                    ?.let { remark ->
+                                        profile.remark = remark
+                                        DemoHelper.getInstance().getDataModel()
+                                            .insertUser(profile, false)
                                     }
-                                    profile
-                                } as MutableList<ChatUIKitProfile>?
-                                data?.let { it1 ->
-                                    ChatUIKitClient.updateUsersInfo(it1)
+                                profile
+                            }
+                            if (data.isNotEmpty()) {
+                                ChatUIKitClient.updateUsersInfo(data)
+                            }
+                            val sortedList = data.map { profile ->
+                                profile.toUser().apply {
+                                    setUserInitialLetter()
                                 }
-                                val result = data?.map { it.toUser() }
-                                result?.map {
-                                    it.setUserInitialLetter()
-                                }
-                                result?.let {
-                                    val sortedList = ContactSortedHelper.sortedList(it)
-                                    viewModelScope.launch {
-                                        view?.loadContactListSuccess(sortedList.toMutableList())
-                                    }
-                                }
+                            }.let(ContactSortedHelper::sortedList)
+                            viewModelScope.launch {
+                                view?.loadContactListSuccess(sortedList.toMutableList())
                             }
                         }
 
                         override fun onError(error: Int, errorMsg: String?) {
                             ChatLog.e("ChatContactViewModel","asyncFetchAllContactsFromLocal onError $error $errorMsg")
+                            viewModelScope.launch {
+                                view?.loadContactListFail(error, errorMsg.orEmpty())
+                            }
                         }
                     })
                 }

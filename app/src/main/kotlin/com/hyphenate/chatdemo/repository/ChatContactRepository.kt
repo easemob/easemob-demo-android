@@ -3,7 +3,6 @@ package com.hyphenate.chatdemo.repository
 import com.hyphenate.chatdemo.BuildConfig
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.R
-import com.hyphenate.chatdemo.common.suspend.fetchResultContactsFromServer
 import com.hyphenate.cloud.HttpClientManager
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
@@ -11,7 +10,6 @@ import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
-import com.hyphenate.easeui.model.ChatUIKitUser
 import com.hyphenate.easeui.repository.ChatUIKitContactListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,14 +25,6 @@ class ChatContactRepository: ChatUIKitContactListRepository() {
         const val checkUrl = BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN + BuildConfig.APP_BASE_USER
         const val OPERATOR = "?operator="
     }
-
-    /**
-     * Load server contacts.
-     */
-    override suspend fun loadData():List<ChatUIKitUser> =
-        withContext(Dispatchers.IO){
-            chatContactManager.fetchResultContactsFromServer()
-        }
 
     suspend fun checkPhoneNumOrIdFromServer(phoneNumberOrId:String):String? =
         withContext(Dispatchers.IO){

@@ -3,6 +3,7 @@ package com.hyphenate.chatdemo
 import android.content.Context
 import android.util.Log
 import com.hyphenate.callkit.utils.ChatLog
+import com.hyphenate.chat.EMOptions.EMDataSyncType
 import com.hyphenate.chatdemo.callkit.CallKitManager
 import com.hyphenate.chatdemo.common.DemoDataModel
 import com.hyphenate.chatdemo.common.ListenersWrapper
@@ -14,6 +15,7 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatOptions
 import com.hyphenate.easeui.common.PushConfigBuilder
 import com.hyphenate.util.EMLog
+import java.util.EnumSet
 
 class DemoHelper private constructor(){
 
@@ -96,11 +98,12 @@ class DemoHelper private constructor(){
             appKey = BuildConfig.APPKEY
             // set if accept the invitation automatically, default true
             acceptInvitationAlways = false
-            // set if you need read ack
-            requireAck = true
             // Set whether the sent message is included in the message listener, default false
             isIncludeSendMessageInMessageListener = true
-            autoLogin=true
+            // Enable user info: messages carry the sender info and the SDK syncs user attributes automatically.
+            setEnableUserInfo(true)
+            // Sync conversations, contacts and joined groups automatically after login.
+            setDataSyncType(EnumSet.of(EMDataSyncType.CONVERSATIONS, EMDataSyncType.CONTACTS, EMDataSyncType.JOINED_GROUPS))
             getDataModel().setUseFCM(true)
 
             /**
