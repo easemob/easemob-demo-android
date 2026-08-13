@@ -7,27 +7,20 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.MainActivity
 import com.hyphenate.chatdemo.R
 import com.hyphenate.chatdemo.base.BaseInitActivity
+import com.hyphenate.chatdemo.common.AutoLoginManager
 import com.hyphenate.chatdemo.common.dialog.DemoAgreementDialogFragment
 import com.hyphenate.chatdemo.common.dialog.DemoDialogFragment
 import com.hyphenate.chatdemo.common.dialog.SimpleDialog
 import com.hyphenate.chatdemo.databinding.DemoSplashActivityBinding
-import com.hyphenate.chatdemo.viewmodel.LoginFragmentViewModel
-import com.hyphenate.easeui.common.ChatException
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
-
-    private val loginViewModel by lazy {
-        ViewModelProvider(this)[LoginFragmentViewModel::class.java]
-    }
 
     override fun getViewBinding(inflater: LayoutInflater): DemoSplashActivityBinding? {
         return DemoSplashActivityBinding.inflate(inflater)
@@ -111,26 +104,19 @@ class SplashActivity : BaseInitActivity<DemoSplashActivityBinding>() {
     }
 
     private fun loginSDK() {
-        val dataModel = DemoHelper.getInstance().getDataModel()
-        val userName = dataModel.getLoginUserName()
-        val token = dataModel.getLoginToken()
-        if (userName.isBlank() || token.isBlank()) {
+        if (AutoLoginManager.hasSavedAccount().not()) {
             goToLoginPage()
             return
         }
 
         lifecycleScope.launch {
-            try {
-                loginViewModel.login(userName, token, true).first()
-            } catch (e: ChatException) {
-                dataModel.clearLoginToken()
+            if (AutoLoginManager.loginWithSavedAccount()) {
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                finish()
+            } else {
+                DemoHelper.getInstance().getDataModel().clearLoginToken()
                 goToLoginPage()
-                return@launch
             }
-
-            dataModel.initDb()
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish()
         }
     }
 
