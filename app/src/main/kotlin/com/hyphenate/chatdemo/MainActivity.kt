@@ -36,6 +36,7 @@ import com.hyphenate.callkit.telecom.PhoneAccountHelper
 import com.hyphenate.callkit.telecom.PhoneAccountHelper.registerPhoneAccount
 import com.hyphenate.callkit.telecom.PhoneAccountHelper.showPhoneAccountEnableGuide
 import com.hyphenate.callkit.telecom.VoipConnectionService
+import com.hyphenate.callkit.utils.PermissionHelper
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
@@ -229,6 +230,23 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
         } else {
             ChatLog.d(TAG, "All permissions already granted")
             checkPhoneAccount()
+            checkFloatWindowPermission()
+        }
+    }
+
+    /**
+     * 检查悬浮窗权限，未授权时弹窗引导用户开启。
+     * 开启后通话悬浮窗、后台拉起通话界面均可正常工作（可豁免 Android 10+ 的后台启动限制）。
+     */
+    private fun checkFloatWindowPermission() {
+        if (!PermissionHelper.hasFloatWindowPermission(this)) {
+            ChatLog.e(TAG, "Float window permission not granted, showing guide")
+            PermissionHelper.showPermissionExplanationDialog(
+                this,
+                onConfirm = {
+                    PermissionHelper.requestFloatWindowPermission(this)
+                }
+            )
         }
     }
 
@@ -253,6 +271,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
                 ChatLog.e(TAG, "Required permissions not granted")
             }
             checkPhoneAccount()
+            checkFloatWindowPermission()
         }
     }
 
