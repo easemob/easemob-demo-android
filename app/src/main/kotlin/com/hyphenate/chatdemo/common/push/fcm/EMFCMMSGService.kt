@@ -5,6 +5,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chatdemo.DemoHelper
+import com.hyphenate.chatdemo.common.AutoLoginManager
 
 /**
  * If you want to show notifications on Android 13+, you need to do the following:
@@ -47,11 +48,23 @@ import com.hyphenate.chatdemo.DemoHelper
  * </pre>
  */
 class EMFCMMSGService : FirebaseMessagingService() {
+
+    override fun onCreate() {
+        super.onCreate()
+        // 环信离线推送为 notification 类型消息：应用不在前台时 FCM SDK 会直接展示系统通知，
+        // 不会回调 onMessageReceived。因此把自动登录挂在 Service 创建时机——只要 FCM
+        // 有消息投递（含通知型）就触发登录，以便 SDK 拉取离线消息（含呼叫信令），拉起 telecom。
+        AutoLoginManager.autoLoginAsync()
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         if (remoteMessage.data.isNotEmpty()) {
             val message = remoteMessage.data["alert"]
             Log.d(TAG, "onMessageReceived: $message")
+            // SDK 5.0 移除了自动登录：收到推送后先使用本地凭证自动登录，
+            // 触发 SDK 拉取离线消息（含呼叫信令），进而拉起 telecom 来电流程。
+            AutoLoginManager.autoLoginAsync()
             DemoHelper.getInstance().getNotifier()?.notify(message)
         }
     }

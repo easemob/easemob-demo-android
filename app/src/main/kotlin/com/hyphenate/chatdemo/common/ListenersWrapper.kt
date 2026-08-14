@@ -1,6 +1,7 @@
 package com.hyphenate.chatdemo.common
 
 import android.content.Intent
+import com.hyphenate.callkit.bean.Constant
 import com.hyphenate.chatdemo.DemoApplication
 import com.hyphenate.chatdemo.DemoHelper
 import com.hyphenate.chatdemo.common.extensions.internal.insertSwindleMsg
@@ -66,6 +67,11 @@ object ListenersWrapper {
                     return@forEach
                 }
                 if (ChatUIKitClient.checkMutedConversationList(message.conversationId())) {
+                    return@forEach
+                }
+                // 呼叫信令消息不弹普通消息通知：来电提醒由 callkit（telecom/悬浮窗/全屏通知）负责，
+                // 且进程被杀时 FCM 推送已展示过一条通知，避免同一呼叫出现两条通知
+                if (message.getStringAttribute(Constant.CALL_MSG_TYPE, "") == Constant.CALL_MSG_INFO) {
                     return@forEach
                 }
                 if (DemoApplication.getInstance().getLifecycleCallbacks().isFront.not()) {
